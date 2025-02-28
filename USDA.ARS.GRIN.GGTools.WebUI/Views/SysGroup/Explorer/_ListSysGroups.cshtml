@@ -1,0 +1,44 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysGroupViewModel
+
+    <a href="compose.html" class="btn btn-primary btn-block mb-3">Add Group</a>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Sys Groups</h3>
+
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <input type="text" id="search-box" class="form-control m-2" placeholder="Start typing...">
+            <ul id="sys-group-list" class="nav nav-pills flex-column">
+                @{
+                    int i = 0;
+                }
+                @foreach (var sysGroup in Model.DataCollection)
+                {
+                    string cssClass = "";
+                    if (i == 0)
+                    {
+                        cssClass = "active";
+                    }
+
+                    <li id="@sysGroup.ID" class="nav-item @cssClass p-1">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-users"></i> @sysGroup.GroupTitle
+                            @if (sysGroup.IsEnabled == "N")
+                            {
+                                <span class="badge bg-danger float-right">DISABLED</span>
+                            }
+                        </a>
+                    </li>
+                    i++;
+                }
+            </ul>
+        </div>
+        <!-- /.card-body -->
+    </div>
+   

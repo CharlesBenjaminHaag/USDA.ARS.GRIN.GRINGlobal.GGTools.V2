@@ -1,0 +1,88 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<table id="data-table-web-order-requests" class="table table-striped ggtools" style="width:100%;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Submitted</th>
+            <th>Status</th>
+            <th style="width: 20%">
+                Requestor
+            </th>
+            <td>Email Address</td>
+            <th>Organization</th>
+            <th>Country</th>
+            <th>Locked</th>
+            <th></th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+            string statusFieldBackgroundColorStyle = "";
+
+            switch (result.StatusCode)
+            {
+                case "ACCEPTED":
+                    statusFieldBackgroundColorStyle = "color:white;background-color:#00a65a;";
+                    break;
+                case "CANCELED":
+                    statusFieldBackgroundColorStyle = "color:white;background-color:#f39c12;";
+                    break;
+                case "SUBMITTED":
+                    statusFieldBackgroundColorStyle = "color:white;background-color:#605ca8;";
+                    break;
+                case "MIXED":
+                    statusFieldBackgroundColorStyle = "color:white;background-color:blue;";
+                    break;
+                case "NRR_FLAG":
+                    statusFieldBackgroundColorStyle = "color:white;background-color:red;";
+                    break;
+                case "NRR_HOLD":
+                   statusFieldBackgroundColorStyle = "background-color:mediumvioletred; color:white;";
+                    break;
+                case "NRR_HOLD_CTRY":
+                    statusFieldBackgroundColorStyle = "background-color:indigo; color:white;";
+                    break;
+                default:
+                    statusFieldBackgroundColorStyle = "background-color:transparent;";
+                    break;
+            }
+            <tr>
+
+                <td>
+                    @result.ID
+                </td>
+                <td>@result.CreatedDate.ToShortDateString()</td>
+                <td style="@statusFieldBackgroundColorStyle">@result.StatusTitle</td>
+                <td>
+                    @result.WebCooperatorFullName
+                </td>
+                <td>
+                    <a href="@Url.Action("Search","WebOrderRequest", new { emailAddress = result.WebCooperatorEmail })">@result.WebCooperatorEmail</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Search","WebOrderRequest", new { organization = result.WebCooperatorOrganization })">@result.WebCooperatorOrganization</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Search","WebOrderRequest", new { countryDescription = result.ShippingAddressCountryDescription })">@result.ShippingAddressCountryDescription</a>
+                </td>
+                <td>
+                    
+                    @{
+                        if (result.IsLocked)
+                        {
+                            <span class="right badge badge-info">
+                                <i class="fas fa-lock" style="color:white;"></i> @result.OwnedByWebCooperatorName
+                            </span>
+                        }
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("View","WebOrderRequest", new { entityId = result.ID})" class="btn btn-default btn-flat btn-block">View</a>
+                </td>
+                
+            </tr>
+        }
+    </tbody>
+</table>

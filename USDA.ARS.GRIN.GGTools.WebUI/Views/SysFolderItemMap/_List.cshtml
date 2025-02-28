@@ -1,0 +1,46 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderViewModel
+
+@{
+    int i = 0;
+    string tabSelectorCssClass = "";
+    string tabContentCssClass = "";
+    string tabSelectorName = "";
+    string tabContentName = "";
+} 
+
+<div class="card card-default card-tabs">
+    <div class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+            @foreach (var sysTable in Model.DataCollectionSysTables)
+            {
+                tabSelectorName = "tab-selector-" + sysTable;
+                tabContentName = "tab-content-" + sysTable;
+
+                if (i == 0)
+                {
+                    tabSelectorCssClass = "nav-link active";
+                }
+                else
+                {
+                    tabSelectorCssClass = "nav-link";
+                }
+
+                <li class="nav-item">
+                    <a class="@tabSelectorCssClass" id="@tabSelectorName" data-toggle="pill" href="@tabContentName" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">@sysTable.SysTableTitle</a>
+                </li>
+                i++;
+            }
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="custom-tabs-one-tabContent">
+            @foreach (var sysTable in Model.DataCollectionSysTables)
+            {
+                <div class="tab-pane fade show active" id="@tabContentName" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                @{Html.RenderAction("_ListFolderItems", sysTable.SysTableTitle.Replace(" ",""), new { @sysFolderId = Model.Entity.ID });}                 
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

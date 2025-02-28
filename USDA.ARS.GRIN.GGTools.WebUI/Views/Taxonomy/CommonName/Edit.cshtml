@@ -1,0 +1,273 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CommonNameViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = null;
+}
+
+@{
+    string eventAction = @ViewContext.RouteData.Values["controller"].ToString();
+    string eventValue = @ViewContext.RouteData.Values["action"].ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/GGlogo_BW.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    @{Html.RenderAction("GetMenu", "Menu", new { @eventAction = eventAction, @eventValue = eventValue });}
+                </div>
+                <!-- BEGIN RIGHT-ALIGNED NAV MENU -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    @if (Model.Entity.ID > 0)
+                    {
+                        <li id="nav-item-view-website" class="nav-item">
+                            <a class="nav-link" href="#" role="button">
+                                <i class="far fa-globe"></i>
+                                View on Website
+                            </a>
+                        </li>
+                    }
+                    @Html.Partial("~/Views/Shared/_NavbarRight.cshtml")
+                </ul>
+                <!-- END RIGHT-ALIGNED NAV MENU -->
+
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        @Html.Partial("~/Views/Taxonomy/Shared/_PageTitle.cshtml")
+                        <div class="col-sm-3">
+                            @Html.Partial("~/Views//Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+                    @using (Html.BeginForm("Edit", "CommonName", FormMethod.Post, new { id = "frmEdit" }))
+                    {
+                        @Html.HiddenFor(x => x.PageTitle)
+                        @Html.HiddenFor(x => x.EventAction)
+                        @Html.HiddenFor(x => x.EventValue)
+                        @Html.HiddenFor(x => x.TableName)
+                        @Html.HiddenFor(x => x.TableCode)
+                        @Html.HiddenFor(x => x.Entity.ID)
+                        @Html.HiddenFor(x => x.Entity.RelatedItemCount)
+                        @Html.HiddenFor(x => x.Entity.CategoryCode)
+                        @Html.HiddenFor(x => x.Entity.CitationID)
+                        @Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Summary</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                                    <div class="row">
+                                        <div id="section-taxon-select" class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Taxon Type</label>
+                                                <select id="ddlTaxonType" class="form-control">
+                                                    <option value="taxonomy-genus">Genus</option>
+                                                    <option value="taxonomy-species">Species</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div id="section-fields-taxonomy-genus" class="form-group">
+                                                <label>Genus</label>
+                                                <div class="input-group">
+
+                                                    @Html.TextBoxFor(x => x.Entity.GenusName, new { @class = "form-control", @readonly = "readonly", @style = "background-color:#ecf0f5;" })
+                                                    @Html.HiddenFor(x => x.Entity.GenusID)
+                                                    @if (Model.Entity.GenusID > 0)
+                                                    {
+                                                        <span class="input-group-btn">
+                                                            <a href="@Url.Action("Edit", "Genus", new { @entityId = Model.Entity.GenusID })" class="btn btn-default btn-flat">
+                                                                <i class="fa fa-link"></i>
+                                                            </a>
+                                                        </span>
+                                                    }
+                                                    <span class="input-group-btn">
+                                                        <button id="btnOpenGenusLookupModal" type="button" data-ggtools-action="GenusID" data-ggtools-value="GenusName" data-toggle="modal" data-target="#modal-genus-lookup" class="btn btn-default btn-flat">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div id="section-fields-taxonomy-species" class="form-group">
+                                                <label>Species</label>
+                                                <div class="input-group">
+                                                    <span id="placeholder-accepted-name" style="background-color: #ecf0f5; border: 1px solid #ced4da; width: 100%; position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; min-width: 0; margin-bottom: 0; padding: 0.375rem 0.75rem; height: calc(2.25rem + 2px);">@Html.Raw(Model.Entity.SpeciesName) </span>
+                                                    @Html.HiddenFor(x => x.Entity.SpeciesID)
+                                                    @if (Model.Entity.SpeciesID > 0)
+                                                    {
+                                                        <span class="input-group-btn">
+                                                            <a href="@Url.Action("Edit", "Species", new { @entityId = Model.Entity.SpeciesID })" class="btn btn-default btn-flat">
+                                                                <i class="fa fa-link"></i>
+                                                            </a>
+                                                        </span>
+                                                    }
+                                                    <span class="input-group-btn">
+                                                        <button id="btnOpenSpeciesLookupModal" type="button" data-ggtools-action="SpeciesID" data-ggtools-value="SpeciesName" data-toggle="modal" data-target="#modal-species-lookup" class="btn btn-default btn-flat">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Name</label>
+                                                @Html.TextBoxFor(x => x.Entity.Name, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Simplified Name</label>
+                                                @Html.TextBoxFor(x => x.Entity.SimplifiedName, new { @class = "form-control", @readonly = "readonly", @style = "background-color:#ebebeb" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Transcription</label>
+                                                @Html.TextBoxFor(x => x.Entity.AlternateTranscription, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Language Description</label>
+                                                @Html.TextBoxFor(x => x.Entity.LanguageDescription, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Language</label>
+                                                @Html.DropDownListFor(x => x.Entity.LanguageID, Model.CommonNameLanguages, "NULL", new { @id = "ddlLanguage", @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <!-- BEGIN NOTE FIELD -->
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>
+                                                    Note
+                                                    &nbsp;<a href="" data-toggle="modal" data-target="#modal-note-lookup"><i class="fa fa-search"></i></a>
+                                                </label>
+                                                <div class="input-group">
+                                                    @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control", @style = "width:100%;" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+
+                                    </div>
+
+                                    @if (Model.Entity.ID > 0)
+                                    {
+                                        <div id="section-species-citation-widget">
+                                            @{Html.RenderAction("RenderWidget", "Citation", new { @entityId = Model.Entity.CitationID });}
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="@Url.Action("Refresh")" class="btn btn-default">Reset</a>
+                                @if (Model.Entity.ID > 0)
+                                {
+                                    <button id="btnDelete" type="button" class="btn btn-danger">
+                                        Delete
+                                    </button>
+                                }
+                                <button type="submit" class="btn btn-default float-right">Save</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+    @{Html.RenderAction("RenderLookupModal", "FamilyMap"); }
+    @{Html.RenderAction("RenderLookupModal", "Genus"); }
+    @{Html.RenderAction("RenderLookupModal", "Species"); }
+    @Html.Partial("~/Views/Shared/Modals/_NoteLookup.cshtml")
+    @Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+    @{Html.RenderAction("GetEditModal", "SysFolder", new { sysTableName = Model.TableName }); }
+
+    @if (Model.Entity.SpeciesID > 0)
+    {
+        Html.RenderAction("RenderSpeciesCitationLookupModal", "Citation", new { @tableName = Model.TableName, @eventAction = "CommonName", @eventValue = "Edit", @speciesId = Model.Entity.SpeciesID });
+    }
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Init();
+        });
+
+        function Init() {
+            $('[id*="section-fields"]').hide();
+            // If adding a new record, show Family by default; otherwise, show section that corresponds to the
+            // citation taxon.
+            var entityId = $("#Entity_ID").val();
+            var genusId = $("#Entity_GenusID").val();
+            var speciesId = $("#Entity_SpeciesID").val();
+
+            if (genusId > 0) {
+                $("#ddlTaxonType option[value=taxonomy-genus]").attr('selected', 'selected');
+                $("#section-fields-taxonomy-genus").show();
+            }
+            else {
+                if (speciesId > 0) {
+                    $("#ddlTaxonType option[value=taxonomy-species]").attr('selected', 'selected');
+                    $("#section-fields-taxonomy-species").show();
+                }
+                else {
+                    $("#ddlTaxonType option[value=taxonomy-genus]").attr('selected', 'selected');
+                    $("#section-fields-taxonomy-genus").show();
+                }
+            }
+        }
+
+        $('#ddlTaxonType').on('change', function () {
+            ToggleTaxonFields(this.value);
+        });
+
+        function ToggleTaxonFields(taxonType) {
+            $('[id*="section-fields"]').hide();
+            $("#section-fields-" + taxonType).show();
+        }
+
+        $('#ddlLanguage').on('change', function () {
+            var selectedText = $(this).find("option:selected").text();
+            $("#Entity_LanguageDescription").val(selectedText);
+        });
+    </script>
+</body>
+</html>
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")

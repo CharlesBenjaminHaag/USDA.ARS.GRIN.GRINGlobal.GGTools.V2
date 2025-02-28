@@ -1,0 +1,188 @@
+﻿@model USDA.ARS.GRIN.GGTools.GOBS.ViewModelLayer.GOBSViewModel
+@{
+    ViewBag.Title = "My GGTools";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@Html.Partial("~/Views/GOBS/Components/_EditDataset.cshtml")
+@Html.Partial("~/Views/Method/Modals/_Lookup.cshtml")
+@Html.Partial("~/Views/GOBS/Modals/_TypeLookup.cshtml")
+@Html.Partial("~/Views/GOBS/Modals/_EditPermissions.cshtml")
+
+<div class="card card-info card-tabs">
+    <div class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Dataset Markers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Inventory Records</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Dataset Values</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Report Values</a>
+            </li>
+            @*<li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Report Traits</a>
+                </li>*@
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="custom-tabs-one-tabContent">
+            <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                <table id="data_table_dataset_markers" class="table table-striped ggtools">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Method</th>
+                            <th>Dataset Field</th>
+                            <th>Value</th>
+                            <th>Valid From</th>
+                            <th>Owner</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var datasetMarker in Model.DatasetEntity.DatasetMarkers)
+                        {
+                            <tr>
+                                <td>@datasetMarker.dataset_marker_id</td>
+                                <td>@datasetMarker.method</td>
+                                <td>@datasetMarker.marker</td>
+                                <td>@datasetMarker.is_trait</td>
+                                <td>@datasetMarker.valid_from.ToShortDateString()</td>
+                                <td style="text-align:right;">
+                                    @if (datasetMarker.authorized == 1)
+                                    {
+                                        <a href="@Url.Action("EditDatasetMarker", "GOBS", new { datasetMarkerId = datasetMarker.dataset_marker_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("EditDatasetMarker", "GOBS", new { datasetMarkerId = datasetMarker.dataset_marker_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                <table id="data_table_report_values" class="table table-striped ggtools">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Method</th>
+                            <th>Inventory</th>
+                            <th>Valid From</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var datasetInventory in Model.DatasetEntity.DatasetInventories)
+                        {
+                            <tr>
+                                <td>@datasetInventory.dataset_inventory_id</td>
+                                <td>@datasetInventory.method</td>
+                                <td>@datasetInventory.inventory</td>
+                                <td>@datasetInventory.valid_from.ToShortDateString()</td>
+                                <td style="text-align:right;">
+                                    <a href="@Url.Action("EditDatasetInventory", "GOBS", new { datasetInventoryId = datasetInventory.dataset_inventory_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+                <table id="data_table_data_set_value" class="table table-striped ggtools">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th><a href="#">Method</a></th>
+                            <th><a href="#">Dataset Field</a></th>
+                            <th>Value</th>
+                            <th>Valid From</th>
+                            <th>Owner</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var datasetValue in Model.DatasetEntity.DatasetValues)
+                        {
+                            <tr>
+                                <td>@datasetValue.dataset_value_id</td>
+                                <td>@datasetValue.method</td>
+                                <td>@datasetValue.field</td>
+                                <td>@datasetValue.value</td>
+                                <td>@datasetValue.valid_from.ToShortDateString()</td>
+                                <td>@datasetValue.controller_name</td>
+                                <td style="text-align:right;">
+                                    @if (datasetValue.authorized == 1)
+                                    {
+                                        <a href="@Url.Action("EditDatasetValue", "GOBS", new { datasetVaId = datasetValue.dataset_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("EditDatasetValue", "GOBS", new { datasetId = datasetValue.dataset_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+                <table id="data_table_report_values" class="table table-striped ggtools">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Method</th>
+                            <th>Marker</th>
+                            <th>Inventory</th>
+                            <th>Individual</th>
+                            <th>Value</th>
+                            <th>Valid From</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var reportValue in Model.DatasetEntity.ReportValues)
+                        {
+                            <tr>
+                                <td>@reportValue.report_value_id</td>
+                                <td>@reportValue.method</td>
+                                <td>@reportValue.marker</td>
+                                <td>@reportValue.inventory</td>
+                                <td>@reportValue.individual</td>
+                                <td>@reportValue.value</td>
+                                <td>@Model.DatasetEntity.valid_from.ToShortDateString()</td>
+                                <td style="text-align:right;">
+                                    <a href="@Url.Action("EditDatasetmarker", "GOBS", new { entityId = Model.DatasetEntity.dataset_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @*<div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+                </div>*@
+        </div>
+    </div>
+
+</div>

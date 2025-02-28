@@ -1,0 +1,159 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.RegulationViewModelBase
+<div class="modal fade" id="modal-regulation-lookup" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="search-progress-overlay-regulation-lookup" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Regulation Lookup
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+                @using (Html.BeginForm(new { id = "frmRegulationLookup", onsubmit = "return false;" }))
+                {
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Regulation Type</label>
+                                @Html.DropDownListFor(x => x.SearchEntity.RegulationTypeCode, Model.RegulationTypeCodes, "All types", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Regulation Level</label>
+                                @Html.DropDownListFor(x => x.SearchEntity.RegulationLevelCode, Model.RegulationLevelCodes, "All levels", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Description</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.Description, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="margin">
+                            <button id="btnReset" type="button" class="btn btn-default">Reset</button>
+                            <button id="btnGetRegulations" type="button" class="btn btn-default float-right">Search</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="section-regulation-lookup-search-results" class="col-md-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+ 
+    // Get the input field
+    var input = document.getElementById("SearchEntity_RegulationTypeCode");
+
+    // Execute a function when the user presses a key on the keyboard
+    input.addEventListener("keypress", function (event) {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            document.getElementById("btnGetRegulation").click();
+        }
+    });
+
+    $("#btnOpenRegulationLookupModal").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var eventValue = $(this).data("ggtools-value");
+        $("#hfSpeciesLookupIDFieldName").val(eventAction);
+        $("#hfSpeciesLookupNameFieldName").val(eventValue);
+        $("#search-progress-overlay-regulation-lookup").hide();
+    });
+
+    $("#btnGetRegulations").click(function () {
+        GetRegulations();
+    });
+
+    function OpenSpeciesModal() {
+        $("#search-progress-overlay-regulation-lookup").hide();
+        $("#modal-regulation-lookup").modal("show");
+    }
+
+    function GetRegulations() {
+        var link = '@Url.Action("Lookup","Regulation")';
+
+        var regulationTypeCode = $("#SearchEntity_RegulationTypeCode").val();
+        var regulationLevelCode = $("#SearchEntity_RegulationLevelCode").val();
+        var regulationDescription = $("#SearchEntity_Description").val();
+
+        var formData = new FormData();
+
+        formData.append("SearchEntity.RegulationTypeCode", regulationTypeCode);
+        formData.append("SearchEntity.RegulationLevelCode", regulationLevelCode);
+        formData.append("SearchEntity.Description", regulationDescription);
+
+        $("#search-progress-overlay-regulation-lookup").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-regulation-lookup-search-results").html(response);
+                InitDataTableWithAssembledName("data-table-regulation-lookup");
+                $("#search-progress-overlay-regulation-lookup").hide();
+            },
+            error: function (ex) {
+                alert("Error");
+                $("#search-progress-overlay-regulation-lookup").hide();
+            }
+        });
+    }
+
+    $(document).on("click", "[id*='btnSaveRegulation']", function () {
+        var eventAction = $("#EventAction").val();
+        var eventValue = $("#EventValue").val();
+        var eventInfo = $("#EventInfo").val();
+        var idList = GetSelectedEntityIDs("data-table-regulation-lookup");
+        
+
+        if (eventValue == "EditBatch") {
+            SaveRegulationToBatch(eventInfo, idList);
+        }
+        else {
+            SaveRegulation();
+        }
+    });
+
+    function SaveRegulation() {
+        var idField = $("#hfSpeciesLookupIDFieldName").val();
+        var nameField = $("#hfSpeciesLookupNameFieldName").val();
+        var isAcceptedName = "";
+        var idList = GetSelectedEntityIDs("data-table-regulation-lookup");
+      
+        $("#Entity_" + idField).val(idList);
+        $("#Entity_" + nameField).val(nameList);
+
+        $("#placeholder-accepted-name").html(nameList);
+        $('#modal-regulation-lookup').modal('hide');
+    }
+
+    function SaveRegulationToBatch() {
+        ('#modal-regulation-lookup').modal('hide');
+    }
+
+</script>

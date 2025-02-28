@@ -1,0 +1,18 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+<div class="form-group">
+    <label>Subspecies Authority</label>
+    <div class="input-group">
+        @Html.TextBoxFor(x => x.Entity.SubspeciesAuthority, new { @class = "form-control" })
+        <span class="input-group-append">
+            <button type="button"
+                    id="btnOpenAuthorityLookupModalSubspecies"
+                    data-toggle="modal"
+                    data-target="#modal-author-lookup"
+                    class="btn btn-default btn-flat"
+                    data-ggtools-id-field="" 
+                    data-ggtools-name-field="Entity_SubspeciesAuthority">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+</div>

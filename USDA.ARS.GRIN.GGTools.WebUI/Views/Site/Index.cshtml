@@ -1,0 +1,17 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SiteViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Site/_Detail.cshtml")
+@Html.Partial("~/Views/Site/_List.cshtml")
+
+<script type="text/javascript">
+    $(document).on("click", "[id='btnSubmitSearch']", function () {
+        event.preventDefault();
+        if ($("#section-search-criteria").is(":visible")) {
+            $("#EventAction").val("SHOW-SEARCH");
+        }
+        $("#frmMain").submit();
+    });
+</script>

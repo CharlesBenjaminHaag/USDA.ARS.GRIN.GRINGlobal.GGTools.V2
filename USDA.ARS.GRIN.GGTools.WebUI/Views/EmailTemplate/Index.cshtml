@@ -1,0 +1,131 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.EmailTemplateViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style>
+    .mailbox-controls {
+        margin-bottom: 10px;
+        padding: 0px;
+    }
+</style>
+
+<style>
+    .users-list img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .info-box {
+        background-color: #e2e4ea;
+    }
+
+    .dashboard-link {
+        color: white;
+        text-decoration: underline;
+    }
+
+    .dashboard-link a, a:hover {
+        color: white;
+    }
+
+    .active-test {
+        /*background-color: #067eff;
+        color:white;*/
+    }
+
+
+    
+</style>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-3">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Templates</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="section-template-list" class="card-body p-0">
+                    <ul class="nav nav-pills flex-column">
+                        @foreach (var emailTemplate in Model.DataCollection)
+                        {
+                            <li id="@emailTemplate.ID" class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-inbox"></i> @emailTemplate.Title
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+            </div>
+
+      
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+            <div id="section-template-view">
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var firstItem = $("#section-template-list ul li:first");
+        var itemId = $(firstItem).attr('id');
+        LoadData(itemId);
+    }
+
+    $(function () {
+        $('#section-template-list ul.nav li').on('click', function () {
+            $(this).parent().find('li.active').removeClass('active-test');
+            $(this).addClass('active-test');
+            var itemId = $(this).attr('id');
+            LoadData(itemId);
+        });
+    });
+
+    function LoadData(id)
+    {
+        var $getStatusElement = $('li#' + id);
+        $getStatusElement.addClass('active-test');
+
+        var link = '@Url.Action("View", "EmailTemplate")';
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: link,
+                data: { entityId: id },
+                success:
+                    function (response) {
+                        $("#section-template-view").html(response);
+                    },
+                error:
+                    function (response) {
+                        console.log(response);
+                    }
+            });
+    }
+
+    $(document).on("click", "[id='btnSave']", function () {
+        Save();
+    });
+
+    function Save() {
+       /* alert("DEBUG");*/
+    }
+
+</script>

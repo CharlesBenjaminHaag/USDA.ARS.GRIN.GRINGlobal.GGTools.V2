@@ -1,0 +1,43 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+<div class="modal fade" id="modal-citation-batch-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Citation Batch Edit
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-info"></i>Please Review</h5>
+                    For each species listed below, please specify the citation that the newly-created distribution records should use.
+                </div>
+
+                @foreach (var result in Model.DataCollectionSpecies)
+                {
+                    <div class="row">
+                        <div class="col-md-6">
+                            @result.AssembledName
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control">
+                                <option>Citation A</option>
+                                <option>Citation B</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr />
+                }
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="btnGenerateBatch" type="button" class="btn btn-default" data-dismiss="modal">Generate Batch</button>
+            </div>
+        </div>
+    </div>
+</div>

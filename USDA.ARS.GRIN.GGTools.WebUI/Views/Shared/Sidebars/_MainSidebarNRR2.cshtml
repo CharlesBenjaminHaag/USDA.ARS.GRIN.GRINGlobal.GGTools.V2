@@ -1,0 +1,91 @@
+﻿<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar nav-compact nav-flat nav-child-indent flex-column text-sm" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item">
+            <a href="@Url.Action("Index","HOme")" class="nav-link">
+                <i class="nav-icon fas fa-home"></i>
+                <p>Home</p>
+            </a>
+        </li>
+        @*<li class="nav-item menu-open">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-calendar"></i>
+                <p>
+                    Time Frame
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="@Url.Action("Navigate","Home", new { applicationCode = "GGT-NRR"})" class="nav-link">
+                        <i class="far fa-circle"></i>
+                        <p>Today</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Navigate","Home", new { applicationCode = "GGT-TAX"})" class="nav-link">
+                        <i class="far fa-circle"></i>
+                        <p>This Week</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Navigate","Home", new { applicationCode = "GGT-ARM"})" class="nav-link">
+                        <i class="far fa-circle"></i>
+                        <p>This Month</p>
+                    </a>
+                </li>
+                
+            </ul>
+        </li>*@
+        
+        
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon far fa-clock"></i>
+                <p>
+                    Time Frame
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="../mailbox/mailbox.html" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Today</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../mailbox/compose.html" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>This Week</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../mailbox/read-mail.html" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>This Month</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        
+        <li class="nav-header">SYSADMIN</li>
+        <li class="nav-item">
+            <a href="@Url.Action("Explorer","SysGroup")" class="nav-link">
+                <i class="nav-icon fas fa-users-cog"></i>
+                <p>Groups</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Explorer","CodeValue")" class="nav-link">
+                <i class="nav-icon fas fa-table"></i>
+                <p>Code Values</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","Error")" class="nav-link">
+                <i class="nav-icon fas fa-bug"></i>
+                <p>Error Logs</p>
+            </a>
+        </li>
+    </ul>
+</nav>

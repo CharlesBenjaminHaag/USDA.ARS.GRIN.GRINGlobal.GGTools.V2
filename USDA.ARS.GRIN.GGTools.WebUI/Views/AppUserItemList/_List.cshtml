@@ -1,0 +1,109 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemListViewModel
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">App User Item List (@Model.DataCollection.Count())</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="card-body">
+
+        <table id="data_table_app_user_item_list" class="table table-striped search-results" style=" width:100%;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Sort Order</th>
+                    <th>TabName</th>
+                    <th>ListName</th>
+                    <th>ID Type</th>
+                    <th>Item Title</th>
+                    <th>Properties</th>
+                    <th>Created</th>
+                    <th>Last Modified</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollection)
+                {
+                    <tr>
+                        <td>@result.ID</td>
+                        <td>@result.SortOrder</td>
+                        <td>@result.TabName</td>
+                        <td>@result.ListName</td>
+                        <td>@result.IDType</td>
+                        <td>@result.Title</td>
+                        <td>@result.Properties</td>
+                        <td>
+                            @result.CreatedDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @if (result.ModifiedDate > DateTime.MinValue)
+                            {
+                                @result.ModifiedDate.ToShortDateString()
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+    </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableAppUserItemListFormat("data_table_app_user_item_list");
+    });
+
+    function InitDataTableAppUserItemListFormat(tableName) {
+        tableName = "#" + tableName;
+        $(document).ready(function () {
+            table = $(tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                "pageLength": 10,
+                responsive: true,
+                buttons: [
+                    'selectAll',
+                    'selectNone',
+                    'csv',
+                    'excel',
+                    'pdfHtml5',
+                    {
+                        text: 'Import Selected',
+                        action: function (e, dt, node, config) {
+                            Import(2);
+                        }
+                    },
+                    {
+                        text: 'Import All',
+                        action: function (e, dt, node, config) {
+                            Import(1);
+                        }
+                    }
+                ],
+                select: true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                columnDefs: [
+                    {
+                        target: 0,
+                        visible: false,
+                        searchable: false,
+                    },
+                    {
+                        target: 1,
+                        visible: false,
+                        searchable: false,
+                    },
+                ]
+            });
+
+            $('table.ggtools').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                /*alert('You clicked on ' + data[0] + "'s row");*/
+            });
+        });
+    }
+</script>

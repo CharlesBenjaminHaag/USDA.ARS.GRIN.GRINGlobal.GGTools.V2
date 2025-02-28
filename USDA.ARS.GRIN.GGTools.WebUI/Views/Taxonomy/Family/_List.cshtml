@@ -1,0 +1,65 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.FamilyViewModel
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title"><i class="nav-icon fas fa-table"></i> Search Results [@Model.RowsAffected]</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results">
+            <table id="data_table_taxonomy_family" class="table table-striped ggtools-table" style=" width:100%;">
+                <thead>
+                    <tr>
+                        <th width="5%">ID</th>
+                        <th>Order Name</th>
+                        <th>Family Name</th>
+                        <th>Subfamily Name</th>
+                        <th>Tribe Name</th>
+                        <th>Subtribe Name</th>
+                        <th style="text-align:center;">Accepted</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollection)
+                    {
+                        <tr>
+                            <td>
+                                @result.ID
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Classification", new { @entityId = result.ClassificationID })">
+                                    @result.ClassificationName
+                                </a>
+                            </td>
+                            <td>
+                                @result.FamilyName
+                            </td>
+                            <td>
+                                @result.SubfamilyName
+                            </td>
+                            <td>
+                                @result.TribeName
+                            </td>
+                            <td>
+                                @result.SubtribeName
+                            </td>
+                            <td style="text-align:center;">
+                                 
+                            </td>
+                            <td style="text-align:right;">
+                                <a href="@Url.Action("Edit", "Family", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

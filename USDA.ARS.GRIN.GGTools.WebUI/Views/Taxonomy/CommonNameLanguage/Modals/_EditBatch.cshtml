@@ -1,0 +1,187 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CommonNameLanguageViewModel
+<div id="modal-taxonomy-common-name-language-edit-batch" class="modal fade" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Batch Edit</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("EditBatch", "CommonNameLanguage", FormMethod.Post, new { id = "frmCommonNameLanguageEditBatch" }))
+                {
+                    <table style="width:100%;">
+                        <tr>
+                            <td>
+                                <div class="icheck-primary">
+                                    @Html.CheckBoxFor(x => x.BatchEditIsSimplifiedNameOptionRequested, new { @id= "check_option_simplified_name" })
+                                    <label for="check_option_simplified_name">Set Simplified Name</label>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <div class="icheck-primary">
+                                        @Html.CheckBoxFor(x => x.BatchEditIsSetCountryOptionRequested, new { @id = "check_option_country" })
+                                        <label for="check_option_country">Set Country</label>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    @Html.DropDownListFor(x => x.BatchEditCountryCode, Model.Countries, new { @class = "form-control" })
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                }
+                </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id="btnSaveCommonNameLanguageBatchEdit" class="btn btn-default float-right" data-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+@{Html.RenderAction("RenderLookupModal", "Literature"); }
+
+<script type="text/javascript">
+    $(document).on("click", "[id='btnSaveCommonNameLanguageBatchEdit']", function () {
+        SaveCommonNameLanguageBatchEdit();
+    });
+
+    function SaveCommonNameLanguageBatchEdit() {
+
+        var link = $("#frmCommonNameLanguageEditBatch").attr("action");
+        var idList = GetSelectedEntityIDs("data_table_taxonomy_common_name_language");
+        var formData = new FormData();
+
+        formData.append("EntityIDList", idList);
+        formData.append("BatchEditIsSimplifiedNameOptionRequested", $("#frmCommonNameLanguageEditBatch #BatchEditIsSimplifiedNameOptionRequested").val());
+        formData.append("BatchEditIsSetCountryOptionRequested", $("#frmCommonNameLanguageEditBatch #BatchEditIsSetCountryOptionRequested").val());
+        formData.append("BatchEditCountryCode", $("#frmCommonNameLanguageEditBatch #BatchEditCountryCode").val());
+        // TODO Additional fields
+
+              $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#tab-content-species-citation-add").html(response);
+
+                    // REFACTOR
+                    var newCitationId = $("#frmEditCitation #Entity_CitationID").val();
+                    var tableName = $("#TableName").val();
+                    var entityId = $("#Entity_ID").val();
+                    SaveSelectedCitation(tableName, entityId, newCitationId);
+                  },
+                error: function () {
+                    alert("Error");
+                }
+            });
+    
+    }
+
+    @*$(document).on("click", "[id='btnSearch']", function () {
+        LookupCitations();
+    });
+
+    function LookupCitations() {
+        var link = '@Url.Action("_Search","Citation")';
+        var formData = new FormData();
+
+        formData.append("SearchEntity.CreatedByCooperatorID", $("#SearchEntity_CreatedByCooperatorID").val());
+        formData.append("SearchEntity.TypeCode", $("#SearchEntity_TypeCode").val());
+        formData.append("SearchEntity.Abbreviation", $("#SearchEntity_Abbreviation").val());
+        formData.append("SearchEntity.CitationTitle", $("#SearchEntity_CitationTitle").val());
+        formData.append("SearchEntity.AuthorName", $("#SearchEntity_AuthorName").val());
+        formData.append("SearchEntity.CitationYear", $("#SearchEntity_CitationYear").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-citation-lookup-search-results").html(response);
+            }
+        });
+    }*@
+
+    $(document).on("click", "[id='btnSaveSelectedCitation']", function () {
+        GetSelectedCitation("N", "data_table_lookup_citations");
+    });
+
+    function GetSelectedCitation(editOption, dataTableName) {
+        var tableName = $("#TableName").val();
+        var entityId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs(dataTableName);
+
+        if (selectedItemIdList.length == 0) {
+            alert("ERROR: NO CITATION SELECTED");
+        }
+        else {
+            SaveSelectedCitation(tableName, entityId, selectedItemIdList);
+        }
+    }
+
+    function SaveSelectedCitation(tableName, entityId, citationId) {
+        var link = '@Url.Action("AddSpeciesCitation","Citation")';
+        var familyId = 0;
+        var genusId = 0;
+        var speciesId = 0;
+        var formData = new FormData();
+
+        //DEBUG
+        //alert("DEBUG TABLE IS " + tableName + " ID IS " + entityId + " CIT ID IS " + citationId);
+
+        formData.append("tableName", tableName);
+        formData.append("entityId", entityId);
+        formData.append("citationId", citationId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                RenderCitationWidget(data.citationId);
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    function RenderCitationWidget(citationId) {
+        var link = '@Url.Action("RenderWidget","Citation")';
+        var formData = new FormData();
+
+        formData.append("entityId", citationId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-citation-widget").html(response);
+                $("#Entity_CitationID").val(citationId);
+            }
+        });
+    }
+
+</script>
+

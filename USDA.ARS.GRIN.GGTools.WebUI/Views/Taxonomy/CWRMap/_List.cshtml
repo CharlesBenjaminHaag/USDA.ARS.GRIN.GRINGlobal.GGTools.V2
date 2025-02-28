@@ -1,0 +1,95 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CWRMapViewModel
+<input type="hidden" id="hfAddNewRecordLink" value="@Url.Action("Add","CWRMap")" />
+<div id="section-search-results" class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">CWR Maps (@Model.DataCollection.Count)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="data_table_taxonomy_cwr_map" class="table table-striped" style=" width:100%;">
+            <thead>
+                <tr>
+                    <th width="5%">ID</th>
+                    <th>Crop Name</th>
+                    <th>Species Name</th>
+                    <th>Crop Common Name</th>
+                    <th>Is Crop</th>
+                    <th>Is Potential</th>
+                    <th>Is Graftstock</th>
+                    <th>Genepool Code</th>
+                    <th>Citation</th>
+                    <th style="text-align:center;">Traits</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollection)
+                {
+                <tr>
+                    <td>
+                        @result.ID
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "CropForCWR", new { entityId = result.CropForCWRID })">
+                            @result.CropForCWRName
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Species", new { entityId = result.SpeciesID })">
+                            @Html.Raw(result.SpeciesName)
+                        </a>
+                    </td>
+                    <td>@result.CropCommonName</td>
+                    <td align="center">@Html.Raw(Model.FormatBoolean(result.IsCrop))</td>
+                    <td align="center">@Html.Raw(Model.FormatBoolean(result.IsPotential))</td>
+                    <td align="center">@Html.Raw(Model.FormatBoolean(result.IsGraftstock))</td>
+                    <td>@result.GenepoolCode</td>
+                    <td>@result.CitationText</td>
+                    <td align="center">
+                        <a href="@Url.Action("Index", "CWRTrait", new { cwrMapId = result.ID })">
+                            [@result.RelatedItemCount]
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "CWRMap", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="section-batch-edit-modal">
+    </div>
+</div>
+<script type="text/javascript">
+     function EditBatch() {
+         var selectedIdList = GetSelectedEntityIDs("data_table_taxonomy_cwr_map");
+        var link = '@Url.Action("RenderBatchEditModal","CWRMap", new { entityIdList = "SELECTED_ID_LIST" })';
+        link = link.replace("SELECTED_ID_LIST", selectedIdList);
+        var formData = new FormData();
+
+        //DEBUG
+        /*alert("ID LIST " + selectedIdList); */
+
+        formData.append("idList", selectedIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-batch-edit-modal").html(response);
+                $("#modal-cwr-map-batch-edit").modal("show");
+            }
+        });
+    }
+</script>

@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "_TEST";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3Login.cshtml";
+}
+
+<h2>_TEST</h2>
+
+<!--OLD-->
+@if (Model.DataCollectionActionGroups.Count > 0)
+{
+    <ul class="timeline timeline-inverse">
+        @foreach (var actionGroup in Model.DataCollectionActionGroups)
+        {
+            <li class="time-label">
+                <span class="bg-aqua">
+                    @actionGroup.DateGroup.ToShortDateString()
+                </span>
+            </li>
+            foreach (var webOrderRequestAction in actionGroup.WebOrderRequestActions)
+            {
+                <li>
+                    <i class="@Model.GetCSSClass(webOrderRequestAction.ActionCode)"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="fa fa-clock-o"></i> @webOrderRequestAction.CreatedDate.ToShortDateString() at @webOrderRequestAction.CreatedDate.ToShortTimeString() </span>
+
+                        <h3 class="timeline-header">
+                            @webOrderRequestAction.ActionTitle
+                            @if (webOrderRequestAction.CreatedByCooperatorID != 1)
+                            {
+                                <a href="#"> by @webOrderRequestAction.CreatedByCooperatorName </a>
+                            }
+                        </h3>
+
+                        <div class="timeline-body">
+                            @if (webOrderRequestAction.ActionCode != "NRR_NOTE")
+                            {
+                                <span>@webOrderRequestAction.ActionDescription</span>
+                            }
+
+                            @if (!String.IsNullOrEmpty(webOrderRequestAction.Note))
+                            {
+                                if (webOrderRequestAction.CreatedByCooperatorID != 1)
+                                {
+                                    <p style="font-style:italic; margin-top:.2em;">
+                                        <strong>@webOrderRequestAction.CreatedByCooperatorName:</strong>
+                                        @webOrderRequestAction.Note
+                                    </p>
+                                }
+                            }
+                        </div>
+
+                        <!-- USE? CBH, 2/6/22 -->
+                        @*<div class="timeline-footer">
+                                <a class="btn btn-default btn-xs">Read more</a>
+                                <a class="btn btn-danger btn-xs">Delete</a>
+                            </div>*@
+                    </div>
+                </li>
+            }
+        }
+        <li>
+            <i class="fa fa-clock-o bg-gray"></i>
+        </li>
+    </ul>
+}

@@ -1,0 +1,111 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemListViewModel
+<style type="text/css">
+    /* Remove default bullets */
+    ul, #myUL {
+        list-style-type: none;
+    }
+
+    /* Remove margins and padding from the parent ul */
+    #myUL {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Style the caret/arrow */
+    .caret {
+        cursor: pointer;
+        user-select: none; /* Prevent text selection */
+    }
+
+        /* Create the caret/arrow with a unicode, and style it */
+        .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+    /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+    .caret-down::before {
+        transform: rotate(90deg);
+    }
+
+    /* Hide the nested list */
+    .nested {
+        display: none;
+    }
+
+    /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+    .active {
+        display: block;
+    }
+</style>
+
+<div class="card card-primary shadow-none">
+    <div class="card-header">
+        <h3 class="card-title">Tabs</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <div id="section-tab-treeview" class="card-body">
+        <ul id="myUL">
+            <li>
+                <span id="tabNode1" class="caret">Tab 1</span>
+                <ul class="nested">
+                    @foreach (var result in Model.DataCollectionLists)
+                    {
+                        <li id="selector-@result.TextValue">
+                            <a href="#" id="@result.TextValue">
+                                @result.TextValue
+                            </a>
+                        </li>
+                    }
+                    @*<li>
+                            <span class="caret">Tea</span>
+                            <ul class="nested">
+                                <li>Black Tea</li>
+                                <li>White Tea</li>
+                                <li>
+                                    <span class="caret">Green Tea</span>
+                                    <ul class="nested">
+                                        <li><a id="link-1" href="#">DEBUG 1</a></li>
+                                        <li><a id="link-2" href="#">DEBUG 2</a></li>
+                                        <li><a id="link-3" href="#">DEBUG 3</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>*@
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var toggler = document.getElementsByClassName("caret");
+    var i;
+
+    for (i = 0; i < toggler.length; i++) {
+        toggler[i].addEventListener("click", function () {
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("caret-down");
+        });
+    }
+
+    $(document).ready(function () {
+
+        $('#myUL li a').click(function (event) {
+            event.preventDefault(); // stop default event to stop reloading of page
+            var myValue = $(this).attr("id");
+            LoadItemsByList(myValue);
+        });
+
+    });
+</script>

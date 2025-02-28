@@ -1,0 +1,174 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.LiteratureViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/GGlogo_BW.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- BEGIN EDIT PAGE MENU -->
+                    <ul class="navbar-nav">
+                        @if (Model.Entity.ID > 0)
+                        {
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="@Url.Action("Add", "Citation", new { literatureId = Model.Entity.ID })" class="nav-link">Add Citation</a>
+                            </li>
+                            Html.RenderAction("_RelatedFoldersMenu", "Folder", new { tableName = Model.TableName, entityId = Model.Entity.ID });
+                        }
+
+                    </ul>
+                    <!-- END EDIT PAGE MENU-->
+                </div>
+                <!-- BEGIN RIGHT-ALIGNED NAV MENU -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    @Html.Partial("~/Views/Shared/_NavbarRight.cshtml")
+                </ul>
+                <!-- END RIGHT-ALIGNED NAV MENU -->
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                @Html.Raw(ViewBag.Title)
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+                    @Html.Partial("~/Views/Taxonomy/Shared/_RevisionHistory.cshtml")
+                    @using (Html.BeginForm("Edit", "Literature", FormMethod.Post, new { id = "frmEdit" }))
+                    {
+                        @Html.HiddenFor(x => x.EventAction)
+                        @Html.HiddenFor(x => x.EventValue)
+                        @Html.HiddenFor(x => x.TableName)
+                        @Html.HiddenFor(x => x.TableCode)
+                        @Html.HiddenFor(x => x.PageTitle)
+                        @Html.HiddenFor(x => x.Entity.ID)
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title">Summary</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Abbreviation</label>
+                                            @Html.TextBoxFor(x => x.Entity.Abbreviation, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Std. Abbreviation</label>
+                                            @Html.TextBoxFor(x => x.Entity.StandardAbbreviation, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Reference Title</label>
+                                        @Html.TextBoxFor(x => x.Entity.ReferenceTitle, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Editor/Author Name</label>
+                                        @Html.TextBoxFor(x => x.Entity.EditorAuthorName, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>Type</label>
+                                        @Html.DropDownListFor(x => x.Entity.LiteratureTypeCode, Model.LiteratureTypes, "NULL", new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label>Pub. Year</label>
+                                        @Html.TextBoxFor(x => x.Entity.PublicationYear, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Publisher Name</label>
+                                        @Html.TextBoxFor(x => x.Entity.PublisherName, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Publisher Location</label>
+                                        @Html.TextBoxFor(x => x.Entity.PublisherLocation, new { @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>URL</label>
+                                        @Html.TextBoxFor(x => x.Entity.URL, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Note</label>
+                                        @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="@Url.Action("Refresh")" class="btn btn-default">Reset</a>
+                                @if (Model.Entity.ID > 0)
+                                {
+                                    <button id="btnDelete" type="button" class="btn btn-danger">
+                                        Delete
+                                    </button>
+                                }
+                                <button type="submit" class="btn btn-primary float-right">Save</button>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.Entity.ID > 0)
+                    {
+                        { Html.RenderAction("_List", "Citation", new { @literatureId = Model.Entity.ID }); }
+                    }
+
+                    @Html.Partial("~/Views/Shared/Modals/_NoteLookup2.cshtml")
+                    @Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+                    @{Html.RenderAction("_Edit", "Folder"); }
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            Init();
+                            /*InitializeCKEditor();*/
+                        });
+
+                        function Init() {
+
+                        }
+                    </script>
+                    <br />
+                </div>
+            </div>
+
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+</body>
+</html>
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")

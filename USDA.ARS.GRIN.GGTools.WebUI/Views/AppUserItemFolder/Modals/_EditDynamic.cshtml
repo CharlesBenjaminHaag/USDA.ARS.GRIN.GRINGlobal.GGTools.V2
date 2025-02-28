@@ -1,0 +1,86 @@
+﻿<div class="modal fade text-sm" id="modal-dynamic-folder-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-folder"></i>
+                    Create Dynamic Folder
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Folder Title</label>
+                            <input id="txtFolderTitle" name="SearchEntity.SearchTitle" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input id="txtFolderDescription" name="SearchEntity.SearchDescription" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id="btnSaveNewDynamicFolder" type="button" class="btn btn-default float-right" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+*************************************************************************************************
+Modal that appears if no record is selected for folder addition.
+*************************************************************************************************
+-->
+<div class="modal fade" id="modal-validation-warning" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">No Record(s) Selected</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please first select at least one record to add to the folder.</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light float-right" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+    });
+
+    $("#btnOpenDynamicFolderModal").click(function () {
+        var tableName = $("#TableName").val();
+        var dataTableName = "data_table_" + tableName;
+        var selectedItemIdList = GetSelectedEntityIDs(dataTableName);
+        $("#modal-dynamic-folder-edit").modal("show");
+    });
+
+    $("#btnSaveNewDynamicFolder").click(function () {
+        SaveNewDynamicFolder();
+    });
+
+    function SaveNewDynamicFolder() {
+        $("#EventAction").val("SEARCH");
+        $("#EventValue").val("SAVE");
+        $("#frmMain").submit();
+    }
+
+    function ConfirmFolderSave(folderTitle) {
+        $("#new-dynamic-folder-name").html(folderTitle);
+        $("#alert-dynamic-folder-confirmation").show();
+    }
+</script>
+

@@ -1,0 +1,173 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+@switch (Model.Entity.Rank.ToUpper())
+{
+    case "SUBSPECIES":
+        <div class="col-md-4">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSpecies.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Subspecies Name</label>
+                @Html.HiddenFor(x => x.Entity.Name)
+                @Html.HiddenFor(x => x.Entity.SpeciesName)
+
+                <div class="input-group">
+                    @Html.TextBoxFor(x => x.Entity.SubspeciesName, new { @class = "form-control" })
+                    <span class="input-group-append">
+                        <a id="btnSetAcceptedOn" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-down"></i> Not Accepted</a>
+                        <a id="btnSetAcceptedOff" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-up"></i> Accepted</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSubspecies.cshtml")
+        </div>
+        break;
+    case "VARIETY":
+        <div class="col-md-4">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorForma.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Subspecies Name</label>
+                @Html.HiddenFor(x => x.Entity.Name)
+                @Html.HiddenFor(x => x.Entity.SpeciesName)
+                @Html.TextBoxFor(x => x.Entity.SubspeciesName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSubspecies.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Variety Name</label>
+                <div class="input-group">
+                    @Html.TextBoxFor(x => x.Entity.VarietyName, new { @class = "form-control" })
+                    <span class="input-group-append">
+                        <a id="btnSetAcceptedOn" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-down"></i> Not Accepted</a>
+                        <a id="btnSetAcceptedOff" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-up"></i> Accepted</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorVariety.cshtml")
+        </div>
+        break;
+    case "SUBVARIETY":
+        <div class="col-md-4">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSubvariety.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Subspecies Name</label>
+                @Html.HiddenFor(x => x.Entity.Name)
+                @Html.HiddenFor(x => x.Entity.SpeciesName)
+                @Html.TextBoxFor(x => x.Entity.SubspeciesName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSubspecies.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Variety Name</label>
+                <div class="input-group">
+                    @Html.TextBoxFor(x => x.Entity.VarietyName, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorForma.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Subvariety Name</label>
+                <div class="input-group">
+                    @Html.TextBoxFor(x => x.Entity.SubvarietyName, new { @class = "form-control" })
+                    <span class="input-group-append">
+                        <a id="btnSetAcceptedOn" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-down"></i> Not Accepted</a>
+                        <a id="btnSetAcceptedOff" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-up"></i> Accepted</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSubvariety.cshtml")
+        </div>
+        break;
+    case "FORMA":
+        <div class="col-md-4">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSpecies.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Subspecies Name</label>
+                @Html.HiddenFor(x => x.Entity.Name)
+                @Html.HiddenFor(x => x.Entity.SpeciesName)
+                @Html.TextBoxFor(x => x.Entity.SubspeciesName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSubspecies.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Variety Name</label>
+                <div class="input-group">
+                    @Html.TextBoxFor(x => x.Entity.VarietyName, new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorVariety.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Subvariety Name</label>
+                <div class="input-group">
+                    @Html.TextBoxFor(x => x.Entity.SubvarietyName, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSubvariety.cshtml")
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Forma Name</label>
+                <div class="input-group">
+                    @Html.TextBoxFor(x => x.Entity.FormaName, new { @class = "form-control" })
+                    <span class="input-group-append">
+                        <a id="btnSetAcceptedOn" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-down"></i> Not Accepted</a>
+                        <a id="btnSetAcceptedOff" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-up"></i> Accepted</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorForma.cshtml")
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Rank Type</label>
+                @Html.DropDownListFor(x => x.Entity.FormaRankType, Model.FormaRankTypes, "Select value", new { @class = "form-control" })
+            </div>
+        </div>
+        break;
+default:
+        <div class="col-md-3">
+            @Html.Partial("~/Views/Taxonomy/Species/Components/_AuthorityEditorSpecies.cshtml")
+        </div>
+        break;
+}
+<script type="text/javascript">
+    $(document).on("click", "[id*='btnOpenAuthorityLookupModal']", function () {
+        var selectedId = $(this).attr('id');
+        var value = $(this).data("ggtools-value");
+        $("#hfAuthorLookupNameFieldName").val(value);
+        OpenLookupModal("author");
+    });
+</script>

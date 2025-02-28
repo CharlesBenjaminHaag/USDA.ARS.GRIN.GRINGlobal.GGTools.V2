@@ -1,0 +1,105 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.LiteratureViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "Literature", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.Entity.ID)
+    <div class="card card-default">
+        <div class="card-header">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal-note-lookup">
+                    <i class="fa fa-search margin-r-5"></i>
+                    Notes
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Abbreviation</label>
+                        @Html.TextBoxFor(x => x.Entity.Abbreviation, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Std. Abbreviation</label>
+                        @Html.TextBoxFor(x => x.Entity.StandardAbbreviation, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label>Reference Title</label>
+                    @Html.TextBoxFor(x => x.Entity.ReferenceTitle, new { @class = "form-control" })
+                </div>
+                <div class="col-md-3">
+                    <label>Editor/Author Name</label>
+                    @Html.TextBoxFor(x => x.Entity.EditorAuthorName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Type</label>
+                    @Html.DropDownListFor(x => x.Entity.TypeCode, Model.LiteratureTypes, "NULL", new { @class = "form-control" })
+                </div>
+                <div class="col-md-1">
+                    <label>Pub. Year</label>
+                    @Html.TextBoxFor(x => x.Entity.PublicationYear, new { @class = "form-control" })
+                </div>
+                <div class="col-md-3">
+                    <label>Publisher Name</label>
+                    @Html.TextBoxFor(x => x.Entity.PublisherName, new { @class = "form-control" })
+                </div>
+                <div class="col-md-3">
+                    <label>Publisher Location</label>
+                    @Html.TextBoxFor(x => x.Entity.PublisherLocation, new { @class = "form-control" })
+                </div>
+                <div class="col-md-3">
+                    <label>URL</label>
+                    @Html.TextBoxFor(x => x.Entity.URL, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Note</label>
+                    @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="@Url.Action("Refresh")" class="btn btn-warning">Cancel</a>
+            @if (Model.Entity.ID > 0)
+            {
+                <button id="btnDelete" type="button" class="btn btn-danger">
+                    Delete
+                </button>
+            }
+            <button type="submit" class="btn btn-primary float-right">Save</button>
+        </div>
+    </div>
+}
+
+
+@if (Model.Entity.ID > 0)
+{
+    { Html.RenderAction("_List", "Citation", new { @literatureId = Model.Entity.ID }); }
+}
+
+@Html.Partial("~/Views/Shared/Modals/_NoteLookup2.cshtml")
+@Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+    }
+</script>

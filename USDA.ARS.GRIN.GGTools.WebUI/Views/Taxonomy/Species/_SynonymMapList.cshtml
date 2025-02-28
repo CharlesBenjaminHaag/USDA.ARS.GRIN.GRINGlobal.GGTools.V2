@@ -1,0 +1,45 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SynonymMapViewModel
+<table id="data-table-species-synonym-maps" class="table table-responsive table-striped ggtools" style="width:100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Species Name</th>
+            <th>Relationship</th>
+            <th>ID</th>
+            <th>Species Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var result in Model.DataCollectionSpeciesSynonymMaps)
+        {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>@result.SpeciesIDSubject</td>
+                <td>
+                    <a href="@Url.Action("Edit","Species", new { entityId = result.SpeciesIDSubject })">
+                        @Html.Raw(result.SpeciesFullNameSubject)
+                    </a>
+                </td>
+                <td>@result.SynonymDescription)</td>
+                <td>@result.SpeciesIDPredicate</td>
+                <td>
+                    <a href="@Url.Action("Edit","Species", new { entityId = result.SpeciesIDPredicate })">
+                        @Html.Raw(result.SpeciesFullNamePredicate)
+                    </a>
+                </td>
+                <td>
+                    <input type="button" id="@result.ID" class="btn btn-danger btn-sm pull-right ggtools-delete" value="Delete" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-species-synonym-maps");
+    });
+</script>

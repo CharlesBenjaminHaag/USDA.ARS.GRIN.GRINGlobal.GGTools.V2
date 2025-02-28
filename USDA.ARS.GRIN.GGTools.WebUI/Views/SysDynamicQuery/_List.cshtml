@@ -1,0 +1,74 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDynamicQueryViewModel
+<table id="data_table_app_user_item_folder" class="table table-striped folder-table" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>
+                <i class="fa fa-star"></i>
+            </th>
+            <th><i class="fa fa-users"></i></th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created</th>
+            <th>By</th>
+            @*<th>Modified</th>
+                <th>By</th>*@
+            @*<th style="text-align:center;">Items</th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var folder in Model.DataCollectionAppUserItemFolders)
+        {
+            <tr>
+                <td>
+                    @folder.ID
+                </td>
+                <td>
+                    @folder.ID
+                </td>
+                <td class="mailbox-star">
+                    @if (folder.IsFavorite == "Y")
+                    {
+                        <a href="#"><i class="fa fa-star text-yellow"></i></a>
+                    }
+                </td>
+                <td>
+                    @if (folder.IsShared == "Y")
+                    {
+                        <a href="#"><i class="fa fa-users text-blue"></i></a>
+                    }
+                </td>
+                <td>
+                    @folder.FolderName
+                </td>
+                <td>@folder.Description</td>
+                <td>@folder.CreatedDate.ToShortDateString()</td>
+                <td>@folder.CreatedByCooperatorName</td>
+                @*<td>
+                        @if (folder.ModifiedDate > DateTime.MinValue)
+                        {
+                            @folder.ModifiedDate.ToShortDateString()
+                        }
+                    </td>
+                    <td>@folder.ModifiedByCooperatorName</td>*@
+                @*<td style="text-align:center;">
+                        <span class="badge bg-gray" style="font-size:11pt;">
+                            @folder.TotalItems
+                        </span>
+                    </td>*@
+                <td style="text-align:right;">
+                    <a href="@Url.Action("Edit", "SysDynamicQuery", new { entityId = folder.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data_table_app_user_item_folder");
+    });
+</script>

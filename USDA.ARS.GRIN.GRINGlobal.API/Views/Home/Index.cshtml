@@ -1,0 +1,64 @@
+﻿@{ ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutUSWDSInterior.cshtml"; 
+}
+
+<div class="usa-section">
+    <div class="grid-container">
+        <div class="grid-row grid-gap">
+            <div class="usa-layout-docs__sidenav desktop:grid-col-2">
+                <nav aria-label="Secondary navigation">
+                    <ul class="usa-sidenav">
+                        <li class="usa-sidenav__item"><a href="">Home</a></li>
+                        @*<li class="usa-sidenav__item">
+                                <a href="" class="usa-current">CGC</a>
+                                <ul class="usa-sidenav__sublist">
+                                    <li class="usa-sidenav__item"><a href="#section-overview">Overview</a></li>
+                                    <li class="usa-sidenav__item"><a href="#section-directory">Committees</a></li>
+                                    <li class="usa-sidenav__item"><a href="#section-briefings">Chair Briefings</a></li>
+
+                                </ul>
+                            </li>*@
+
+                    </ul>
+                </nav>
+            </div>
+            <main class="usa-layout-docs__main desktop:grid-col-10 usa-prose usa-layout-docs" id="main-content">
+                @*<h1>National Genetic Resources Advisory Council (NGRAC)</h1>*@
+                
+                <h2 id="bkmk-6">Overview</h2>
+                <p>This API provides programmatic access to all GRIN-Global accessions. All data is returned in <a href="https://ggce.genesys-pgr.org/docs/manual/accession/mcpd/" target="_blank">MCPD format.</a></p>
+
+                <h2 id="bkmk-6">API Endpoints</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>URL</td>
+                            <td>Verb</td>
+                            <td>Purpose</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>/api/accession/get/{offset}{limit}</td>
+                            <td>GET</td>
+                            <td>Fetches a batch of MCPD-formatted accession records, beginning at the offset, and returning a batch size based on the specified limit.</td>
+                        </tr>
+                        <tr>
+                            <td>/api/accession/get/{piNumber}</td>
+                            <td>GET</td>
+                            <td>Fetches all accessions that match all or part of a specified PI number.</td>
+                        </tr>
+                        <tr>
+                            <td>/api/accession/get/{instCode}</td>
+                            <td>GET</td>
+                            <td>Fetches all accessions linked to a specified institution code.</td>
+                        </tr>
+                       
+                    </tbody>
+                </table>
+
+            </main>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,61 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<input type="text" id="hf_current_filter_web_order_request_status" />
+
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-filter"></i>
+            Current Status
+        </h3>
+    </div>
+    <div class="card-body">
+        <div id="section-current-status">
+            @foreach (var result in Model.WebOrderRequestStatuses)
+            {
+                string checkboxBackgroundColorStyle = "";
+
+                switch(result.Value)
+                {
+                    case "ACCEPTED":
+                        checkboxBackgroundColorStyle = "color:white;background-color:#00a65a;";
+                        break;
+                    case "CANCELED":
+                        checkboxBackgroundColorStyle = "color:white;background-color:#f39c12;";
+                        break;
+                    case "SUBMITTED":
+                        checkboxBackgroundColorStyle = "color:white;background-color:#605ca8;";
+                        break;
+                    case "MIXED":
+                        checkboxBackgroundColorStyle = "color:white;background-color:blue;";
+                        break;
+                    case "NRR_FLAG":
+                        checkboxBackgroundColorStyle = "color:white;background-color:red;";
+                        break;
+                    case "NRR_HOLD":
+                        checkboxBackgroundColorStyle = "color:white;background-color:mediumvioletred;";
+                        break;
+                    case "NRR_HOLD_CTRY":
+                        checkboxBackgroundColorStyle = "color:white;background-color:indigo;";
+                        break;
+                    default:
+                        checkboxBackgroundColorStyle = "background-color:transparent;";
+                        break;
+                }
+                <label class="button-checkbox" style="@checkboxBackgroundColorStyle">
+                    <input id="filter-current-status-@result.Value" type="checkbox" data-ggtools-action="@result.Value" />
+                    <span>@result.Text</span>
+                </label>
+            }
+        </div>
+    </div>  
+    <div class="card-footer">
+        <label>
+            <input type="checkbox" id="ckSelectDeselectAllWebOrderRequestStatuses" />
+            <span id="label-current_filter_web_order_request_status">Select All</span>
+        </label>
+    </div>
+</div>
+<script type="text/javascript">
+
+
+</script>

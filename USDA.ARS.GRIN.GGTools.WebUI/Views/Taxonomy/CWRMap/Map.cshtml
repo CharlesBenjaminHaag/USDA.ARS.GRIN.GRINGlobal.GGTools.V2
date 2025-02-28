@@ -1,0 +1,297 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CWRMapViewModel
+@{
+    ViewBag.Title = "Map";
+    Layout = "~/Views/Shared/_LayoutAdminLTE.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h4>Crop For CWR</h4>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Crop For CWR</label>
+                            @Html.DropDownListFor(x => x.Entity.CropForCWRID, Model.CropsForCWR, "Select value", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group form-horizontal">
+                            <label>Genepool Code</label>
+                            @Html.DropDownListFor(x => x.Entity.GenepoolCode, Model.GenepoolCodes, "All Genepool Codes", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div id="section-common-name" class="col-md-3">
+                        <div class="form-group form-horizontal">
+                            <label>Crop Common Name</label>
+                            @Html.TextBoxFor(x => x.Entity.CropCommonName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h4>Species</h4>
+                <div class="mailbox-controls">
+                </div>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" id="txtLookupSpeciesName" class="form-control" />
+                            <span class="input-group-addon">
+                                <input id="cbxLookupIsAcceptedName" type="checkbox">
+                                Accepted
+                            </span>
+                            <span class="input-group-btn">
+                                <button type="button" id="btnLookupSpecies" class="btn btn-default btn-flat"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="section-species-lookup-search-results">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h4>CWR Maps</h4>
+                <div class="btn-group pull-right">
+                    <button id="btnGenerateMaps" type="button" class="btn btn-success pull-right disabled" data-toggle="modal" data-target="#modal-note-lookup">Generate Maps</button>
+                    <div class="btn-group">
+                        <button id="btnOpenFolderModal" type="button" class="btn btn-default"><i class="fa fa-folder"></i></button>
+                    </div>
+                </div>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div id="section-cwr-maps">
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+@{Html.RenderAction("GetEditModal", "SysFolder", new { sysTableName = Model.TableName }); }
+
+<script type="text/javascript">
+
+/*
+* ===================================================================================================
+* SPECIES SEARCH
+* ===================================================================================================
+*/
+    $(document).on("click", "[id='btnLookupSpecies']", function () {
+        SearchSpecies();
+    });
+
+    function SearchSpecies() {
+        var link = '@Url.Action("Lookup","Species")';
+        var lookupSpeciesName = $("#txtLookupSpeciesName").val();
+
+        var formData = new FormData();
+
+        formData.append("SpeciesName", lookupSpeciesName);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-lookup-search-results").html(response);
+                $("#btnGenerateMaps").removeClass("disabled");
+            }
+        });
+    }
+
+    function SelectSpecies(ID, speciesName) {
+        $('#modal-species-lookup').modal('hide');
+        $("#Entity_SpeciesName").val(speciesName);
+        $("#Entity_SpeciesID").val(ID);
+    }
+
+/*
+* ===================================================================================================
+* CWR MAP
+* ===================================================================================================
+*/
+    $(document).on("click", "[id='btnGenerateMaps']", function () {
+        GenerateMaps();
+    });
+
+    function GenerateMaps() {
+        var link = '@Url.Action("Add","CWRMap")';
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-species-lookup");
+        var cropForCwrId = $("#Entity_CropForCWRID").val();
+        var genepoolCode = $("#Entity_GenepoolCode").val();
+        var cropCommonName = $("#Entity_CropCommonName").val();
+        var folderName = $("#txtFolderTitle").val();
+        var folderCategory = $("#Entity_Category").val();
+        var folderDescription = $("#txtFolderDescription").val();
+
+        var formData = new FormData();
+
+        if (typeof selectedItemIdList != 'undefined') {
+            formData.append("IDList", selectedItemIdList);
+        }
+
+        formData.append("CropForCWRID", cropForCwrId);
+        formData.append("GenepoolCode", genepoolCode);
+        formData.append("CropCommonName", cropCommonName);
+        formData.append("FolderTitle", folderName);
+        formData.append("FolderCategory", folderCategory);
+        formData.append("FolderDescription", folderDescription);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+                $("#section-cwr-maps").html(result);
+                InitDataTable("data-table-cwr-map");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+    
+
+    /*
+     * ===============================================================================
+     * FOLDER MODAL
+     * ===============================================================================
+     */
+    $("#btnOpenFolderModal").click(function () {
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-cwr-map");
+        $("#modal-folder-edit").modal("show");
+    });
+
+    $("#btnSaveFolder").click(function () {
+        SaveFolder(0);
+    });
+
+    function SaveFolder(folderId) {
+        var link = '@Url.Action("Add", "Folder")';
+        var tableName = $("#TableName").val();
+        var folderName = $("#txtFolderTitle").val();
+        var folderCategory = $("#Entity_Category").val();
+        var folderNewCategory = $("#txtFolderNewCategory").val();
+        var folderDescription = $("#txtFolderDescription").val();
+
+        if ($('#cbxIsFavorite').prop('checked') == true) {
+            isFavorite = true;
+        }
+
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-cwr-map");
+        var formData = new FormData();
+
+        if (typeof selectedItemIdList != 'undefined') {
+            formData.append("IDList", selectedItemIdList);
+        }
+
+        if ($('#cbxIsFavorite').prop('checked') == true) {
+            formData.append("IsFavorite", true);
+        }
+
+        if ($('#cbxIsShared').prop('checked') == true) {
+            formData.append("IsShared", true);
+        }
+
+        formData.append("FolderID", folderId);
+        formData.append("TableName", tableName);
+        formData.append("FolderName", folderName);
+        formData.append("FolderType", tableName);
+        formData.append("Category", folderCategory);
+        formData.append("NewCategory", folderNewCategory);
+        formData.append("Description", folderDescription);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+                //window.location.href = originalLink;
+            },
+            error: function () {
+                alert("Error in ApplyCitation()");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    function SaveFolderItems(folderId) {
+        var link = '@Url.Action("AddItems", "Folder")';
+        var tableName = $("#TableName").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-cwr-map");
+        var formData = new FormData();
+
+        formData.append("FolderID", folderId);
+        formData.append("TableName", tableName);
+
+        if (typeof selectedItemIdList != 'undefined') {
+            formData.append("IDList", selectedItemIdList);
+        }
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    function GetSelectedEntityIDs(tableName) {
+        var table = $('#' + tableName).DataTable();
+        var ids = $.map(table.rows('.selected').data(), function (item) {
+            return item[0]
+        });
+        console.log(ids)
+        return ids;
+    }
+
+
+</script>

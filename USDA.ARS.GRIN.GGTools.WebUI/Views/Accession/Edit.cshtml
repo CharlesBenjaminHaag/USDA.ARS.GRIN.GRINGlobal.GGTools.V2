@@ -1,0 +1,149 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.AccessionViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/GGlogo_BW.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- BEGIN EDIT PAGE MENU -->
+                    <ul class="navbar-nav">
+                        @if (Model.Entity.ID > 0)
+                        {
+                            Html.RenderAction("RenderRelatedFoldersMenu", "AppUserItemFolder", new { sysTableName = Model.TableName, entityId = Model.Entity.ID });
+                        }
+
+                    </ul>
+                    <!-- END EDIT PAGE MENU-->
+                </div>
+                <!-- BEGIN RIGHT-ALIGNED NAV MENU -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    @if (Model.Entity.ID > 0)
+                    {
+                        string url = String.Format("https://training.ars-grin.gov/gringlobal/taxon/cwrcropdetail?id={0}&type=crop", Model.Entity.ID);
+                        <li id="nav-item-view-website" class="nav-item">
+                            <a class="nav-link" href="@url">
+                                <i class="far fa-globe"></i>
+                                View on Website
+                            </a>
+                        </li>
+                    }
+                    @Html.Partial("~/Views/Shared/_NavbarRight.cshtml")
+                </ul>
+                <!-- END RIGHT-ALIGNED NAV MENU -->
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                @Html.Raw(ViewBag.Title)
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+
+
+                    <div class="card card-primary card-tabs">
+                        <div class="card-header p-0 pt-1">
+                            <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tab-detail" data-toggle="pill" href="#detail" role="tab" aria-controls="detail" aria-selected="true">Detail</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-inventory" data-toggle="pill" href="#inventory" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Inventory</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-actions" data-toggle="pill" href="#actions" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Actions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-ipr" data-toggle="pill" href="#ipr" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">IPR</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-pedigree" data-toggle="pill" href="#pedigree" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Pedigree</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-source" data-toggle="pill" href="#source" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Source</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="custom-tabs-one-tabContent">
+                                <div class="tab-pane fade show active" id="detail" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                    <h3>DETAIL HERE</h3>
+                                </div>
+                                <div class="tab-pane fade" id="inventory" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                                    <h3>INVENTORY</h3>
+                                </div>
+                                <div class="tab-pane fade" id="actions" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+                                    <h3>ACTIONS</h3>
+                                </div>
+                                <div class="tab-pane fade" id="ipr" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+                                    <h3>IPR</h3>
+                                </div>
+                                <div class="tab-pane fade" id="pedigree" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+                                    <h3>PEDIGREE</h3>
+                                </div>
+                                <div class="tab-pane fade" id="source" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+                                    <h3>SOURCE</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    @using (Html.BeginForm("Edit", "Accession", FormMethod.Post, new { id = "frmEdit" }))
+                    {
+                        @Html.HiddenFor(x => x.PageTitle)
+                        @Html.HiddenFor(x => x.EventAction)
+                        @Html.HiddenFor(x => x.EventValue)
+                        @Html.HiddenFor(x => x.TableName)
+                        @Html.HiddenFor(x => x.TableCode)
+                        @Html.HiddenFor(x => x.Entity.ID)
+                        @Html.HiddenFor(x => x.Entity.RelatedItemCount)
+                        @Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+
+
+                    }
+
+
+                    @Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+                    @{Html.RenderAction("GetEditModal", "SysFolder", new { sysTableName = Model.TableName }); }
+                </div>
+            </div>
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+ 
+
+</script>
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")

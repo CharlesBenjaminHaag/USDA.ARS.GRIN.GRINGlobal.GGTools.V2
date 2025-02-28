@@ -1,0 +1,62 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysGroupViewModel
+<table id="data_table_sys_permission" class="table table-striped ggtools-table" style=" width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th width="5%">ID</th>
+            <th>Table</th>
+            <th>Tag</th>
+            <th>Enabled</th>
+            <th>Create</th>
+            <th>Read</th>
+            <th>Update</th>
+            <th>Delete</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollectionSysPermission)
+        {
+        <tr>
+            <td>
+                @result.ID
+            </td>
+            <td>
+                @result.ID
+            </td>
+            <td>
+                @result.TableName
+            </td>
+            <td>
+                @result.PermissionTag
+            </td>
+            <td>
+                @Html.Raw(Model.FormatBoolean(result.IsEnabled))
+            </td>
+            <td>
+                <select id="@result.ID">
+                    <option value="A">Allow</option>
+                    <option value="A">Deny</option>?
+                </select>
+                @result.CreatePermission
+            </td>
+            <td>
+                @result.ReadPermission
+            </td>
+            <td>
+                @result.UpdatePermission
+            </td>
+            <td>
+                @result.DeletePermission
+            </td>
+            <td></td>
+        </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableSingleSelect("data_table_sys_permission");
+    });
+</script>
+

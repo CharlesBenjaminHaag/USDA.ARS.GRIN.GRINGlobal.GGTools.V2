@@ -1,0 +1,54 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CropForCWRViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("Search", "CropForCWR", FormMethod.Post, new { id = "frmMain" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.AuthenticatedUserCooperatorID)
+    @Html.HiddenFor(x => x.ItemIDList)
+    @Html.Partial("~/Views/Taxonomy/CropForCWR/_Detail.cshtml")
+}
+
+<div id="section-search-results">
+    @Html.Partial("~/Views/Taxonomy/CropForCWR/_List.cshtml")
+</div>
+
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+
+<script type="text/javascript">
+
+    //$(document).keypress(function (event) {
+    //    var keycode = (event.keyCode ? event.keyCode : event.which);
+    //    if (keycode == '13') {
+    //        $("#btnSearch").click();
+    //    }
+    //});
+
+    $(document).ready(function () {
+        Init();
+        SetExtendedFields();
+    });
+
+    function Init() {
+    }
+
+    $(document).on("click", "[id='btnSearch']", function () {
+        $("body").addClass("submit-progress-bg");
+        $(".submit-progress").removeClass("hidden");
+
+    });
+
+    function Search() {
+
+        $("body").removeClass("submit-progress-bg");
+        $(".submit-progress").addClass("hidden");
+    }
+</script>

@@ -1,0 +1,531 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@Html.HiddenFor(x => x.ActionEmailFrom)
+
+<!-- Checkbox selector styles -->
+<style>
+    .button-checkbox {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        cursor: pointer;
+        margin-bottom: 10px;
+        transition: background-color 0.3s;
+    }
+
+        .button-checkbox:hover {
+            background-color: #e9e9e9;
+        }
+
+        .button-checkbox input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .button-checkbox label {
+            margin: 0;
+            vertical-align: middle;
+        }
+</style>
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.Partial("~/Views/WebOrderRequest/Components/_CurrentStatusFilter.cshtml")
+        @Html.Partial("~/Views/WebOrderRequest/Components/_MostRecentActionFilter.cshtml")
+    </div>
+    
+    <div class="col-md-9">
+        <input type="hidden" id="hf_current_filter_time_frame" />
+        <div class="card card-default card-tabs">
+            <div id="section-time-frame" class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                    <li class="nav-item" id="filter-time-frame-1D">
+                        <a class="nav-link active" data-ggtools-action="1D" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Today</a>
+                    </li>
+                    <li class="nav-item" id="filter-time-frame-3D">
+                        <a class="nav-link" data-ggtools-action="3D" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">The Last 3 Days</a>
+                    </li>
+                    <li class="nav-item" id="filter-time-frame-7D">
+                        <a class="nav-link" data-ggtools-action="7D" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">This Week</a>
+                    </li>
+                    <li class="nav-item" id="filter-time-frame-30D">
+                        <a class="nav-link" data-ggtools-action="30D" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">This Month</a>
+                    </li>
+                    <li class="nav-item" id="filter-time-frame-60D">
+                        <a class="nav-link" data-ggtools-action="60D" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">The Last 2 Months</a>
+                    </li>
+                    <li class="nav-item" id="filter-time-frame-90D">
+                        <a class="nav-link" data-ggtools-action="90D" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">The Last 3 Months</a>
+                    </li>
+                    <li class="nav-item" id="filter-time-frame-180D">
+                        <a class="nav-link" data-ggtools-action="180D" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">The Last 6 Months</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div id="web-order-request-overlay" class="overlay-wrapper">
+                    <div class="overlay">
+                        <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                        <div class="text-bold pt-2">Loading...</div>
+                    </div>
+                </div>
+                <div class="tab-content" id="section-web-order-request-list">
+
+
+
+                </div>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+</div>
+
+<!-- ****************************************** BEGIN EMAIL MODAL *******************************************************-->
+<div class="modal fade" id="modal-email" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    <span id="section-modal-title-event-value"></span> <span id="section-modal-title-web-order-request-id"></span>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-modal-email-content" class="modal-body">
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="btnSubmitReview" type="button" class="btn btn-default" data-ggtools-action="@Model.EventAction" data-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ****************************************** END EMAIL MODAL *******************************************************-->
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#hf_current_filter_time_frame").val("1D");
+        LoadWebOrderRequestList();
+        $("#web-order-request-overlay").hide();
+    });
+
+    document.addEventListener('change', function (event) {
+        var valueArrayCurrentStatuses = [];
+        var valueArrayMostRecentActions = [];
+        var actionCode = "";
+        var controlId = event.target.id;
+
+        if (event.target.matches('input[type="checkbox"][id^="filter-"]')) {
+            GetSelectedValues("section-current-status","hf_current_filter_web_order_request_status");
+            GetSelectedValues("section-most-recent-action","hf_current_filter_most_recent_action");
+            LoadWebOrderRequestList();
+        }
+
+        // If the user checks or unchecks an individual filter, reset the corresponding "select all"
+        // filter.
+        if (controlId.includes("filter-current-status")) {
+            $('#ckSelectDeselectAllWebOrderRequestStatuses').prop('checked', false);
+            $('#label-current_filter_web_order_request_status').html('Select All');
+        }
+
+    });
+
+    $('#section-time-frame ul.nav li').on('click', function () {
+        var selectedTimeFrame = $(this).attr('id').replace('filter-time-frame-','');
+        $("#hf_current_filter_time_frame").val(selectedTimeFrame);
+        console.log("DEBUG SEL TIME FRAME IS " + selectedTimeFrame);
+        LoadWebOrderRequestList();
+    });
+
+    function GetSelectedValues(listName, hiddenFieldName) {
+        var valueArray = [];
+
+        $("#" + listName + " input:checked").each(function () {
+            var id = $(this).attr("id");
+            var actionCode = $(this).data("ggtools-action");
+            valueArray.push(actionCode);
+        });
+        $("#"+ hiddenFieldName).val(valueArray);
+    }
+
+    // Populate the list of web order requests based on the filters currently
+    // stored in hidden fields.
+    function LoadWebOrderRequestList() {
+        var link = '@Url.Action("ExplorerList","WebOrderRequest")';
+
+        // Get all active filters.
+        var timeFrame = $("#hf_current_filter_time_frame").val();
+        var statusList = $("#hf_current_filter_web_order_request_status").val();
+        var mostRecentActionList = $("#hf_current_filter_most_recent_action").val();
+        var assignedTo = "";
+
+        var formData = new FormData();
+        
+        formData.append("SearchEntity.TimeFrame", timeFrame);
+        formData.append("SearchEntity.StatusList", statusList);
+        formData.append("SearchEntity.MostRecentActionList", mostRecentActionList);
+
+        $("#section-overlay-web-order-request-list").show();
+
+        $("#web-order-request-overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-web-order-request-list").html(response);
+                $("#section-overlay-web-order-request-list").hide();
+                InitWebOrderRequestDataTable("data-table-web-order-requests");
+                $("#web-order-request-overlay").hide();
+            }
+        });
+    }
+
+    function LoadWebOrderRequest(id) {
+    var selectedTab = GetSelectedTab();
+
+    $("#Entity_ID").val(id);
+
+    switch (selectedTab) {
+        case "tab-web-order-request-detail":
+            LoadWebOrderRequestDetail(id);
+            break;
+        case "tab-web-order-request-timeline":
+            LoadWebOrderRequestTimeline(id);
+            break;
+        case "tab-web-order-request-notes":
+            LoadWebOrderRequestNotes(id);
+            break;
+        case "tab-web-order-request-order-request":
+            LoadWebOrderRequestOrderRequest(id);
+            break;
+    }
+}
+
+    function LoadWebOrderRequestDetail(webOrderRequestId) {
+    var link = '@Url.Action("ExplorerDetail","WebOrderRequest", new { webOrderRequestId = "WEB_ORDER_REQUEST_ID" })';
+    link = link.replace("WEB_ORDER_REQUEST_ID", webOrderRequestId);
+
+    var formData = new FormData();
+    formData.append("webOrderRequestId", webOrderRequestId);
+
+    $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            $("#tab-content-web-order-request").html(response);
+        }
+    });
+    //tab-web-order-request-detail
+}
+
+    function LoadWebOrderRequestTimeline(webOrderRequestId) {
+    var link = '@Url.Action("ExplorerTimeline","WebOrderRequest", new { webOrderRequestId = "WEB_ORDER_REQUEST_ID" })';
+    link = link.replace("WEB_ORDER_REQUEST_ID", webOrderRequestId);
+
+    var formData = new FormData();
+    formData.append("webOrderRequestId", webOrderRequestId);
+
+    $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            $("#tab-content-web-order-request").html(response);
+        }
+    });
+}
+
+    function LoadWebOrderRequestNotes(webOrderRequestId) {
+    var link = '@Url.Action("ExplorerNotes","WebOrderRequest", new { webOrderRequestId = "WEB_ORDER_REQUEST_ID" })';
+    link = link.replace("WEB_ORDER_REQUEST_ID", webOrderRequestId);
+
+    var formData = new FormData();
+    formData.append("webOrderRequestId", webOrderRequestId);
+
+    $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            $("#tab-content-web-order-request").html(response);
+        }
+    });
+}
+
+    function LoadWebOrderRequestOrderRequest(webOrderRequestId) {
+    var link = '@Url.Action("_Get","OrderRequest", new { webOrderRequestId = "WEB_ORDER_REQUEST_ID" })';
+    link = link.replace("WEB_ORDER_REQUEST_ID", webOrderRequestId);
+
+    var formData = new FormData();
+    formData.append("webOrderRequestId", webOrderRequestId);
+
+    $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            $("#tab-content-web-order-request").html(response);
+        }
+    });
+}
+
+    $(document).on("click", "[id='btnAddNote']", function () {
+        event.preventDefault();
+        var webOrderRequestId = $("#Entity_ID").val();
+        var note = $("#txtNote").val();
+        AddNote(webOrderRequestId, note);
+    });
+
+    $(document).on("click", "[id='btnSubmitReview']", function () {
+        SubmitReview();
+        LoadWebOrderRequestList();
+    });
+
+    $(document).on('click', '[id^="btnSetStatus"]', function () {
+        var entityId = $("#Entity_ID").val();
+        var isLocked = $(this).data('ggtools-is-locked');
+
+        // Your event handler logic here
+        //alert('Button clicked: ' + $(this).attr('id') + " ID IS " + entityId + " ACTION IS " + isLocked);
+        UpdateLock(entityId, isLocked);
+        LoadWebOrderRequestDetail(entityId);
+    });
+
+    $(document).on("click", "[id*='btnOpenModal']", function () {
+        var webOrderRequestAction = $(this).data('ggtools-web-order-request-action');
+        LoadEmailModal(webOrderRequestAction);
+    });
+
+    function SubmitReview() {
+        var link = '@Url.Action("Edit","WebOrderRequest")';
+        var note = $("#EventNote").val();
+        var entityId = $("#Entity_ID").val();
+        var newActionCode = $("#NewActionCode").val();
+        var actionEmailFrom = $("#ActionEmailFrom").val();
+        var actionEmailTo = $("#ActionEmailTo").val();
+        var actionEmailSubject = $("#ActionEmailSubject").val();
+        var actionEmailBody = $("#ActionEmailBody").val();
+        var actionEmailBodyOriginal = $("#ActionEmailBodyOriginal").val();
+
+        var formData = new FormData();
+        formData.append("Entity.ID", entityId);
+        formData.append("EventNote", note);
+        formData.append("NewActionCode", newActionCode);
+        formData.append("ActionEmailFrom", actionEmailFrom);
+        formData.append("ActionEmailTo", actionEmailTo);
+        formData.append("ActionEmailSubject", actionEmailSubject);
+        formData.append("ActionEmailBody", actionEmailBody);
+        formData.append("ActionEmailBodyOriginal", actionEmailBodyOriginal);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+
+
+                } else {
+                    HandleError(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                /*HandleError(errorMessage);*/
+            }
+        });
+    }
+
+    function UpdateLock(webOrderRequestId, isLocked) {
+        var link = '@Url.Action("SetLockStatus", "WebOrderRequest")';
+
+        var formData = new FormData();
+
+        formData.append("webOrderRequestId", webOrderRequestId);
+        formData.append("isLocked", isLocked);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                //alert("SUCCESS");
+            }
+        });
+    }
+
+    function LoadEmailModal(webOrderRequestAction) {
+        link = '@Url.Action("Component_EmailModal", "WebOrderRequest")';
+        var webOrderRequestId = $("#Entity_ID").val();
+        var actionEmailTo = $("#Entity_WebCooperatorEmail").val();
+        var formData = new FormData();
+
+        $("#modal-email").modal("show");
+
+        formData.append("entityId", webOrderRequestId);
+        formData.append("webOrderRequestAction", webOrderRequestAction);
+        formData.append("actionEmailTo", actionEmailTo);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-modal-email-content").html(response);
+            }
+        });
+    }
+
+    function AddNote(webOrderRequestId, note) {
+        var link = '@Url.Action("AddNote", "WebOrderRequest")';
+        var formData = new FormData();
+
+        formData.append("webOrderRequestId", webOrderRequestId);
+        formData.append("noteText", note);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                LoadWebOrderRequestNotes(webOrderRequestId);
+            }
+        });
+    }
+
+    function InitWebOrderRequestDataTable(tableName) {
+        tableName = "#" + tableName;
+        $(document).ready(function () {
+            table = $(tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                "pageLength": 25,
+                responsive: true,
+                buttons: [
+                    'csv',
+                    'excel',
+                    'pdf'
+                ],
+                search: true,
+                select: {
+                    style: 'single'
+                },
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                //columnDefs: [
+                //    { targets: [0], visible: false }
+                //]
+
+            });
+
+            // If the table contains at least one row, select that row by default, and load the WOR data
+            // related to it.
+            //if (table.rows().count() > 0) {
+            //    // Select the first visible row
+            //    var firstVisibleRow = table.rows({ search: 'applied' }).indexes()[0];
+            //    if (firstVisibleRow !== undefined) {
+            //        table.row(firstVisibleRow).select();
+            //        LoadWebOrderRequest(table.row(':eq(0)', { page: 'current' }).data()[0]);
+            //    }
+            //}
+
+            // Call select method when user clicks a given row.
+            //$('table.ggtools').on('click', 'tr', function () {
+            //    var data = table.row(this).data();
+            //    LoadWebOrderRequest(data[0]);
+            //});
+        });
+    }
+
+    $("#btnSearchByID").click(function () {
+        var entityId = $("#txtSearchByID").val();
+        var url = "/ggtools-orders/WebOrder/Lookup" + "?entityId=" + entityId;
+        window.location.href = url;
+    });
+
+    $(".allownumericwithoutdecimal").on("keypress keyup blur", function (event) {
+        $(this).val($(this).val().replace(/[^\d].+/, ""));
+        if ((event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+
+    $(document).ready(function () {
+        $('#ckSelectDeselectAllWebOrderRequestStatuses').on('change', function () {
+            var isChecked = $(this).prop('checked');
+
+            // Select/Deselect all checkboxes inside the specified div and ul
+            $('#section-current-status input[type="checkbox"]').each(function () {
+                $(this).prop('checked', isChecked).trigger('change');
+            });
+
+            // Toggle the label of 'ckControl' based on its state
+            if (isChecked) {
+                $('#label-current_filter_web_order_request_status').html('Deselect All');
+            } else {
+                $('#label-current_filter_web_order_request_status').html('Select All');
+            }
+            GetSelectedValues("section-current-status", "hf_current_filter_web_order_request_status");
+            LoadWebOrderRequestList();
+        });
+    });
+
+    $(document).ready(function () {
+        $('#ckSelectDeselectAllWebOrderRequestMostRecentAction').on('change', function () {
+            var isChecked = $(this).prop('checked');
+
+            // Select/Deselect all checkboxes inside the specified div and ul
+            $('#section-most-recent-action input[type="checkbox"]').each(function () {
+                $(this).prop('checked', isChecked).trigger('change');
+            });
+
+            // Toggle the label of 'ckControl' based on its state
+            if (isChecked) {
+                $('#label-current_filter_web_order_request_most-recent-action').html('Deselect All');
+            } else {
+                $('#label-current_filter_web_order_request_most-recent-action').html('Select All');
+            }
+            GetSelectedValues("section-most-recent-action", "hf_current_filter_most_recent_action");
+            LoadWebOrderRequestList();
+        });
+    });
+
+
+</script>

@@ -1,0 +1,30 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SiteAdminViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style>
+    .row {
+        margin-top: 5px;
+    }
+</style>
+
+<div class="row">
+  
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var isReadOnly = $("#IsReadOnly").val();
+        if (isReadOnly == "Y") {
+            SetReadOnly();
+        }
+    }
+</script>
+
+

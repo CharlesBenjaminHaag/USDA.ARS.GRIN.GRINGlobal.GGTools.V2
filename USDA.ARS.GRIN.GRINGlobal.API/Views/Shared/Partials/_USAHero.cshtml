@@ -1,0 +1,38 @@
+﻿@*<section class="usa-hero" aria-label="Introduction" style="background-image: url('https://www.ars-grin.gov/assets/img/hero-topic-plants_0.jpg');">*@
+<section 
+         class="usa-hero" 
+         aria-label="Introduction" 
+         style="background-image: url('https://www.ars-grin.gov/assets/img/usa-hero/Field-RoundBales-Sunset_AdobeStock_238038228.jpeg'); ">
+    <div class="grid-container">
+        <div class="usa-hero__callout">
+            <h1 class="usa-hero__heading">
+                <span class="usa-hero__heading--alt">GRIN-Global:</span>
+                Empowering and enabling crop diversity
+            </h1>
+            <p>
+                Search over <strong>600,000</strong> active accessions
+            </p>
+            <section aria-label="Default search component">
+                <form id="grinGlobalSearchForm" class="usa-search " role="search" action="@Url.Action("Search","Home")">
+                    <label class="usa-sr-only" for="search-field">Search</label>
+                    <input class="usa-input" id="search-field" type="search" name="search">
+                    <button id="btnSearchGRINGlobal" class="usa-button" type="submit">
+                        <span class="usa-search__submit-text">Search</span>
+                    </button>
+                </form>
+            </section>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    $(function () {
+        $('#btnSearchGRINGlobal').on('click', function (e) {
+            e.preventDefault();
+            var searchString = grinGlobalSearchForm.search.value;
+
+            if (searchString.length > 0) {
+                window.location.href = "https://npgsweb.ars-grin.gov/gringlobal/search?q=" + searchString;
+            }
+        });
+    });
+</script>

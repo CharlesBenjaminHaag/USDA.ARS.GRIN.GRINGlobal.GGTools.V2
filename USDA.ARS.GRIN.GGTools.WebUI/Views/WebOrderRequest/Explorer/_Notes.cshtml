@@ -1,0 +1,37 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+
+<div class="direct-chat-messages" style="height:350px;">
+    @{
+        int i = 0;
+    }
+
+    @foreach (var result in Model.DataCollectionNotes)
+    {
+        i++;
+
+        <div class="direct-chat-msg">
+            <div class="direct-chat-infos clearfix">
+                <span class="direct-chat-name float-left">@result.CreatedByCooperatorName</span>
+                <span class="direct-chat-timestamp float-right">@result.CreatedDate.ToShortDateString()</span>
+            </div>
+            <img class="direct-chat-img" src="https://localhost:44377/dist/img/user-default.png" alt="message user image">
+            <div class="direct-chat-text">
+                @result.Note
+            </div>
+        </div>
+    }
+</div>
+<div class="card-footer">
+    <form action="#" method="post">
+        <div class="input-group">
+            <input id="txtNote" type="text" name="message" placeholder="Type Message ..." class="form-control">
+            <span class="input-group-append">
+                <button id="btnAddNote" type="button" class="btn btn-default">Send</button>
+            </span>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    
+</script>

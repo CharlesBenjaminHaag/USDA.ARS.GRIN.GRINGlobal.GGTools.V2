@@ -1,0 +1,32 @@
+﻿@using System.Data;
+@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDynamicQueryViewModel
+<table id="data_table_sys_dynamic_query" class="table table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            @foreach (DataColumn col in Model.DataCollectionDataTable.Columns)
+            {
+                <th>
+                    @col.ColumnName
+                </th>
+            }
+    </thead>
+    <tbody>
+        @foreach (DataRow dr in Model.DataCollectionDataTable.Rows)
+        {
+            <tr>
+                @foreach (DataColumn rowCol in Model.DataCollectionDataTable.Columns)
+                {
+                    <td>
+                        @dr[rowCol.ColumnName]
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-code-values");
+    });
+</script>

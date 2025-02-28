@@ -1,0 +1,68 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdminLTE3Login.cshtml";
+}
+<div class="login-box" style="width:600px;">
+    <div class="card card-outline ">
+        <div class="card-header text-center" style="font-size: 2.0rem;">
+            Curator Tool Account Request
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Final", "Account", FormMethod.Post, new { id = "frmAccountDetails" }))
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Please specify any additional information, here, that you think would be useful.</label>
+                            @Html.TextAreaFor(x=>x.RequestorNotes, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div>
+                            <div class="icheck-primary">
+                                <input type="checkbox" value="" id="cbxSendRequestorCC" class="form-check-input-subcontinents">
+                                <label for="check-all-subcontinent">Please email me a copy of this request.</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="section-requestor-email-address">
+                            <div class="form-group">
+                                @Html.TextBoxFor(x => x.RequestorEmailAddress, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="@Url.Action("New","Account")"
+                           class="btn btn-default btn-block btn-flat">
+                            << Cancel
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="btnStepFinish" class="btn btn-default btn-block btn-flat" type="submit">Finish >></button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="card-footer">Version @AppInfo.GetVersion()</div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#section-requestor-email-address").hide();
+
+    $("#cbxSendRequestorCC").change(function () {
+        var sendRequestorCC = $("#cbxSendRequestorCC").prop('checked');
+        if (sendRequestorCC) {
+            $("#section-requestor-email-address").show();
+        }
+        else {
+            $("#section-requestor-email-address").hide();
+        }
+    });
+</script>

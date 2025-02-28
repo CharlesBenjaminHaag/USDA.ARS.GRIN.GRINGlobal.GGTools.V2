@@ -1,0 +1,122 @@
+﻿<div class="modal fade" id="modal-type-lookup" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="search-progress-overlay-type-lookup" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Type Lookup
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+                @using (Html.BeginForm("Search", "Method", FormMethod.Post, new { id = "frm-modal-type-lookup", @class = "ggtools-lookup-form" }))
+                {
+                    <input type="hidden" id="hfIdField" />
+                    <input type="hidden" id="hfNameField" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    Name
+                                    &nbsp;<i class="fas fa-info-circle" style="color:#17a2b8;"></i>
+                                </label>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    Validator
+                                    &nbsp;<i class="fas fa-info-circle" style="color:#17a2b8;"></i>
+                                </label>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    Message
+                                    &nbsp;<i class="fas fa-info-circle" style="color:#17a2b8;"></i>
+                                </label>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="margin">
+                                <button id="btnReset" type="button" class="btn btn-danger">Reset</button>
+                                <button id="btnLookupType" type="button" class="btn btn-default float-right">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div id="section-Method-lookup-search-results" class="col-md-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#search-progress-overlay-type-lookup").hide();
+
+    $('#modal-type-lookup').on('keypress', function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            /*alert("ENTER clicked");*/
+            SearchType();
+            event.preventDefault();
+        }
+    });
+
+    $("#btnLookupType").click(function () {
+        SearchType();
+    });
+
+    $(document).on("click", "[id='btnOpenTypeLookupModal']", function () {
+        OpenLookupModal("type");
+    });
+
+    function SearchType() {
+        var link = '@Url.Action("_Search","Type")';
+        var formData = new FormData();
+
+        formData.append("SearchEntity.ShortName", $("#SearchEntity_ShortName").val());
+        formData.append("SearchEntity.IsShortNameExactMatchOption", $("#SearchEntity_IsShortNameExactMatchOption").val());
+        formData.append("SearchEntity.FullName", $("#SearchEntity_FullName").val());
+
+        $("#search-progress-overlay-Method-lookup").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-Method-lookup-search-results").html(response);
+                $("#search-progress-overlay-Method-lookup").hide();
+            }
+        });
+    }
+   
+    $(document).on("click", "[id*='btnSaveType']", function () {
+        var nameField = $("#hfTypeLookupNameFieldName").val();
+        var tableName = $("#TableName").val();
+        $('#modal-Method-lookup').modal('hide');
+        var selectedType = GetSelectedEntityText("data-table-Method-lookup");
+        $("#" + nameField).val(selectedType);
+    });
+
+</script>

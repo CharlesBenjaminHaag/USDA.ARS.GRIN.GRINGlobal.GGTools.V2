@@ -1,0 +1,16 @@
+﻿ @if (Model.Entity.ID > 0)
+ {
+    <div class="row">
+        <div class="col-md-6">
+            <label>Created</label>
+            @Model.Entity.CreatedDate
+        </div>
+        @if (Model.Entity.ModifiedDate > System.DateTime.MinValue)
+        {
+            <div class="col-md-6">
+                <label>Last Modified</label>
+                @Model.Entity.ModifiedDate
+            </div>
+        }
+    </div>
+}

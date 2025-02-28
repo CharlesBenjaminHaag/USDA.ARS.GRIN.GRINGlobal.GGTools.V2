@@ -1,0 +1,36 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.FolderViewModel
+<table id="data-table-folder-list" class="table table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Items</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var folder in Model.DataCollection)
+        {
+            <tr>
+                <td>
+                    @folder.ID
+                </td>
+                <td>
+                    @folder.ID
+                </td>
+                <td>
+                    <b>@folder.FolderName</b> - @folder.Description
+                </td>
+                <td>@folder.TotalItems</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-folder-list");
+    });
+</script>
+
+
+

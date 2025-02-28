@@ -1,0 +1,137 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.FamilyViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    ViewBag.ID = Model.ID;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+<div id="section-search-results" class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Family</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results">
+            <div id="section-search-results">
+                <table id="example" class="table table-striped" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Subfamily</th>
+                            <th>Tribe</th>
+                            <th>Subtribe</th>
+                            <th>Authority</th>
+                            <th>Last Modified</th>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var editor = new DataTable.Editor({
+            ajax: '@Url.Action("EditBatch","Family")',
+            fields: [
+                {
+                    label: 'ID:',
+                    name: 'taxonomy_family.taxonomy_family_id'
+                },
+                {
+                    label: 'Name:',
+                    name: 'taxonomy_family.family_name'
+                },
+                {
+                    label: 'Subfamily:',
+                    name: 'taxonomy_family.subfamily_name'
+                },
+                {
+                    label: 'Tribe:',
+                    name: 'taxonomy_family.tribe_name'
+                },
+                {
+                    label: 'Subtribe:',
+                    name: 'taxonomy_family.subtribe_name'
+                },
+                {
+                    label: 'Authority:',
+                    name: 'taxonomy_family.family_authority'
+                }
+            ],
+            table: '#example'
+        });
+
+        var table = $('#example').DataTable({
+            ajax: '@Url.Action("EditBatch","Family")',
+            autoFill: {
+                editor: editor
+            },
+            //buttons: [
+            //    { extend: 'create', editor: editor },
+            //    { extend: 'edit', editor: editor },
+            //    { extend: 'remove', editor: editor }
+            //],
+            columns: [
+                {
+                    data: 'taxonomy_family.taxonomy_family_id',
+                    render: function (data, type, row, meta) {
+                        var url = '@Url.Action("Edit","Family")' + '?entityId=' + row.taxonomy_family.taxonomy_family_id;
+                        return '<a href="' + url + '">' + data + '</a>';
+                    }
+                },
+                { data: 'taxonomy_family.family_name' },
+                { data: 'taxonomy_family.subfamily_name' },
+                { data: 'taxonomy_family.tribe_name' },
+                { data: 'taxonomy_family.subtribe_name' },
+                { data: 'taxonomy_family.family_authority' },
+                { data: 'taxonomy_family.modified_date' }
+            ],
+            keys: {
+                /*columns: ':not(:first-child)',*/
+                columns: [1,2,3,4,5],
+                keys: [9],
+                editor: editor,
+                editOnFocus: true
+            },
+            layout: {
+                topStart: {
+                    buttons: [
+                        { extend: 'create', editor: editor },
+                        { extend: 'edit', editor: editor },
+                        { extend: 'remove', editor: editor }
+                    ]
+                }
+            },
+            order: [[1, 'asc']],
+            scrollX: true,
+            scrollY: 500,
+            paging: false,
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, 'All']
+            ],
+            dom: "Bflrtip",
+            select: {
+                blurable: true,
+                selector: 'td:first-child',
+                style: 'os'
+            }
+        });
+
+        // Activate an inline edit on click of a table cell
+        $('#example').on('click', 'tbody td:not(:first-child)', function (e) {
+            editor.inline(this, {
+                onBlur: 'submit'
+            });
+        });
+
+    });
+</script>

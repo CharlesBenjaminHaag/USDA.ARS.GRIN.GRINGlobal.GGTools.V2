@@ -1,0 +1,35 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("Search", "Citation", FormMethod.Post, new { id = "frmMain" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.AuthenticatedUserCooperatorID)
+    @Html.HiddenFor(x => x.ItemIDList)
+    @Html.Partial("~/Views/Taxonomy/Citation/_Detail.cshtml")
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Search Results (@Model.RowsAffected)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div id="section-search-results" class="card-body">
+        @Html.Partial("~/Views/Taxonomy/Citation/_List.cshtml")
+    </div>
+</div>
+
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }

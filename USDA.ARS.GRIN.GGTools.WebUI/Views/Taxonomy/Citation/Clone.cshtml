@@ -1,0 +1,317 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@Model.PageTitle</title>
+    <link rel="stylesheet" href="~/Content/dist/css/fonts.googleapis.com.css">
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="~/dist/css/adminlte.css">
+    <link rel="stylesheet" href="~/Content/dist/css/icheck-bootstrap.min.css" />
+
+    <!-- Datatables -->
+    <link rel="stylesheet" href="~/Content/dist/css/DataTables/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/dist/css/DataTables/select.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/dist/css/DataTables/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/dist/css/bootstrap-switch.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css" />
+
+    <style type="text/css">
+        .table-col-align-right {
+            text-align: right;
+        }
+
+        .ggtools-selector input {
+            opacity: 1;
+            margin-right: 5px;
+            margin-left: 3px;
+        }
+
+        .ggtools-selector-label {
+            margin-left: 25px;
+        }
+
+        .ggtools-checkbox {
+            margin-top: 40px;
+        }
+
+        table.dataTable tbody tr.selected > * {
+            box-shadow: inset 0 0 0 9999px rgb(176, 190, 217);
+            color: white;
+        }
+
+        .margin {
+            margin-bottom: 15px;
+            margin-top: 15px;
+        }
+
+        .social-auth-links {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .button-label {
+            margin-left: .3em;
+        }
+
+        .checkbox {
+            margin-top: 0px;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+
+        .text-danger {
+            background-color: #dd4b39;
+            color: white;
+        }
+
+        .badge {
+            padding: 5px;
+            font-size: 9.5pt;
+        }
+
+        .infraspecific-hybrid {
+            margin-top: 25px;
+        }
+
+        #section-extended-search-fields {
+            margin-top: 15px;
+        }
+
+        .section-checkbox {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/adminlte/js")
+    @Scripts.Render("~/ggtools/js")
+</head>
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/gringlobal-logo.jfif" alt="GRIN-Global Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- BEGIN EDIT PAGE MENU -->
+                    <ul class="navbar-nav">
+                        @if (Model.Entity.ID > 0)
+                        {
+                            @*<li class="nav-item d-none d-sm-inline-block">
+                                <a href="@Url.Action("Add", "EconomicUse", new { cropForCwrId = Model.Entity.ID })" class="nav-link">Add CWR Map</a>
+                            </li>*@
+                        }
+                    </ul>
+                    <!-- END EDIT PAGE MENU-->
+                </div>
+
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-user"></i>
+
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
+                            <span class="dropdown-item dropdown-header">@AppInfo.GetAuthenticatedUser().FullName</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-clock mr-2"></i> Logged In
+                                <span class="float-right text-muted text-sm"> </span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="@Url.Action("Logout","Login")" class="dropdown-item dropdown-footer bg-danger">Log Out</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                Clone Citation                             
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row">
+                        <div id="section-citation" class="col-md-6">
+                            @{Html.RenderAction("_Edit", "Citation", new { entityId = Model.Entity.ID });}
+                        </div>
+                        <div id="section-citation-clone" class="col-md-6">
+                             
+                        </div>
+                    </div>
+
+                    @*@{Html.RenderAction("RenderLookupModal", "FamilyMap"); }
+                    @{Html.RenderAction("RenderLookupModal", "Genus"); }
+                    @{Html.RenderAction("RenderLookupModal", "Species"); }
+                    @Html.Partial("~/Views/Shared/Modals/_NoteLookup.cshtml")
+                    @Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+                    @{Html.RenderAction("GetEditModal", "SysFolder", new { sysTableName = Model.TableName }); }*@
+                </div>
+            </div>
+
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Init();
+            /*InitializeCKEditor();*/
+        });
+
+        function Init() {
+            RenderCloneWidget();
+            $("#section-citation select").attr('readonly', true);
+            $("#section-citation select").prop('disabled', true);
+            $("#section-citation input").attr('readonly', true);
+            $("#section-citation textarea").attr('readonly', true);
+            $(':button').prop('disabled', true); // Disable all the buttons
+
+        }
+
+        function RenderCloneWidget() {
+            var link = '@Url.Action("RenderCloneWidget","Citation")';
+            var entityId = $("#Entity_ID").val();
+            var formData = new FormData();
+            formData.append("entityId", entityId);
+
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-citation-clone").html(response);
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        }
+
+        $(document).on("click", "[id*='btnAddCloneFamily']", function () {
+            AddClone("Family");
+        });
+
+        $(document).on("click", "[id*='btnAddCloneGenus']", function () {
+            AddClone("Genus");
+        });
+
+        $(document).on("click", "[id*='btnAddCloneSpecies']", function () {
+            AddClone("Species");
+        });
+
+        function AddClone(taxonType) {
+            var link = '@Url.Action("_AddClone","Citation")';
+            var entityId = $("#Entity_ID").val();
+            var formData = new FormData();
+
+            formData.append("entityId", entityId);
+            formData.append("eventAction", "add");
+            formData.append("eventValue", taxonType);
+
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-citation-clone").html(response);
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        }
+
+        $(document).on("click", "[id*='btnSaveCitation']", function () {
+            SaveCitation();
+        });
+
+        function SaveCitation() {
+            var link = $("#frmEditCitation").attr("action");
+            var formData = new FormData();
+
+            //DEBUG
+            //alert("LINK " + link);
+
+            formData.append("Entity.ID", $("#frmEditCitation #Entity_ID").val());
+            //formData.append("Entity.FamilyID", $("#frmEditCitation #Entity_FamilyID").val());
+            //formData.append("Entity.GenusID", $("#frmEditCitation #Entity_GenusID").val());
+            //formData.append("Entity.SpeciesID", $("#frmEditCitation #Entity_SpeciesID").val());
+            //formData.append("Entity.IsAcceptedNameOption", $("#frmEditCitation #Entity_IsAcceptedNameOption").val());
+            //formData.append("Entity.CitationTitle", $("#frmEditCitation #Entity_CitationTitle").val());
+            //formData.append("Entity.ReferenceTitle", $("#frmEditCitation #Entity_ReferenceTitle").val());
+            //formData.append("Entity.URL", $("#frmEditCitation #Entity_URL").val());
+            //formData.append("Entity.TypeCode", $("#frmEditCitation #Entity_TypeCode").val());
+            //formData.append("Entity.CitationYear", $("#frmEditCitation #Entity_CitationYear").val());
+            //formData.append("Entity.Reference", $("#frmEditCitation #Entity_Reference").val());
+            //formData.append("Entity.DOIReference", $("#frmEditCitation #Entity_DOIReference").val());
+            //formData.append("Entity.LiteratureID", $("#frmEditCitation #Entity_LiteratureID").val());
+            //formData.append("Entity.Note", $("#frmEditCitation #Entity_Note").val());
+
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-citation-clone").html(response);
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        }
+
+
+    </script>
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/dist/js/adminlte.js"></script>
+    <script type="text/javascript" src="~/Content/dist/js/DataTables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/Content/dist/js/DataTables/dataTables.select.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/Content/dist/js/DataTables/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="~/Content/dist/js/DataTables/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+</body>
+</html>

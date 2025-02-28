@@ -1,0 +1,385 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AccessionInventoryAttachmentViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE.cshtml";
+}
+
+<style type="text/css">
+    .submit-progress-bg {
+        background-color: lightgray;
+        opacity: .5;
+    }
+
+    .submit-progress {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        height: 6em;
+        padding-top: 2.3em;
+    }
+
+    .table-col-centered {
+        text-align:center;
+    }
+    /* The following rules are the
+        ones most likely to change */
+    /*width: 20em;*/
+    /* Set 'margin-left' to a negative number
+        that is 1/2 of 'width' */
+    /*margin-left: -10em;
+            padding-left: 2.1em;
+            background-color: black;
+            color: white;
+            -webkit-border-radius: 0.4em;
+            -moz-border-radius: 0.4em;
+            border-radius: 0.4em;
+            box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+            -webkit-box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+            -moz-box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+
+</style>
+
+<div id="alert-folder-confirmation" class="alert alert-success alert-dismissible" style="display:none;">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4><i class="icon fa fa-check"></i> Folder Created</h4>
+    The folder <a href="#"><span id="new-folder-name"></span></a> has been created.
+</div>
+
+@using (Html.BeginForm("Search", "AccessionInventoryAttachment", FormMethod.Post, new { id = "frmSearch" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.AuthenticatedUserCooperatorID)
+    @Html.HiddenFor(x => x.ItemIDList)
+    @Html.Partial("~/Views/AccessionInventoryAttachment/_Detail.cshtml")
+    @Html.Partial("~/Views/AccessionInventoryAttachment/Modals/_Validate.cshtml")
+}
+
+<div class="box box-default">
+    <div class="box-header with-border">
+        <i class="fa fa-table"></i>
+        <h3 class="box-title">Search Results</h3>
+    </div>
+    <div class="box-body">
+        <div class="mailbox-controls no-padding">
+            @*<div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-folder"></i></button>
+                </div>*@
+            <div class="btn-group">
+                <button id="btnValidate" type="button" class="btn btn-default btn-sm"><i class="fa fa-gears margin-r-5"></i> Validate Selected Records</button>
+            </div>
+        </div>
+        <div id="section-search-results" class="data-list">
+            @Html.Partial("~/Views/AccessionInventoryAttachment/_List.cshtml")
+        </div>
+    </div>
+    <div class="box-footer">
+        <div class="mailbox-controls no-padding">
+            @*<div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-folder"></i></button>
+                </div>*@
+            <div class="btn-group">
+                <button id="btnValidate" type="button" class="btn btn-default btn-sm"><i class="fa fa-gears margin-r-5"></i> Validate Selected Records</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/AccessionInventoryAttachment/Modals/_Validate.cshtml")
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Init();
+        InitBulkDataTable("data-table-attachments");
+    });
+
+    function Init() {
+        var eventAction = $("#EventAction").val();
+        if (eventAction == "SHOW-SEARCH") {
+            $("#section-search-criteria").show();
+        }
+        /*$('.date').mask('00/00/0000');*/
+    }
+
+    /*
+    * ===============================================================================
+    * SAVE SEARCH
+    * ===============================================================================
+    */
+    $(document).on("click", "[id='btnSaveSearch']", function () {
+        $("#EventAction").val("SAVE-SEARCH");
+        $("#frmSearch").submit();
+    });
+
+    /*
+    * ===============================================================================
+    * VALIDATE
+    * ===============================================================================
+    */
+
+    //$(document).on("click", "[id='btnValidate']", function () {
+    //    $("#EventAction").val("VALIDATE");
+    //    $("#ItemIDList").val(GetSelectedEntityIDs("data-table-attachments"));
+    //    $("#frmSearch").submit();
+    //});
+
+    $(document).on("click", "[id='btnValidate']", function () {
+        var link = '@Url.Action("Validate", "AccessionInventoryAttachment")';
+        var itemIdList = GetSelectedEntityIDs("data-table-attachments");
+        var formData = new FormData();
+
+        if (itemIdList.length == 0) {
+            alert("There are no items selected.");
+        }
+        else {
+            $("#IDList").val(itemIdList);
+
+            formData.append("IDList", itemIdList);
+
+            $("body").addClass("submit-progress-bg");
+            $(".submit-progress").removeClass("hidden");
+
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("body").removeClass("submit-progress-bg");
+                    $(".submit-progress").addClass("hidden");
+                    $("#modal-accession_inventory-attachment-validate").modal("show");
+                },
+                error: function () {
+                    $("body").removeClass("submit-progress-bg");
+                    $(".submit-progress").addClass("hidden");
+                }
+            });
+        }
+    });
+
+    $(document).on("click", "[id='btnGetValidationResults']", function () {
+        var link = '@Url.Action("ValidationResultsList", "Attachment")';
+        var formData = new FormData();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            async: true,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-validate-detail").html(response);
+                InitValidationDataTable("data-table-attachment-validation");
+            }
+        });
+    });
+
+    function FormatResults(data)
+    {
+        // Display totals
+        $("#txtTotal").val(data.validationResult.RowsAffected);
+
+        if ((data.validationResult.VirtualPathErrors > 0) || (data.validationResult.ThumbnailVirtualPathErrors > 0)) {
+            $("#section-virtual-path-error-info").show();
+            $("#btnGetValidationResults").show();
+            $("#section-modal-content").addClass("modal-lg");
+        }
+        else {
+            $("#section-virtual-path-error-info").hide();
+            $("#btnGetValidationResults").hide();
+            $("#section-modal-content").removeClass("modal-lg");
+        }
+
+        // Virtual path data
+        $("#section-virtual-path-errors").html(data.validationResult.VirtualPathErrors);
+
+        var virtualPathProgressString = "<div class='progress-bar' style='width: " + data.validationResult.VirtualPathErrorPercentage + "%'></div>'";
+        $("#section-virtual-path-progress").html(virtualPathProgressString);
+
+        var virtualPathProgressDescriptionString = data.validationResult.VirtualPathErrorPercentage + "% of " + data.validationResult.RowsAffected + " Web Orders";
+        $("#section-virtual-path-progress-description").html(virtualPathProgressDescriptionString);
+
+        var thumbnailVirtualPathProgressString = "<div class='progress-bar' style='width: " + data.validationResult.ThumbnailVirtualPathErrorPercentage + "%'></div>'";
+        $("#section-thumbnail-virtual-path-progress").html(thumbnailVirtualPathProgressString);
+
+        $("#section-thumbnail-virtual-path-errors").html(data.validationResult.ThumbnailVirtualPathErrors);
+
+        // Thumbnail virtual path data
+        $("#section-thumbnail-virtual-path-errors").html(data.validationResult.ThumbnailVirtualPathErrors);
+
+        var thumbnailVirtualPathProgressString = "<div class='progress-bar' style='width: " + data.validationResult.ThumbnailVirtualPathErrorPercentage + "%'></div>'";
+        $("#section-thumbnail-virtual-path-progress").html(thumbnailVirtualPathProgressString);
+
+        var thumbnailVirtualPathProgressDescriptionString = data.validationResult.ThumbnailVirtualPathErrorPercentage + "% of " + data.validationResult.RowsAffected + " Web Orders";
+        $("#section-thumbnail-virtual-path-progress-description").html(thumbnailVirtualPathProgressDescriptionString);
+
+        var thumbnailVirtualPathProgressString = "<div class='progress-bar' style='width: " + data.validationResult.ThumbnailVirtualPathErrorPercentage + "%'></div>'";
+        $("#section-thumbnail-virtual-path-progress").html(thumbnailVirtualPathProgressString);
+
+        $("#section-thumbnail-virtual-path-errors").html(data.validationResult.ThumbnailVirtualPathErrors);
+
+        //Clear any existing results from modal list.
+        $("#section-validation-results").html("");
+        $("#modal-accession_inventory-attachment-validate-confirm").modal("show");
+    }
+
+    /*
+    * ===============================================================================
+    * FOLDER MODAL
+    * ===============================================================================
+    */
+    $("#btnOpenFolderModal").click(function () {
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-orders");
+        $("#modal-folder-edit").modal("show");
+    });
+
+    $("#btnSaveFolder").click(function () {
+        SaveFolder(0);
+    });
+
+    function SaveFolder(folderId) {
+        var link = '@Url.Action("Add", "Folder")';
+        var tableName = $("#TableName").val();
+        var folderName = $("#txtFolderTitle").val();
+        var folderCategory = $("#Entity_Category").val();
+        var folderNewCategory = $("#txtFolderNewCategory").val();
+        var folderDescription = $("#txtFolderDescription").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-orders");
+        var formData = new FormData();
+
+        if ($('#cbxIsFavorite').prop('checked') == true) {
+            isFavorite = true;
+        }
+
+        if (typeof selectedItemIdList != 'undefined') {
+            formData.append("IDList", selectedItemIdList);
+        }
+
+        if ($('#cbxIsFavorite').prop('checked') == true) {
+            formData.append("IsFavorite", true);
+        }
+
+        if ($('#cbxIsShared').prop('checked') == true) {
+            formData.append("IsShared", true);
+        }
+
+        formData.append("FolderID", folderId);
+        formData.append("TableName", tableName);
+        formData.append("FolderName", folderName);
+        formData.append("FolderType", tableName);
+        formData.append("Category", folderCategory);
+        formData.append("NewCategory", folderNewCategory);
+        formData.append("Description", folderDescription);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                console.log(data);
+                ConfirmFolderSave(data.folder.FolderName);
+            },
+            error: function (ex) {
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    function ConfirmFolderSave(folderTitle) {
+        $("#new-folder-name").html(folderTitle);
+        $("#alert-folder-confirmation").show();
+    }
+
+    function SaveFolderItems(folderId) {
+        var link = '@Url.Action("AddItems", "Folder")';
+        var tableName = $("#TableName").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-order");
+        var formData = new FormData();
+
+        formData.append("FolderID", folderId);
+        formData.append("TableName", tableName);
+
+        if (typeof selectedItemIdList != 'undefined') {
+            formData.append("IDList", selectedItemIdList);
+        }
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+
+
+    function InitBulkDataTable(tableName) {
+        $(document).ready(function () {
+            var table = $('#' + tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                responsive: true,
+                stateSave: true,
+                buttons: [
+                    'selectAll',
+                    'selectNone',
+                    'excel',
+                    'csv'
+                ],
+                select: true,
+                lengthMenu: [[10, 25, 50, 100, 250, 500, 1000, -1], [10, 25, 50, 100, 250, 500, 1000, "All"]],
+                pageLength: 10,
+                columnDefs: [
+                    { targets: [0], visible: false }
+
+                ]
+            });
+        });
+    }
+
+    function InitValidationDataTable(tableName) {
+        $(document).ready(function () {
+            var table = $('#' + tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                responsive: true,
+                stateSave: true,
+                buttons: [
+                    'selectAll',
+                    'selectNone',
+                    'excel',
+                    'csv'
+                ],
+                select: true,
+                lengthMenu: [[10, 25, 50, 100, 250, 500, 1000, -1], [10, 25, 50, 100, 250, 500, 1000, "All"]],
+                pageLength: 10,
+                columnDefs: [
+                    { targets: [0], visible: false }
+
+                ]
+            });
+            table.columns([4, 7]).visible(false);
+        });
+    }
+</script>
+
+

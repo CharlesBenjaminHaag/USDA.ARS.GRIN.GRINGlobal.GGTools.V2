@@ -1,0 +1,65 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysPermissionViewModel
+<div class="modal fade" id="modal-sys-table-lookup" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Sys Table Permissions
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="data_table_sys_permission" class="table table-striped ggtools" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>ID</th>
+                            <th>Group</th>
+                            <th>Permission</th>
+                            <th>Member</th>
+                            <th>Create</th>
+                            <th>Read</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            @foreach (var result in Model.DataCollection)
+                            {
+                                <tr>
+                                    <td>
+                                        @result.ID
+                                    </td>
+                                    <td>@result.ID</td>
+                                    <td>@result.GroupTag</td>
+                                    <td>@result.PermissionTag</td>
+                                    <td>@Html.Raw(Model.FormatBoolean(result.IsMember))</td>
+                                    <td>@result.CreatePermission</td>
+                                    <td>@result.ReadPermission</td>
+                                    <td>@result.UpdatePermission</td>
+                                    <td>@result.DeletePermission</td>
+                                </tr>
+                            }
+                    </tbody>
+                </table>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        InitDataTableLight("data_table_sys_permission");
+                    });
+                </script>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).on("click", "[id='btnShowTablePermissions']", function () {
+        $("#modal-sys-table-lookup").modal("show");
+    });
+</script>

@@ -1,0 +1,44 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysGroupViewModel
+<table id="data-table-sys-group-user-map" class="table table-striped">
+    <thead>
+        <tr>
+            <th width="5%"></th>
+            <th>ID</th>
+            <th>User Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Site</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollectionSysGroupUserMap)
+        {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    @result.SysUserName
+                </td>
+                <td>@result.FirstName</td>
+                <td>@result.LastName</td>
+                <td>@result.SiteLongName</td>
+                <td style="text-align:right;">
+                    <button class="btn btn-default btn-sm">Remove</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableSingleSelect("data-table-sys-group-user-map");
+    });
+</script>
+
+
+

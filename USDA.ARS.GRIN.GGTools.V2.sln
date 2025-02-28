@@ -1,0 +1,79 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.Common.DataLayer", "USDA.ARS.GRIN.Common.DataLayer\USDA.ARS.GRIN.Common.DataLayer.csproj", "{4D384F7B-0650-4D28-824C-963AAD902DCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.Common.DataLayer.SqlServer", "USDA.ARS.GRIN.Common.DataLayer.SqlServer\USDA.ARS.GRIN.Common.DataLayer.SqlServer.csproj", "{AB887E72-BD5E-47D2-B4F9-4323CB43E607}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.Common.Library", "USDA.ARS.GRIN.Common.Library\USDA.ARS.GRIN.Common.Library.csproj", "{79CE8EB3-0993-4B8D-A6E4-9D89CA7FE4EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.GGTools.AppLayer", "USDA.ARS.GRIN.GGTools.AppLayer\USDA.ARS.GRIN.GGTools.AppLayer.csproj", "{CA168B27-64AA-4258-AA66-6BD1BED5ECEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.GGTools.DataLayer", "USDA.ARS.GRIN.GGTools.DataLayer\USDA.ARS.GRIN.GGTools.DataLayer.csproj", "{902C87A6-FB1F-4C16-B816-5F7678B1EF01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.GGTools.ViewModelLayer", "USDA.ARS.GRIN.GGTools.ViewModelLayer\USDA.ARS.GRIN.GGTools.ViewModelLayer.csproj", "{9460DC16-3013-4028-9403-3541E1235771}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.GGTools.WebUI", "USDA.ARS.GRIN.GGTools.WebUI\USDA.ARS.GRIN.GGTools.WebUI.csproj", "{BE0916C1-1F82-4CDE-A60A-A14D893DD196}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.GGTools.AccessRigntsManagement.WebUI", "USDA.ARS.GRIN.GGTools.WebUI.V2\USDA.ARS.GRIN.GGTools.AccessRigntsManagement.WebUI.csproj", "{38DFE0F8-C3DC-4B5A-8286-7E7A36D54035}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.GRINGlobal.Common.Library.StringHandling", "USDA.ARS.GRIN.GRINGlobal.Common.Library.StringHandling\USDA.ARS.GRIN.GRINGlobal.Common.Library.StringHandling.csproj", "{3367D008-31D0-4D3D-8A6F-D080555F0F1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDA.ARS.GRIN.GRINGlobal.DTO", "USDA.ARS.GRIN.GRINGlobal.DTO\USDA.ARS.GRIN.GRINGlobal.DTO.csproj", "{B8F69EF8-93F5-4EA9-B5F5-3C67DA0E2846}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D384F7B-0650-4D28-824C-963AAD902DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D384F7B-0650-4D28-824C-963AAD902DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D384F7B-0650-4D28-824C-963AAD902DCD}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D384F7B-0650-4D28-824C-963AAD902DCD}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{AB887E72-BD5E-47D2-B4F9-4323CB43E607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB887E72-BD5E-47D2-B4F9-4323CB43E607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB887E72-BD5E-47D2-B4F9-4323CB43E607}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB887E72-BD5E-47D2-B4F9-4323CB43E607}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{79CE8EB3-0993-4B8D-A6E4-9D89CA7FE4EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79CE8EB3-0993-4B8D-A6E4-9D89CA7FE4EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79CE8EB3-0993-4B8D-A6E4-9D89CA7FE4EE}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{79CE8EB3-0993-4B8D-A6E4-9D89CA7FE4EE}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{CA168B27-64AA-4258-AA66-6BD1BED5ECEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA168B27-64AA-4258-AA66-6BD1BED5ECEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA168B27-64AA-4258-AA66-6BD1BED5ECEF}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA168B27-64AA-4258-AA66-6BD1BED5ECEF}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{902C87A6-FB1F-4C16-B816-5F7678B1EF01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{902C87A6-FB1F-4C16-B816-5F7678B1EF01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{902C87A6-FB1F-4C16-B816-5F7678B1EF01}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{902C87A6-FB1F-4C16-B816-5F7678B1EF01}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{9460DC16-3013-4028-9403-3541E1235771}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9460DC16-3013-4028-9403-3541E1235771}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9460DC16-3013-4028-9403-3541E1235771}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{9460DC16-3013-4028-9403-3541E1235771}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{BE0916C1-1F82-4CDE-A60A-A14D893DD196}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE0916C1-1F82-4CDE-A60A-A14D893DD196}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE0916C1-1F82-4CDE-A60A-A14D893DD196}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE0916C1-1F82-4CDE-A60A-A14D893DD196}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{38DFE0F8-C3DC-4B5A-8286-7E7A36D54035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38DFE0F8-C3DC-4B5A-8286-7E7A36D54035}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38DFE0F8-C3DC-4B5A-8286-7E7A36D54035}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{38DFE0F8-C3DC-4B5A-8286-7E7A36D54035}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{3367D008-31D0-4D3D-8A6F-D080555F0F1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3367D008-31D0-4D3D-8A6F-D080555F0F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3367D008-31D0-4D3D-8A6F-D080555F0F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3367D008-31D0-4D3D-8A6F-D080555F0F1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8F69EF8-93F5-4EA9-B5F5-3C67DA0E2846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8F69EF8-93F5-4EA9-B5F5-3C67DA0E2846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8F69EF8-93F5-4EA9-B5F5-3C67DA0E2846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8F69EF8-93F5-4EA9-B5F5-3C67DA0E2846}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4EF871A-B402-4974-9985-C244E9144034}
+	EndGlobalSection
+EndGlobal

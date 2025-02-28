@@ -1,0 +1,96 @@
+﻿+@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderViewModel
+
+@{ 
+    string typeCode = Model.Entity.TypeCode;
+    string modalTitle = String.Empty;
+    string iconCssClass = String.Empty;
+
+    if (typeCode == "DYN")
+    {
+        modalTitle = "Save Dynamic Folder";
+        iconCssClass = "fas fa-folder";
+    }
+    else
+    {
+        if (typeCode == "SQL")
+        {
+            modalTitle = "Save SQL Search";
+            iconCssClass = "fas fa-database";
+        }
+    }
+}
+
+<div class="modal fade text-sm" id="modal-dynamic-folder-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="@iconCssClass"></i>
+                    @modalTitle
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.HiddenFor(x=>x.Entity.TypeCode)
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Folder Title</label>
+                            <input id="txtDynamicFolderTitle" name="SearchEntity.SearchTitle" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input id="txtDynamicFolderDescription" name="SearchEntity.SearchDescription" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id="btnSaveDynamic" type="button" class="btn btn-default float-right" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+*************************************************************************************************
+Modal that appears if no record is selected for folder addition.
+*************************************************************************************************
+-->
+@Html.Partial("~/Views/Shared/Modals/_UnderConstruction.cshtml")
+
+<script type="text/javascript">
+    $("#btnOpenDynamicFolderModal").click(function () {
+
+        var tableName = $("#TableName").val();
+        var dataTableName = "data_table_" + tableName;
+        var selectedItemIdList = GetSelectedEntityIDs(dataTableName);
+        $("#modal-dynamic-folder-edit").modal("show");
+
+        /*$("#modal-feature-not-available").modal("show");*/
+    });
+
+    $("#btnSaveDynamic").click(function () {
+        CreateDynamicFolder();
+    });
+
+    function CreateDynamicFolder() {
+        var folderTitle = $("#txtDynamicFolderTitle").val();
+        var folderDescription = $("#txtDynamicFolderDescription").val();
+        var typeCode = $("#TypeCode").val();
+
+        $("modal-dynamic-folder-edit").modal("hide");
+
+        //if ((viewModel.EventAction == "SEARCH") && (viewModel.EventValue == "SAVE"))
+        $("#EventAction").val("SEARCH");
+        $("#EventValue").val("SAVE");
+        $("#EventInfo").val(folderTitle);
+        $("#EventNote").val(folderDescription);
+        $("#frmMain").submit();
+    }
+
+</script>
+

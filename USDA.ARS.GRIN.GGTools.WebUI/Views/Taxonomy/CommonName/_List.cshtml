@@ -1,0 +1,86 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CommonNameViewModel
+
+        <div id="section-search-results" class="data-list">
+            <table id="data_table_taxonomy_common_name" class="table table-striped ggtools-table" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                       
+                        <th>Name</th>
+                        <th>Genus</th>
+                        <th>Species</th>
+                        <th>Language</th>
+                        <th>Simplified Name</th>
+                        <th>Citation</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.DataCollection != null)
+                    {
+                        if (Model.DataCollection.Count() > 0)
+                        {
+                            foreach (var result in Model.DataCollection)
+                            {
+                            <tr>
+                                <td>
+                                    @result.ID
+                                </td>
+                               
+                                <td>@result.Name</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "Genus", new { entityId = result.GenusID })">@Html.Raw(result.GenusName)</a>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "Species", new { entityId = result.SpeciesID })">@Html.Raw(result.SpeciesName)</a>
+                                </td>
+                                <td>@result.LanguageDescription</td>
+                                <td>@result.SimplifiedName</td>
+                                <td>
+                                    @Html.Raw(result.CitationText)
+                                </td>
+                                <td style="text-align:right;">
+                                    <a href="@Url.Action("Edit", "CommonName", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+   
+<script type="text/javascript">
+    
+
+    function EditBatch() {
+        var selectedIdList = GetSelectedEntityIDs("data_table_taxonomy_common_name");
+        var link = '@Url.Action("RenderBatchEditModal","CommonName", new { entityIdList = "SELECTED_ID_LIST" })';
+        link = link.replace("SELECTED_ID_LIST", selectedIdList);
+        var formData = new FormData();
+
+        //DEBUG
+        /*alert("ID LIST " + selectedIdList); */
+
+        formData.append("idList", selectedIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-batch-edit-modal").html(response);
+                $("#modal-common-name-batch-edit").modal("show");
+            }
+        });
+    }
+</script>
+
+
+
+

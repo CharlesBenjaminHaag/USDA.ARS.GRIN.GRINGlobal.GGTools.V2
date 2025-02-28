@@ -1,0 +1,23 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.RegulationViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Taxonomy/Regulation/_Detail.cshtml")
+@Html.Partial("~/Views/Taxonomy/Regulation/_List.cshtml")
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        /*SetExtendedFields();*/
+    });
+
+    //$(document).keypress(function (event) {
+    //    var keycode = (event.keyCode ? event.keyCode : event.which);
+    //    if (keycode == '13') {
+    //        $("#btnSearch").click();
+    //    }
+    //});
+
+</script>

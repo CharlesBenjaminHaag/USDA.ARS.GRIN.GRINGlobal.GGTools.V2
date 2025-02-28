@@ -1,0 +1,286 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.AuthorViewModel
+@{
+    ViewBag.Title = ViewBag.PageTitle;
+    Layout = null;
+}
+
+@{
+    string eventAction = @ViewContext.RouteData.Values["controller"].ToString();
+    string eventValue = @ViewContext.RouteData.Values["action"].ToString(); 
+}
+
+<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/gringlobal-logo.jfif" alt="GRIN-Global Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <h3>@Model.IsReadOnly</h3>
+                    @{Html.RenderAction("GetMenu", "Menu", new { eventAction = eventAction, eventValue = eventValue });}
+                </div>
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-user"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
+                            <span class="dropdown-item dropdown-header">@AppInfo.GetAuthenticatedUser().FullName</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-clock mr-2"></i> Logged In
+                                <span class="float-right text-muted text-sm"> </span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="@Url.Action("Logout","Login")" class="dropdown-item dropdown-footer bg-danger">Log Out</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                @Html.Raw(ViewBag.Title)
+                                @*<small>Example 3.0</small>*@
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+                    @using (Html.BeginForm("Edit", "Author", FormMethod.Post, new { id = "frmEdit" }))
+                    {
+                        @Html.HiddenFor(x => x.PageTitle)
+                        @Html.HiddenFor(x => x.EventAction)
+                        @Html.HiddenFor(x => x.EventValue)
+                        @Html.HiddenFor(x => x.TableName)
+                        @Html.HiddenFor(x => x.TableCode)
+                        @Html.HiddenFor(x => x.Entity.ID)
+                        @Html.HiddenFor(x => x.OriginalShortName)
+                        @Html.HiddenFor(x => x.AppUserItemFolderID)
+
+                        <!--
+                        =====================================================
+                        BEGIN REF. FOLDER LOGIC
+                        =====================================================
+                        -->
+                        if (Model.AppUserItemFolderID > 0)
+                        {
+                            Html.RenderAction("RenderRelatedFoldersWidget", "AppUserItemFolder", new { idNumber = Model.Entity.ID });
+                        }
+                        <!--
+                        =====================================================
+                        BEGIN REF. FOLDER LOGIC
+                        =====================================================
+                        -->
+
+
+
+                        @Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+
+                        <!-- Reference warning-->
+                        <div class="modal fade" id="modal-warning-references" style="display: none;" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content bg-warning">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Warning Modal</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>One fine body…</p>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-outline-dark">Save changes</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Summary</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>Short Name</label>
+                                            @Html.TextBoxFor(x => x.Entity.ShortName, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(x => x.Entity.ShortName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <label>Full Name</label>
+                                            @Html.TextBoxFor(x => x.Entity.FullName, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(x => x.Entity.FullName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <!-- BEGIN NOTE FIELD -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>
+                                                Note
+                                                &nbsp;<a href="" data-toggle="modal" data-target="#modal-note-lookup"><i class="fa fa-search"></i></a>
+                                            </label>
+                                            <div class="input-group">
+                                                @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control", @style = "width:100%;" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="@Url.Action("Refresh")" class="btn btn-default">
+                                    <i class="fa fa-undo"></i>
+                                    Reset
+                                </a>
+                                @if (Model.Entity.ID > 0)
+                                {
+                                    <button id="btnDelete" type="button" class="btn btn-danger">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                }
+                                <button type="submit" class="btn btn-default float-right">
+                                    <i class="fa fa-save"></i> Save Edits
+                                </button>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.Entity.ID > 0 && !String.IsNullOrEmpty(Model.Entity.ShortName))
+                    {
+                        { Html.RenderAction("_ListReferences", "Author", new { @shortName = Model.Entity.ShortName }); }
+                    }
+
+                    @Html.Partial("~/Views/Shared/Modals/_NoteLookup.cshtml")
+                    @Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+                    @{Html.RenderAction("GetEditModal", "SysFolder", new { sysTableName = Model.TableName, parentEntityId = Model.Entity.ID }); }
+                </div>
+            </div>
+
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+    <!-- Author ref. warning modal -->
+    <div class="modal fade" id="modal-alert-author-references">
+        <div class="modal-dialog">
+            <div class="modal-content bg-warning">
+                <div class="modal-header">
+                    <h4 class="modal-title">Taxon Author References Found</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>There are currently multiple taxa that reference the author name <span id="section-author-original-short-name" style="font-weight:bold;"></span>. It is recommended that you update these records.</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                    <button id="btnSaveAuthorOnly" type="button" class="btn btn-outline-dark">Save Author Only</button>
+                    <button id="btnSaveAuthorAndUpdateReferences" type="button" class="btn btn-outline-dark">Save and Update References</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")
+<script type="text/javascript">
+    function Page_Load() {
+        /*alert("DEBUG " + window.location.href); */
+        window.location.href = window.location.href;
+    }
+
+    //btnSaveAuthor
+    $("#btnSaveAuthor").on('click', function (event) {
+
+        var originalAuthorShortName = $("#OriginalShortName").val();
+        var newAuthorShortName = $("#Entity_ShortName").val();
+        var table = $('#data_table_taxonomy_author').DataTable();
+
+        if ((originalAuthorShortName != newAuthorShortName) && (table.data().count() > 0)) {
+            $("#section-author-original-short-name").html(originalAuthorShortName);
+            $("#modal-alert-author-references").modal("show");
+        }
+        else {
+            $("#frmEdit").submit();
+        }
+    });
+
+    $("#btnSaveAuthorOnly").on('click', function (event) {
+        $("#frmEdit").submit();
+    });
+
+    $("#btnSaveAuthorAndUpdateReferences").on('click', function (event) {
+        $("#EventAction").val("SAVE");
+        $("#EventValue").val("REF");
+        $("#frmEdit").submit();
+    });
+
+    $(function () {
+        var mark = function () {
+            // Read the keyword
+            var keyword = $("#OriginalShortName").val();
+
+            // Determine selected options
+            var options = {};
+            $("input[name='opt[]']").each(function () {
+                options[$(this).val()] = $(this).is(":checked");
+            });
+
+            // Remove previous marked elements and mark
+            // the new keyword inside the context
+            $("#data_table_taxonomy_author").unmark({
+                done: function () {
+                    $("#data_table_taxonomy_author").mark(keyword, options);
+                }
+            });
+        };
+
+        $("input[name='Entity.ShortName']").on("input", mark);
+        $("input[type='checkbox']").on("change", mark);
+
+    });
+</script>

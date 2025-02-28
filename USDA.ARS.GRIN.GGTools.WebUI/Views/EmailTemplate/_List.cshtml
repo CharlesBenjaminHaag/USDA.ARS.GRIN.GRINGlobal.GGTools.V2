@@ -1,0 +1,47 @@
+﻿@model USDA.ARS.GRIN.GGTools.OrderManagement.ViewModelLayer.WebOrderRequestViewModel
+<table id="data-table-web-order-requests" class="table table-responsive table-striped" style=" width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th width="5%">ID</th>
+            <th>Order Date</th>
+            <th>Status</th>
+            <th>Intended Use</th>
+            <th>Requestor</th>
+            <th>Organization</th>
+            <th align="center">Related Orders</th>
+            <th>Review Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var webOrderRequest in Model.DataCollection)
+        {
+        <tr>
+            <td>@webOrderRequest.ID</td>
+            <td><span class="badge">@webOrderRequest.ID</span></td>
+            <td>@webOrderRequest.OrderDate</td>
+            <td><span class="label @webOrderRequest.CSSClass">@webOrderRequest.StatusCode</span></td>
+            <td>@webOrderRequest.IntendedUseCode</td>
+            <td>@webOrderRequest.WebCooperatorFullName</td>
+            <td>@webOrderRequest.WebCooperatorOrganization</td>
+            
+            <td align="center">
+                @if (webOrderRequest.RelatedOrders > 0)
+                {
+                <span class="label bg-gray">@webOrderRequest.RelatedOrders</span>
+                }
+            </td>
+            <td>
+                @if (webOrderRequest.IsLocked)
+                {
+                    <span class="label bg-yellow" style="font-size:9.5pt;">Locked by @webOrderRequest.OwnedByWebCooperatorName as of @webOrderRequest.OwnedByDate.ToShortDateString() at @webOrderRequest.OwnedByDate.ToShortTimeString()</span>
+                }
+            </td>
+            <td>
+                <a href="@Url.Action("View","WebOrder", new { entityId = webOrderRequest.ID })" class="btn btn-default btn-sm pull-right">View</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

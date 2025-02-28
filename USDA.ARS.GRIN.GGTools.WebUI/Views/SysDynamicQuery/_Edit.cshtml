@@ -1,0 +1,125 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDynamicQueryViewModel
+@Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+@using (Html.BeginForm("_Edit", "SysDynamicQuery", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.Entity.ParentID)
+    @Html.HiddenFor(x => x.Entity.ID)
+    @Html.HiddenFor(x => x.Entity.RelatedItemCount)
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Name</label>
+                @Html.TextBoxFor(x => x.Entity.Title, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Description</label>
+                @Html.TextBoxFor(x => x.Entity.Description, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group clearfix">
+                <div class="icheck-primary d-inline">
+                    @Html.CheckBoxFor(x => x.Entity.IsFavoriteOption, new { id = "cbxIsFavorite", @type = "checkbox", @class = "custom-control-input" })
+                    <label for="cbxIsFavorite">
+                        Add this folder to my Favorites list.
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>
+                    SQL Statement
+                    &nbsp;<i class="fas fa-info-circle" style="color:#17a2b8;"></i>
+                </label>
+                @Html.TextAreaFor(x => x.Entity.SQLStatement, new { @class = "form-control", @rows = "10" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="margin">
+                <button id="btnSaveSysDynamicQuery" type="button" class="btn btn-default float-right"><i class="fas fa-save"></i> Save Edits</button>
+                <button id="btnRunSysDynamicQuery" type="button" class="btn btn-default"><i class="fas fa-running"></i> Run Query</button>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $("#btnSaveSysDynamicQuery").click(function () {
+        SaveSysDynamicQuery();
+    });
+
+    $("#btnRunSysDynamicQuery").click(function () {
+        RunSysDynamicQuery();
+    });
+
+    function SaveSysDynamicQuery() {
+        var link = '@Url.Action("_Edit", "SysDynamicQuery")';
+        var formData = new FormData();
+
+        if ($('#cbxIsFavorite').prop('checked') == true) {
+            formData.append("Entity.IsFavorite", "Y");
+        }
+
+        formData.append("Entity.ParentID", $("#Entity_ParentID").val());
+        formData.append("Entity.ID", $("#Entity_ID").val());
+        formData.append("Entity.Title", $("#Entity_Title").val());
+        formData.append("Entity.Description", $("#Entity_Description").val());
+        formData.append("Entity.SQLStatement", $("#Entity_SQLStatement").val());
+
+        //DEBUG
+        /*alert("EVENT VAL " + eventValue + " PARENT ENTITY " + entityId);*/
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content-detail").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    function RunSysDynamicQuery() {
+        var link = '@Url.Action("_Search", "SysDynamicQuery")';
+        var formData = new FormData();
+
+        formData.append("Entity.SQLStatement", $("#Entity_SQLStatement").val());
+
+        //DEBUG
+        /*alert("EVENT VAL " + eventValue + " PARENT ENTITY " + entityId);*/
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section_search_results").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+</script>

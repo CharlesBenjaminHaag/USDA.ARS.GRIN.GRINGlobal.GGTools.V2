@@ -1,0 +1,64 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+@switch (Model.Entity.Rank.ToUpper())
+{
+    case "SUBSPECIES":
+        <div class="col-md-2">
+            <div class="form-group clearfix section-checkbox" style=" margin-top:38px;">
+                <div class="icheck-primary d-inline">
+                    @Html.CheckBoxFor(x => x.Entity.IsSubSpecificHybridOption, new { id = "cbxIsSubSpecificHybrid" })
+                    <label for="cbxIsSubSpecificHybrid">
+                        Subspecific Hybrid
+                    </label>
+                </div>
+            </div>
+        </div>
+        break;
+    case "VARIETY":
+        <div class="col-md-2">
+            <div class="form-group clearfix section-checkbox" style=" margin-top:38px;">
+                <div class="icheck-primary d-inline">
+                    @Html.CheckBoxFor(x => x.Entity.IsVarietalHybridOption, new { id = "cbxIsVarietalHybrid" })
+                    <label for="cbxIsVarietalHybrid">
+                        Varietal Hybrid
+                    </label>
+                </div>
+            </div>
+        </div>
+        break;
+    case "SUBVARIETY":
+        <div class="col-md-2">
+            <div class="form-group clearfix section-checkbox" style=" margin-top:38px;">
+                <div class="icheck-primary d-inline">
+                    @Html.CheckBoxFor(x => x.Entity.IsSubvarietalHybridOption, new { id = "cbxIsSubVarietalHybrid" })
+                    <label for="cbxIsSubVarietalHybrid">
+                        Subvarietal Hybrid
+                    </label>
+                </div>
+            </div>
+        </div>
+        break;
+    case "FORM":
+        <div class="col-md-2">
+            <div class="form-group clearfix section-checkbox" style=" margin-top:38px;">
+                <div class="icheck-primary d-inline">
+                    @Html.CheckBoxFor(x => x.Entity.IsFormaHybridOption, new { id = "cbxIsFormaHybrid" })
+                    <label for="cbxIsFormaHybrid">
+                        Forma Hybrid
+                    </label>
+                </div>
+            </div>
+        </div>
+        break;
+    default:
+        <div class="col-md-2">
+            <div class="form-group clearfix section-checkbox" style=" margin-top:38px;">
+                <div class="icheck-primary d-inline">
+                    @Html.CheckBoxFor(x => x.Entity.IsSpecificHybridOption, new { id = "cbxIsSpecificHybrid" })
+                    <label for="cbxIsSpecificHybrid">
+                        Specific Hybrid
+                    </label>
+                </div>
+            </div>
+        </div>
+        break;
+}

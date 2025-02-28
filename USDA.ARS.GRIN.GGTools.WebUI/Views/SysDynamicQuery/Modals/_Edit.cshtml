@@ -1,0 +1,112 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDynamicQueryViewModelBase
+<div class="modal fade text-sm" id="modal-sys-dynamic-query-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-database"></i>
+                    Save SQL Query
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("SaveSearch", "SysDynamicQuery", FormMethod.Post, new { id = "frmAppUserItemFolder" }))
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Folder Title</label>
+                                @Html.TextBoxFor(x=>x.Entity.Title, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                @Html.TextBoxFor(x => x.Entity.Description, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id="btnSaveSysDynamicQuery" type="button" class="btn btn-default float-right" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+*************************************************************************************************
+Modal that appears if no record is selected for folder addition.
+*************************************************************************************************
+-->
+<div class="modal fade" id="modal-validation-warning" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">No Record(s) Selected</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please first select at least one record to add to the folder.</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light float-right" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    $("#btnOpenSysDynamicQueryModal").click(function () {
+        var tableName = $("#TableName").val();
+        var dataTableName = "data_table_" + tableName;
+        var selectedItemIdList = GetSelectedEntityIDs(dataTableName);
+        $("#modal-sys-dynamic-query-edit").modal("show");
+    });
+
+    $("#btnSaveSysDynamicQuery").click(function () {
+        SaveSysDynamicQuery();
+    });
+
+    function SaveSysDynamicQuery() {
+        var link = '@Url.Action("SaveSearch", "SysDynamicQuery")';
+        var title = $("#Entity_Title").val();
+        var description = $("#Entity_Description").val();
+        var sqlStatement = $("#SearchEntity_SQLStatement").val();
+        var formData = new FormData();
+
+        formData.append("Entity.Title", title);
+        formData.append("Entity.Description", description);
+        formData.append("Entity.SQLStatement", sqlStatement);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                //DEBUG
+                alert("FOLDER SAVED");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    function ConfirmFolderSave(folderTitle) {
+        $("#new-dynamic-folder-name").html(folderTitle);
+        $("#alert-dynamic-folder-confirmation").show();
+    }
+</script>
+

@@ -1,0 +1,280 @@
+﻿@using System.Data;
+@using USDA.ARS.GRIN.GGTools.DataLayer;
+@model USDA.ARS.GRIN.GGTools.ViewModelLayer.ImportViewModel
+@{
+    ViewBag.Title = "Import";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("ImportFile", "Import", FormMethod.Post, new { id = "frmEdit", value = ViewBag.ImportFileName, enctype = "multipart/form-data" }))
+        {
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Load Import File</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-group">
+                        <label>Select Source File (.xls)</label>
+                        @Html.TextBoxFor(x => x.DocumentUpload, new { @class = "form-control", @type = "file", @value = Model.ImportFileName })
+                    </div>
+
+
+
+                </div>
+                <div class="card-footer">
+                    <button id="btnLoadDataFile" type="submit" class="btn btn-default float-right btn-flat">Load Data File</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@Html.Partial("~/Views/Import/_ListImport.cshtml")
+
+<div class="modal fade" id="modal-search-matches" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="section-modal-title" class="modal-title">Default Modal</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Species Name</label>
+                        <input type="text" id="txtSpeciesName" class="form-control" />
+                    </div>
+                </div>
+                <div id="section-species-name-matching-results">
+
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableDynamicQuery("data_table_import");
+    });
+
+    $("#btnLoadFileDefinition").on('click', function (event) {
+        GetFieldNames();
+    });
+
+    $(document).on("click", "[id*='species-selector-']", function () {
+        event.preventDefault();
+        var selectedGenusName = $(this).data("ggtools-genus");
+        var selectedSpeciesName = $(this).data("ggtools-species");
+        // get genus name
+        // get species name
+        ShowResultsModal(selectedGenusName, selectedSpeciesName);
+    });
+
+    function InitDataTableDynamicQuery(tableName) {
+        tableName = "#" + tableName;
+        $(document).ready(function () {
+            table = $(tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                "pageLength": 10,
+                scrollX: true,
+
+                responsive: true,
+                buttons: [
+                    //'selectAll',
+                    //'selectNone',
+                    //'csv',
+                    //'excel',
+                    //'pdf',
+                    {
+                        text: 'Import Selected Rows',
+                        action: function (e, dt, node, config) {
+                            ImportSelectedRows();
+                        }
+                    }
+                ],
+                select: true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                //columnDefs: [
+                //    { targets: [0], visible: false }
+                //]
+            });
+
+            // Event listener to expand/collapse child row
+            // Add event listener for opening and closing details
+            //$(tableName + ' tbody').on('click', 'td.details-control', function () {
+            //    var tr = $(this).closest('tr');
+            //    var row = table.row(tr);
+
+            //    if (row.child.isShown()) {
+            //        // This row is already open - close it
+            //        row.child.hide();
+            //        tr.removeClass('shown');
+            //    } else {
+            //        // Open this row
+            //        row.child(format(row.data())).show();
+            //        tr.addClass('shown');
+            //    }
+            //});
+
+            //function format(d) {
+            //    // `d` is the original data object for the row
+            //    return '<div>The extra details for ' + d.name + '</div>'; // Sample format
+            //}
+
+            //$(tableName).on('click', 'tr', function () {
+            //    var data = table.row(this).data();
+            //    ShowResultsModal(data[1], data[2]);
+            //});
+        });
+    }
+
+    function ImportSelectedSpeciesRecords() {
+
+    }
+
+    function GetSelectedSpeciesRecords(tableName) {
+        var table = $('#' + tableName).DataTable();
+        var ids = $.map(table.rows('.selected').data(), function (item) {
+            return item[3]
+        });
+        console.log(ids)
+        return ids;
+    }
+
+    function GetFieldNames() {
+        var link = '@Url.Action("Save","Component_FieldNameList")';
+        var formData = new FormData();
+
+        formData.append("Entity.ID", $("#Entity_ID").val());
+        formData.append("Entity.CodeValueID", $("#Entity_CodeValueID").val());
+        formData.append("Entity.CodeValueLangID", $("#Entity_CodeValueLangID").val());
+        formData.append("Entity.GroupName", $("#Entity_GroupName").val());
+        formData.append("Entity.SysLangID", $("#Entity_SysLangID").val());var link = '@Url.Action("Save","CodeValue")';
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    var selectedGroupName = $("#SelectedGroup").val();
+                    var selectedCodeValueId = $("#SelectedCodeValueID").val();
+                    GetCodeValueDetail(selectedCodeValueId);
+                    GetCodeValueList(selectedGroupName);
+                    SetCurrentRow(selectedCodeValueId);
+
+                } else {
+                    HandleError(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                HandleError(errorMessage);
+            }
+        });
+    }
+
+    function ShowResultsModal(genusName, speciesName) {
+        $("#section-modal-title").html(genusName);
+        $("#txtSpeciesName").val(speciesName);
+        GetNameMatches(genusName, speciesName);
+        $("#modal-search-matches").modal("show");
+
+    }
+
+    function GetNameMatches(genusName, speciesName) {
+        var link = '@Url.Action("GetNameMatches","Species")';
+        var formData = new FormData();
+
+        formData.append("genusName", genusName);
+        formData.append("speciesName", speciesName);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-name-matching-results").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    function LoadFileDefinition() {
+        var link = '@Url.Action("LoadFileDefinition","Import")';
+        var formData = new FormData();
+
+        formData.append("genusName", genusName);
+        formData.append("speciesName", speciesName);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-name-matching-results").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    @*function ImportFile() {
+        var link = '@Url.Action("ImportFile","Import")';
+        var formData = new FormData();
+
+        var
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-name-matching-results").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+
+    }*@
+
+    function HandleError(message) {
+        $("#section-error").show();
+        $("#section-error-message").html(message);
+
+    }
+</script>

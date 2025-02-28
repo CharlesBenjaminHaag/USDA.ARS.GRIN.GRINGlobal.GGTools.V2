@@ -1,0 +1,12 @@
+﻿@{
+    string eventAction = @ViewContext.RouteData.Values["controller"].ToString();
+    string eventValue = @ViewContext.RouteData.Values["action"].ToString();
+    var sysTableName = @Request.QueryString["sysTableName"];
+    var sysTableTitle = @Request.QueryString["sysTableTitle"];
+}
+
+<div class="col-sm-9">
+    <h1 id="placeholder-page-main-title" class="m-0">
+        @Html.Raw(ViewBag.PageTitle)
+    </h1>
+</div>

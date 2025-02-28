@@ -1,0 +1,77 @@
+---
+Proposed Cooperator Refactoring
+---
+erDiagram
+
+person {
+    INT person_id PK  
+    TEXT preferred_pronouns
+    TEXT salutation  
+    TEXT first_name
+    TEXT middle_name
+    TEXT last_name
+    TEXT phone_number
+    TEXT email_address
+    TEXT status_code "Ex. ACTIVE, INACTIVE, PENDING"
+}
+
+address {
+    INT address_id PK
+    TEXT line_1
+    TEXT line_2
+    TEXT line_3
+    TEXT city
+    TEXT state_province
+    TEXT country_code
+    TEXT postal_code
+    TEXT polygon
+}
+
+site {
+    INT site_id PK
+    TEXT abreviation
+    TEXT name
+    TEXT fao_institure_number
+    INT is_internal "Q: How used? Needed?"
+    INT is_distrib "Q: How used? Needed?"
+    int type_id "1=SEED, 2-CLONAL, 3=MIXED"
+}
+
+site_address_map {
+    INT site_id PK, FK
+    INT address_id PK, FK
+    TEXT type_code "Ex. CONTACT, other?"
+}
+
+site_person_map {
+    INT person_id PK,FK
+    INT site_id PK,FK
+    TEXT type_code "Ex. ADMIN, CURATOR"
+}
+
+site ||--o{ site_address_map : can_have
+person ||--o{ site_address_map : can_be_mapped
+
+person_address_map {
+    INT person_id PK,FK
+    INT address_id PK,FK
+    TEXT type_code "Ex. PRIMARY, SHIPPING"
+}
+
+organization {
+    INT organization_id PK
+    TEXT name
+    TEXT url
+}
+
+organization_address_map {
+    INT organization_id PK,FK
+    INT address_id PK,FK
+    TEXT type_code "Ex. PRIMARY -- needed?"
+}
+
+person ||--o{ person_address_map : can_have
+address ||--o{ person_address_map : can_be_mapped
+
+person ||--o{ organization_address_map : is_part_of
+organization ||--o{ organization_address_map : has_as_member

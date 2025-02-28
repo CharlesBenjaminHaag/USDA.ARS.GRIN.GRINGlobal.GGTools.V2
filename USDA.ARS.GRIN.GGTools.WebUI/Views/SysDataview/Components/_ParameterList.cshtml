@@ -1,0 +1,26 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDataViewViewModel
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Parameters</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div id="section-parameter-list" class="row">
+            @foreach (var param in Model.DataCollectionParameters)
+            {
+                <div class="form-group">
+                    <label>@param.ParamName</label>
+                    @Html.TextBoxFor(model => param.ParamValue, new { @id=param.ParamName, @class = "form-control" })
+                </div>
+            }
+        </div>
+    </div>
+    <div class="card-footer">
+        <button id="btnSearch" type="button" class="btn btn-default float-right">Search</button>
+    </div>
+</div>

@@ -1,0 +1,339 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AccessionInventoryAttachmentViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "AccessionInventoryAttachment", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.Entity.ID)
+    @Html.HiddenFor(x => x.Entity.CreatedByCooperatorID)
+    @Html.HiddenFor(x => x.Entity.ModifiedByCooperatorID)
+
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <i class="fa fa-info"></i>
+            <h3 class="box-title">Summary</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div id="section-input-fields" class="box-body">
+            <div class="mailbox-controls no-padding">
+            </div>
+            @Html.ValidationSummary()
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Title</label>
+                        @Html.TextBoxFor(x => x.Entity.Title, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Description</label>
+                        @Html.TextBoxFor(x => x.Entity.AttachmentDescription, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group form-horizontal">
+                        <label>Description Code</label>
+                        @Html.DropDownListFor(x => x.Entity.AttachmentDescriptionCode, Model.AttachmentDescriptionCodes, "Select code", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group form-horizontal">
+                        <label>Content Type</label>
+                        @Html.TextBoxFor(x => x.Entity.ContentType, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group form-horizontal">
+                        <label>Category Code</label>
+                        @Html.DropDownListFor(x => x.SearchEntity.CategoryCode, Model.CategoryCodes, "All codes", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group form-horizontal">
+                        <label>Web Visible</label>
+                        @Html.TextBoxFor(x => x.Entity.IsWebVisible, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="section-edit-controls" class="box-footer">
+            <button type="button" class="btn btn-danger pull-left"><i class="fa fa-undo margin-r-5"></i> Cancel</button>
+            <button type="submit" class="btn btn-default pull-right"><i class="fa fa-save margin-r-5"></i> Save</button>
+        </div>
+        
+    </div>
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <i class="fa fa-paperclip"></i>
+            <h3 class="box-title">Attachments</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div id="section-file-input-fields" class="box-body">
+            <div class="mailbox-controls">
+            </div>
+            @if (Model.Entity.CategoryCode == "IMAGE")
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Virtual Path</label>
+                            @Html.TextBoxFor(x => x.Entity.VirtualPath, new { @class = "form-control input-sm", @readonly = "readonly" })
+                        </div>
+                        <div class="form-group">
+                            <label>Upload</label>
+                            @Html.TextBoxFor(x => x.VirtualPathUpload, new { @class = "form-control input-sm", @type = "file" })
+                            <img class="img-responsive" src="@Model.Entity.VirtualPath" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label>Thumbnail Virtual Path</label>
+                                @Html.TextBoxFor(x => x.Entity.ThumbnailVirtualPath, new { @class = "form-control input-sm", @readonly="readonly" })
+                            </div>
+                            <label>Upload</label>
+                            @Html.TextBoxFor(x => x.ThumbnailVirtualPathUpload, new { @class = "form-control input-sm", @type = "file" })
+                            <img class="img-responsive" src="@Model.Entity.ThumbnailVirtualPath" alt="Accession Thumbnail" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="box-footer"></div>
+    </div>
+}
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+        SetReadOnly();
+    });
+
+    /*
+   * ===================================================================================================
+   * SPECIES LOOKUP
+   * ===================================================================================================
+   */
+    $("#btnAcceptedNameLookup").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var eventValue = $(this).data("ggtools-value");
+        $("#hfModalEventValue").val(eventValue);
+    });
+
+
+    $("#btnSpeciesNameLookup").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var eventValue = $(this).data("ggtools-value");
+        $("#hfModalEventValue").val(eventValue);
+    });
+
+    $("#btnLookupSpecies").click(function () {
+        SearchSpecies();
+    });
+
+    function SearchSpecies() {
+        var link = '@Url.Action("Lookup","Species")';
+        var speciesName = $("#txtLookupSpeciesName").val();
+        var formData = new FormData();
+
+        formData.append("SpeciesName", speciesName);
+        if ($("#cbxLookupIsAcceptedName").is(":checked")) {
+            formData.append("IsAcceptedName", "Y");
+        }
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-lookup-search-results").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    function SelectSpecies(ID, speciesName) {
+        var eventAction = "";
+        var eventValue = "";
+
+        $('#modal-species-lookup').modal('hide');
+
+        eventValue = $("#hfModalEventValue").val();
+        if (eventValue == 'SPECIES') {
+            $("#Entity_SpeciesName").val(speciesName);
+        }
+        else {
+            $("#Entity_SpeciesID").val(ID);
+            $("#Entity_SpeciesName").val(speciesName);
+        }
+    }
+
+    /*
+    * ===================================================================================================
+    * NOTE LOOKUP MODAL
+    * ===================================================================================================
+    */
+
+    $("#btnLookupNote").click(function () {
+        SearchNotes();
+    });
+
+    function SearchNotes() {
+        var link = '@Url.Action("Lookup","Note")';
+        var tableName = $("#TableName").val();
+        var noteText = $("#txtLookupNote").val();
+
+        var formData = new FormData();
+
+        formData.append("TableName", tableName);
+        formData.append("Note", noteText);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-lookup-note-search-results").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    $(document).on("click", ".note-selector", function () {
+        $('#modal-note-lookup').modal('hide');
+        var selectedNote = $(this).val();
+        CKEDITOR.instances["txtNote"].setData(selectedNote);
+    });
+
+        /*
+    * ===================================================================================================
+    * CITATION MODAL
+    * ===================================================================================================
+    */
+
+    $(document).on("click", "[id='btnLookupCitations']", function () {
+        var link = '@Url.Action("Lookup","Citation")';
+        var tableName = $("#TableName").val();
+        var literatureId = $("#SearchEntity_LiteratureID").val();
+        var citationTitle = $("#SearchEntity_CitationTitle").val();
+        var editorAuthorName = $("#SearchEntity_EditorAuthorName").val();
+        var citationYear = $("#SearchEntity_CitationYear").val();
+        var formData = new FormData();
+
+        formData.append("TableName", tableName);
+        formData.append("LiteratureID", literatureId);
+        formData.append("CitationTitle", citationTitle);
+        formData.append("EditorAuthorName", editorAuthorName);
+        formData.append("CitationYear", citationYear);
+
+        try {
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-citation-lookup-search-results").html(response);
+                }
+            });
+        }
+        catch (ex) {
+            //ErrorHandler(ex);
+        }
+    });
+
+    $(document).on("click", "[id='btnSaveCitations']", function () {
+        SaveCitations();
+    });
+
+  function SaveCitations() {
+    var link = '@Url.Action("Add","Citation")';
+    var tableName = $("#TableName").val();
+    var entityId = $("#Entity_ID").val();
+    var formData = new FormData();
+
+    formData.append("TableName", tableName);
+    formData.append("FamilyID", entityId);
+
+    var selectedItemIdList = GetSelectedEntityIDs("citation-lookup-data-table");
+
+    formData.append("IDList", selectedItemIdList);
+
+    $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (result) {
+
+        },
+        error: function () {
+            alert("Error in ApplyCitation()");
+        }
+    });
+
+    $("#modal-citation-search").modal("hide");
+    $("#frmEdit").submit();
+}
+
+    /*
+    * ===================================================================================================
+    * CKEDITOR
+    * ===================================================================================================
+    */
+    function InitializeCKEditor() {
+        const editor = CKEDITOR.replace('txtNote', {
+            width: '100%',
+            height: 100,
+            enterMode: CKEDITOR.ENTER_BR
+        }
+        );
+
+        editor.addCommand("searchNotes", {
+            exec(edt) {
+                OpenNoteLookupModal();
+            }
+        });
+
+        editor.config.coreStyles_italic = { element: 'i', overrides: 'em' };
+
+        editor.ui.addButton('SuperButton', {
+            label: "Search taxon record notes.",
+            command: 'searchNotes',
+            toolbar: 'insert',
+            height: 80,
+            width: 100,
+            icon: 'https://cdn-icons.flaticon.com/png/128/3031/premium/3031293.png?token=exp=1643047176~hmac=8e60d1aebf934f53fda6eb320d1ffedc'
+        });
+    }
+    </script>
+
+

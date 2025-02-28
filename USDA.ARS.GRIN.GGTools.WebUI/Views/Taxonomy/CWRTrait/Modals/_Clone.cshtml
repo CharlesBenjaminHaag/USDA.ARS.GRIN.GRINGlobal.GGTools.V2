@@ -1,0 +1,103 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CWRTraitViewModel
+<div class="modal fade" id="modal-taxonomy-cwr-trait-clone" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Clone CWR Trait
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Map</label>
+                        @Html.TextBoxFor(x => x.Entity.AssembledName, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                    <div class="col-md-3">
+                        <label>Trait Class</label>
+                        @Html.TextBoxFor(x => x.Entity.TraitClassTitle, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                    <div class="col-md-3">
+                        <label>Breeding Type</label>
+                        @Html.TextBoxFor(x => x.Entity.BreedingTypeTitle, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                    <div class="col-md-3">
+                        <label>Quantity</label>
+                        <div class="input-group">
+                            <input id="txtQuantity" type="number" min="1" value="1" class="form-control" />
+                            <span class="input-group-append">
+                                <button id="btnSaveCWRTraitCloneBatch" type="button" class="btn btn-default">Generate</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        @*<label>Citation</label>
+            <select id="sel-cwr-trait-citation" class="form-control">
+                @foreach (var citation in Model.Entity.Citations)
+                {
+                    <option value="@citation.ID">[@citation.ID] @citation.AssembledName</option>
+                }
+            </select>*@
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" id="section-taxonomy-cwr-trait-clone-list"></div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="btnSaveCWRTraitBatch" type="button" class="btn btn-default float-right" data-dismiss="modal">Apply Selected Citations</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#btnSaveCWRTraitCloneBatch").click(function () {
+        /*var citationId = $("#sel-cwr-trait-citation").val();*/
+        var cwrMapId = $("#Entity_CWRMapID").val();
+        var cwrTraitId = $("#Entity_ID").val();
+        var quantity = $("#txtQuantity").val();
+        
+        SaveCWRTraitCloneBatch(cwrTraitId, cwrMapId, quantity);
+    });
+
+    function SaveCWRTraitCloneBatch(cwrTraitId, cwrMapId, quantity) {
+        var link = '@Url.Action("Clone","CWRTrait")';
+        var formData = new FormData();
+
+        formData.append("cwrTraitId", cwrTraitId);
+        formData.append("cwrMapId", cwrMapId);
+        formData.append("quantity", quantity);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-taxonomy-cwr-trait-clone-list").html(response);
+            },
+            error: function (ex) {
+                alert("Error");
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+

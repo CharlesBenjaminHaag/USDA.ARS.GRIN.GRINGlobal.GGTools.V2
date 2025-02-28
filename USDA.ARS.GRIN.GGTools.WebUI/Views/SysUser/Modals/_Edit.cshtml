@@ -1,0 +1,90 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+<div class="modal fade" id="modal-sys-user-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-user"></i>
+                    Add Sys User
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <h5><i class="icon fas fa-info"></i> Your new password must:</h5>
+                    <ul>
+                        <li>be at least 12 characters long.</li>
+                        <li>be no longer than 255 characters.</li>
+                        <li>contain at least one digit.</li>
+                        <li>contain at least one lowercase letter.</li>
+                        <li>contain at least one uppercase letter.</li>
+                        <li>contain at least one special character.</li>
+                    </ul>
+                </div>
+
+                @using (Html.BeginForm("_Save", "SysUser", FormMethod.Post, new { id = "frmEditSysUser" }))
+                {
+                    @Html.HiddenFor(x => x.Entity.SysUserID)
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>User Name</label>
+                                @Html.TextBoxFor(x => x.Entity.UserName, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                @Html.TextBoxFor(x => x.Entity.Password, new { @class = "form-control", @type = "text" })
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                @Html.TextBoxFor(x => x.Entity.PasswordConfirm, new { @class = "form-control", @type = "text" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id="btnSaveSysUser" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#btnSaveSysUser").click(function () {
+        SaveSysUser();
+    });
+
+    function SaveSysUser() {
+        var link = '@Url.Action("Add","SysUser")';
+        var cooperatorId = $("#Entity_ID").val();
+        var sysUserName = $("#Entity_UserName").val();
+        var sysUserPassword = $("#Entity_Password").val();
+        var sysUserPasswordConfirm = $("#Entity_PasswordConfirm").val();
+
+        var formData = new FormData();
+
+        formData.append("CooperatorID", cooperatorId);
+        formData.append("SysUserName", sysUserName);
+        formData.append("SysUserPassword", sysUserPassword);
+        formData.append("SysUserPasswordConfirm", sysUserPasswordConfirm);
+        
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-sys-user-widget").html(response);
+            },
+            error: function (ex) {
+                alert("Error");
+            }
+        });
+    }
+</script>

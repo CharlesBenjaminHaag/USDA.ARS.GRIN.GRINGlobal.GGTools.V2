@@ -1,0 +1,187 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.RegulationViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@using (Html.BeginForm("Edit", "Regulation", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.Entity.ID)
+
+    <div class="card card-default">
+        <div class="card-header">
+            @if (Model.Entity.ID > 0)
+            {
+                <div class="btn-group">
+                    <a href="@Url.Action("Add", "RegulationMap", new { regulationId = Model.Entity.ID })" , class="btn btn-default btn-sm pull-right">
+                        <i class="fa fa-plus margin-r-5"></i>
+                        Map
+                    </a>
+                </div>
+            }
+            <div class="btn-group">
+                <button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal-note-lookup">
+                    <i class="fa fa-search margin-r-5"></i>
+                    Notes
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label id="lblStandardAbbreviation">State</label>
+                        @Html.DropDownListFor(x => x.Entity.GeographyID, Model.States, "NULL", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Regulation Type</label>
+                        @Html.DropDownListFor(x => x.Entity.RegulationTypeCode, Model.RegulationTypeCodes, "NULL", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Regulation Level</label>
+                        @Html.DropDownListFor(x => x.Entity.RegulationLevelCode, Model.RegulationLevelCodes, "NULL", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Description</label>
+                        @Html.TextBoxFor(x => x.Entity.Description, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>URL 1</label>
+                        @Html.TextBoxFor(x => x.Entity.URL1, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>URL 2</label>
+                        @Html.TextBoxFor(x => x.Entity.URL2, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Note</label>
+                    @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="@Url.Action("Refresh")" class="btn btn-warning">Cancel</a>
+            @if (Model.Entity.ID > 0)
+            {
+                <button id="btnDelete" type="button" class="btn btn-danger">
+                    Delete
+                </button>
+            }
+            <button type="submit" class="btn btn-default float-right">Save</button>
+        </div>
+    </div>
+}
+
+@if (Model.Entity.ID > 0)
+{
+    { Html.RenderAction("_List", "RegulationMap", new { @regulationId = Model.Entity.ID }); }
+}
+
+@Html.Partial("~/Views/Shared/Modals/_NoteLookup2.cshtml")
+@Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+
+<script>
+    $(document).ready(function () {
+        Init();
+        InitializeCKEditor();
+    });
+
+    function Init() {
+    }
+
+       /*
+   * ===================================================================================================
+   * SPECIES LOOKUP MODAL (MAP MODE)
+   * ===================================================================================================
+   */
+    $("#btnLookupSpecies").click(function () {
+        SearchSpecies();
+    });
+
+    function SearchSpecies() {
+        var link = '@Url.Action("Lookup","Species")';
+        var speciesName = $("#txtLookupSpeciesName").val();
+        var formData = new FormData();
+
+        formData.append("SpeciesName", speciesName);
+        if ($("#cbxLookupIsAcceptedName").is(":checked")) {
+            formData.append("IsAcceptedName", "Y");
+        }
+        formData.append("IsMultiSelect", "Y");
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-lookup-search-results").html(response);
+                $(".cwr-map-options").show();
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    $("#btnGenerateMaps").click(function () {
+        var link = '@Url.Action("Map", "Regulation")';
+        var entityId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedSpecies();
+        var formData = new FormData();
+
+        formData.append("ID", entityId);
+        if (typeof selectedItemIdList != 'undefined') {
+            formData.append("IDList", selectedItemIdList);
+        }
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#modal-species-lookup").modal("hide");
+                $("#frmEdit").submit();
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    });
+
+    function GetSelectedSpecies() {
+        var table = $('#data-table-species-lookup').DataTable();
+        var ids = $.map(table.rows('.selected').data(), function (item) {
+            return item[0]
+        });
+        console.log(ids)
+        return ids;
+    }
+
+    
+</script>

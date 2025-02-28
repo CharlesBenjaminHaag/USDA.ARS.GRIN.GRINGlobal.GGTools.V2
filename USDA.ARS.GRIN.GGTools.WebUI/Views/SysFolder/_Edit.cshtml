@@ -1,0 +1,54 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderViewModel
+@using (Html.BeginForm("Edit", "SysFolder", FormMethod.Post, new { id = "frmSysFolder" }))
+{
+    @Html.HiddenFor(x => x.EventInfo)
+    @Html.HiddenFor(x => x.Entity.ID)
+    @Html.HiddenFor(x => x.Entity.TypeCode)
+    @Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Name</label>
+                @Html.TextBoxFor(x => x.Entity.Title, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                @Html.TextBoxFor(x => x.Entity.Description, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $("#btnSaveDetails").on('click', function (event) {
+        SaveDetails();
+    });
+
+    function SaveDetails() {
+        var link = '@Url.Action("EditDetails", "SysFolder")';
+        var id = $('#frmSysFolder #Entity_ID').val();;
+        var title = $('#frmSysFolder #Entity_Title').val();
+        var description = $('#frmSysFolder #Entity_Description').val();
+        var typeCode = $('#frmSysFolder #Entity_TypeCode').val();
+        var formData = new FormData();
+
+        formData.append("Entity.ID", id);
+        formData.append("Entity.Title", title);
+        formData.append("Entity.Description", description);
+        formData.append("Entity.TypeCode", typeCode);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-details").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+}
+</script>

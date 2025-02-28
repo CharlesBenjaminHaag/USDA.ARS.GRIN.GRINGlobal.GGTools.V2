@@ -1,0 +1,467 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GGTools @AppInfo.GetVersion() @ViewBag.PageTitle</title>
+    <link rel="stylesheet" href="~/Content/dist/css/fonts.googleapis.com.css">
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="~/dist/css/adminlte.css">
+    <link rel="stylesheet" href="~/Content/dist/css/icheck-bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/autofill/2.7.0/css/autoFill.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.5.1/css/dataTables.dateTime.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/dist/css/DataTables/editor.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://editor.datatables.net/extensions/Editor/css/editor.dataTables.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css">
+
+    <!-- Include stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+
+    <!-- Include the Quill library -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+    <!--jQuery UI-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+    <!-- Date range picker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <style type="text/css">
+        .table-col-align-right {
+            text-align: right;
+        }
+
+        .ggtools-selector input {
+            opacity: 1;
+            margin-right: 5px;
+            margin-left: 3px;
+        }
+
+        .ggtools-selector-label {
+            margin-left: 25px;
+        }
+
+        .ggtools-checkbox {
+            margin-top: 40px;
+        }
+
+        table.dataTable tbody tr.selected > * {
+            box-shadow: inset 0 0 0 9999px rgb(176, 190, 217);
+            color: white;
+        }
+
+        /* .margin {
+            margin-top: 15px;
+        }*/
+
+        .social-auth-links {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .button-label {
+            margin-left: .3em;
+        }
+
+        .checkbox {
+            margin-top: 0px;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+
+        .text-danger {
+            background-color: #dd4b39;
+            color: white;
+        }
+
+        .badge {
+            padding: 5px;
+            font-size: 9.5pt;
+        }
+
+        .infraspecific-hybrid {
+            margin-top: 25px;
+        }
+
+        /*#section-extended-search-fields {
+            margin-top: 15px;
+        }*/
+
+        .section-checkbox {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .external-event {
+            cursor: default;
+        }
+    </style>
+
+    <!-- SummerNote -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/adminlte/js")
+    @Scripts.Render("~/ggtools/js")
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed text-sm">
+    <div class="wrapper">
+        @{
+            string eventAction = @ViewContext.RouteData.Values["controller"].ToString();
+            string eventValue = @ViewContext.RouteData.Values["action"].ToString();
+            string entityId = Request.QueryString["entityId"];
+        }
+
+        @Html.Hidden("hfController", eventAction)
+        @Html.Hidden("hfAction", eventValue)
+
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__wobble" src="~/dist/img/gringlobal-logo.jfif" alt="AdminLTELogo" height="90" width="90">
+        </div>
+
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light text-sm">
+            @{Html.RenderAction("GetMenu", "Menu", new { @eventAction = eventAction, @eventValue = eventValue });}
+            <ul class="navbar-nav ml-auto">
+
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-user"></i>&nbsp
+                        @AppInfo.GetAuthenticatedUser().FullName
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
+                        <span class="dropdown-item dropdown-header">@AppInfo.GetAuthenticatedUser().FullName</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-clock mr-2"></i> Logged in: @Session["USER-SESSION-START"]
+                            <span class="float-right text-muted text-sm"> </span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="@Url.Action("Logout", "Login")" class="dropdown-item dropdown-footer bg-danger">Log Out</a>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Sidebar Container -->
+        @{ string controllerName = ViewContext.RouteData.Values["controller"].ToString();
+            string actionName = ViewContext.RouteData.Values["action"].ToString();
+            string sidebarCssClass;
+
+            sidebarCssClass = "sidebar-dark-primary";
+        }
+
+        <aside class="main-sidebar @sidebarCssClass elevation-4">
+            <a href="@Url.Action("Index", "Home")" class="brand-link">
+                <img src="~/dist/img/GGlogo_BW.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">
+                    <span>GGTools</span>
+                </span>
+            </a>
+            <div class="sidebar">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="~/dist/img/user-default.png" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a href="@Url.Action("Edit", "Cooperator", new { entityId = AppInfo.GetAuthenticatedUser().CooperatorID })" class="d-block">
+                            @AppInfo.GetAuthenticatedUser().FullName
+                        </a>
+                    </div>
+                </div>
+
+                @Html.Partial("~/Views/WebOrderRequest/Components/_SearchBox.cshtml")
+
+                @switch (controllerName)
+                {
+                    case "WebOrderRequest":
+                        Html.RenderAction("RenderSidebar", "WebOrderRequest");
+                        break;
+                    default:
+                        Html.RenderAction("RenderSidebar", "Home");
+                        break;
+                }
+            </div>
+        </aside> <!-- Content Wrapper. Contains page content -->
+
+        <div class="content-wrapper text-sm">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+
+                    <!--TEST-->
+                    @if (AppInfo.IsRunningInTestMode())
+                    {
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <div class="alert alert-warning alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <h5><i class="icon fas fa-exclamation-triangle"></i>NOTE!</h5>
+                                    Application is currently running in test mode. All email notifications will be sent to the designated recipient only.
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+
+                    <div class="row mb-2">
+                        @Html.Partial("~/Views/Taxonomy/Shared/_PageTitle.cshtml")
+
+                        <div class="col-sm-3">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </section>
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside> <!-- /.control-sidebar -->
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+    @{Html.RenderAction("RenderLookupModal", "Cooperator");}
+</body>
+</html>
+
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/dist/js/adminlte.js"></script>
+
+<!-- Datatables -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+@*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>*@
+@*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>*@
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+
+
+<script type="text/javascript" src="https://cdn.datatables.net/keytable/2.12.0/js/dataTables.keyTable.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/keytable/2.12.0/js/keyTable.dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/autofill/2.7.0/js/dataTables.autoFill.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/autofill/2.7.0/js/autoFill.dataTables.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+
+<script type="text/javascript" src="~/Content/dist/js/DataTables/dataTables.editor.js"></script>
+
+<!-- Summernote (used in all Note fields)-->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+<!-- Date range picker -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+
+
+<script>
+    $(document).on({
+        ajaxStart: function () {
+            $("body").addClass("loading");
+        },
+        ajaxStop: function () {
+            $("body").removeClass("loading");
+        }
+    });
+
+    $(document).on('shown.bs.modal', function (e) {
+        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+    });
+
+    /************************************************************************************************
+     * Date range logic
+     ************************************************************************************************/
+    $(document).ready(function () {
+        ConfigureDatePickerField("#SearchEntity_CreatedDateText");
+        ConfigureDatePickerField("#SearchEntity_ModifiedDateText");
+        ConfigureDatePickerField("#SearchEntity_NameVerifiedDate");
+
+        /* Created Date */
+        $('#SearchEntity_CreatedDateText').on('apply.daterangepicker', function (ev, picker) {
+            $("#SearchEntity_CreatedDateFrom").val(picker.startDate.format('YYYY-MM-DD HH:mm'));
+            $("#SearchEntity_CreatedDateTo").val(picker.endDate.format('YYYY-MM-DD HH:mm'));
+            $("#SearchEntity_CreatedDateText").val(picker.startDate.format('YYYY-MM-DD HH:mm') + "--" + picker.endDate.format('YYYY-MM-DD HH:mm'));
+        });
+
+        $('input[name="SearchEntity_CreatedDateFrom"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
+
+        /* Modified Date */
+        $('#SearchEntity_ModifiedDateText').on('apply.daterangepicker', function (ev, picker) {
+            $("#SearchEntity_ModifiedDateFrom").val(picker.startDate.format('YYYY-MM-DD HH:mm'));
+            $("#SearchEntity_ModifiedDateTo").val(picker.endDate.format('YYYY-MM-DD HH:mm'));
+            $("#SearchEntity_ModifiedDateText").val(picker.startDate.format('YYYY-MM-DD HH:mm') + "--" + picker.endDate.format('YYYY-MM-DD HH:mm'));
+        });
+
+        $('input[name="SearchEntity_ModifiedDateText"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
+
+        /* Name Verified Date */
+        $('#SearchEntity_NameVerifiedDate').on('apply.daterangepicker', function (ev, picker) {
+            $("#SearchEntity_NameVerifiedDateFrom").val(picker.startDate.format('YYYY-MM-DD HH:mm'));
+            $("#SearchEntity_NameVerifiedDateTo").val(picker.endDate.format('YYYY-MM-DD HH:mm'));
+            $("#SearchEntity_NameVerifiedDate").val(picker.startDate.format('YYYY-MM-DD HH:mm') + "--" + picker.endDate.format('YYYY-MM-DD HH:mm'));
+        });
+
+        $('input[name="SearchEntity_NameVerifiedDate"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
+
+        /* Set first edit field active in any edit form. */
+        $("#section-search-criteria :input[type='text']:visible:enabled:first").focus();
+        $("#frmMain :input[type='text']:visible:enabled:first").focus();
+        $("#frmEdit :input[type='text']:visible:enabled:first").focus();
+        $("#frmLookup :input[type='text']:visible:enabled:first").focus();
+
+        /* When user begins typing, hide error message block. */
+        $(document).on('keypress', function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            $("#section-input-error").hide();
+        });
+    });
+
+    function ConfigureDatePickerField(fieldName) {
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $(fieldName + ' span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $(fieldName).daterangepicker({
+            startDate: start,
+            endDate: end,
+            autoUpdateInput: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        }, cb);
+        cb(start, end);
+    }
+
+    $("#btnCreatedByDateClear").on('click', function (event) {
+        $("#SearchEntity_CreatedDateText").val("");
+        $("#SearchEntity_CreatedDateFrom").val("");
+        $("#SearchEntity_CreatedDateTo").val("");
+    });
+
+    $("#btnModifiedByDateClear").on('click', function (event) {
+        $("#SearchEntity_ModifiedDate").val("");
+        $("#SearchEntity_ModifiedDateFrom").val("");
+        $("#SearchEntity_ModifiedDateTo").val("");
+    });
+
+    function ToTitleCase(str) {
+        return str.replace(
+
+            /\w\S*/g,
+            function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+
+    $(document).ready(function () {
+        InitSearchResultsDataTable();
+    });
+
+    function InitSearchResultsDataTable() {
+        var specificDiv = document.getElementById('section-search-results');
+
+        if (specificDiv) {
+            var dataTableId = $('#section-search-results').find('table:first').attr('id');
+            InitDataTable(dataTableId);
+        } else {
+            //TODO
+        }
+    }
+
+    // Used by any page that displays a list of entities. Looks for a table within
+    // a standardized section.
+    // STANDARD
+    // Search pages: section-search-results
+    // Folder edit: tab-content-items
+    function BatchEdit() {
+        var controller = $("#hfController").val();
+        var action = $("#hfAction").val();
+        var contentSectionId = "";
+
+        if ($("#section-search-results").length) {
+            contentSectionId = "#section-search-results";
+        }
+        else {
+            if ($("#tab-content-items").length) {
+                contentSectionId = "#tab-content-items";
+            }
+        }
+
+        var dataTableId = $(contentSectionId).find('table:first').attr('id');
+
+        //DEBUG
+        console.log("CALLED FROM BatchEdit() section is " + contentSectionId + " table is " + dataTableId);
+
+        /* dataTableId = dataTableId.replace("data_table_", "");*/
+
+        var idList = GetSelectedEntityIDs(dataTableId);
+
+        console.log("CALLED FROM BatchEdit() ItemIDList is " + idList);
+
+        $("#frmGetBatchEditor #ItemIDList").val(idList);
+        $("#frmGetBatchEditor").submit();
+    }
+
+    function BatchEditFiltered() {
+        var controller = $("#hfController").val();
+        var action = $("#hfAction").val();
+        var dataTableId = $('#section-search-results').find('table:first').attr('id');
+        dataTableId = dataTableId.replace("data_table_", "");
+
+        if (dataTableId == "taxonomy_species") {
+            var idList = GetFilteredEntityIDs("data_table_taxonomy_species");
+            $("#ItemIDList").val(idList);
+            $("#frmGetBatchEditor").submit();
+        }
+        else {
+            $("#modal-cooperator-lookup").modal("show");
+        }
+    }
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+@*<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>*@

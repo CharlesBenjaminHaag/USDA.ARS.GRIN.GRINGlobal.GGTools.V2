@@ -1,0 +1,103 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+<div class="row">
+    <div class="col-md-12">
+        @if (Model.IsReadOnly == "N")
+        {
+            <div>
+                <button id="btnOpenCooperatorLookup" class="btn btn-default float-right" style="margin-bottom:15px;" data-toggle="modal" data-target="#modal-cooperator-lookup">
+                    Transfer Selected Records
+                </button>
+            </div>
+        }
+            <table id="data-table-cooperator-ownership" class="table table-striped" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Table Name</th>
+                        <th>Table Title</th>
+                        <th>Records Owned</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollectionReportItems)
+                    {
+                        <tr>
+                            <td>
+                                @result.Title
+                            </td>
+                            <td>
+                                @result.Description
+                            </td>
+                            <td>
+                                @result.Total
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+</div>
+@{Html.RenderAction("RenderLookupModal", "Cooperator"); }
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitOwnershipDataTable("data-table-cooperator-ownership");
+    });
+
+    function InitOwnershipDataTable(tableName) {
+        tableName = "#" + tableName;
+
+        $(document).ready(function () {
+            table = $(tableName).DataTable({
+                dom: "Bflrtip",
+                stateSave: true,
+                responsive: true,
+                paging: true,
+                "pageLength": 10,
+                select: true,
+                layout: {
+                    topStart: {
+                        buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+                    }
+                },
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: [0, ':visible']
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: [0, 1, 2, 5]
+                        }
+                    },
+                    'colvis',
+                    'selectAll',
+                    'selectNone',
+                    {
+                        text: 'Transfer Selected Records',
+                        action: function (e, dt, node, config) {
+                            OpenCooperatorLookupModal();
+                        }
+                    }
+                ]
+            });
+
+            $('table.ggtools').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                /*alert('You clicked on ' + data[0] + "'s row");*/
+            });
+        });
+    }
+
+    function OpenCooperatorLookupModal() {
+        $("#modal-cooperator-lookup").modal("show");
+    }
+
+</script>

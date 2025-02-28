@@ -1,0 +1,63 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SynonymMapViewModelBase
+<div id="section-folder-confirmation"></div>
+<div class="card">
+    <div class="card-header p-2">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Search Criteria</a></li>
+            <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Saved Searches</a></li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="activity">
+                <div id="section-search-criteria">
+                    @using (Html.BeginForm("Search", "SpeciesSynonymMap", FormMethod.Post, new { id = "frmMain" }))
+                    {
+                    <div class="row">
+                        @Html.Partial("~/Views/Components/_ShowHideButtons.cshtml")
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>Taxon A Name</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.SpeciesAName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group form-horizontal">
+                                <label>Synonym Code</label>
+                                @Html.DropDownListFor(x => x.SearchEntity.SynonymCode, Model.SynonymCodes, "All Codes", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>Taxon B Name</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.SpeciesBName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                        @Html.Partial("~/Views/Taxonomy/SpeciesSynonymMap/_DetailExtended.cshtml")
+                    }
+                </div>
+                <div>
+                    <button id="btnReset" type="button" class="btn btn-default">Reset</button>
+                    <div class="btn-group float-right">
+                        <button id="btnSearch" type="submit" class="btn btn-default">Search</button>
+                        <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu" role="menu" style="">
+                            <a id="btnOpenDynamicFolderModal" class="dropdown-item" href="#">Save Search</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="timeline">
+                <div class="row">
+                    <div class="col-md-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

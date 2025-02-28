@@ -1,0 +1,51 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CWRMapViewModel
+<table id="data-table-cwr-map" class="table table-responsive table-striped" style=" width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th width="5%">ID</th>
+            <th>CWR Map Name</th>
+            <th>Crop Common Name</th>
+            <th>Genepool Code</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.DataCollection != null)
+        {
+            if (Model.DataCollection.Count() > 0)
+            {
+                foreach (var result in Model.DataCollection)
+                {
+                    <tr>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>
+                            <span class="label label-default">
+                                @result.ID
+                            </span>
+                        </td>
+                        <td>@result.CWRMapName</td>
+                        <td>@result.CropCommonName</td>
+                        <td>@result.GenepoolCode</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "CWRMap", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            @*@if (Model.Action == "Folder")
+                                {
+                                    <button id="btnDeleteFolderItem_@cropForCWR.ReferenceID" class="btn btn-danger btn-sm pull-right row-edit margin-r-5">
+                                        <i class="fa fa-trash"></i> Remove From Folder
+                                    </button>
+                                }*@
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+
+
+

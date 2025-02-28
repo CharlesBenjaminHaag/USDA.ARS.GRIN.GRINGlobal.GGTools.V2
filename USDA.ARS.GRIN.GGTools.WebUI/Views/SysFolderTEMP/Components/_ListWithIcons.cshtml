@@ -1,0 +1,63 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderViewModel
+
+@{
+    string folderIconCssClass = "fas fa-folder";
+}
+
+<div class="row">
+    @if (Model.DataCollection.Count > 0)
+    {
+        foreach (var result in Model.DataCollection)
+        {
+            switch (result.TypeCode)
+            {
+                case "STC":
+                    folderIconCssClass = "fas fa-folder";
+                    break;
+                case "DYN":
+                    folderIconCssClass = "fas fa-bolt";
+                    break;
+                case "SQL":
+                    folderIconCssClass = "fas fa-database";
+                    break;
+            }
+
+            <div class="col-md-4">
+                <div class="info-box shadow">
+                    <span class="info-box-icon bg-info">
+                        <i class="@folderIconCssClass"></i>
+                    </span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">
+                            @if (result.IsSharedWithMe == "Y")
+                            {
+                                <i class="fas fa-users text-warning"></i>
+                            }
+                            <a href="@Url.Action("Edit", "SysFolder", new { @entityId = result.ID })">
+                                @result.Title
+                            </a>
+                        </span>
+                        <span class="info-box-number">
+                            Created @result.CreatedDate.ToShortDateString()
+                    
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+
+        <div class="col-md-12">
+            <div class="alert alert-info alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-info"></i> No Folders Found</h5>
+                There are currently no folders in this category.
+            </div>
+        </div>
+
+    }
+
+</div>
+

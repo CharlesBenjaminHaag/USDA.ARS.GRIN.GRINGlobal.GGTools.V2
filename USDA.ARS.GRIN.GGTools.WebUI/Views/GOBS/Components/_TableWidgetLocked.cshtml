@@ -1,0 +1,19 @@
+﻿@model USDA.ARS.GRIN.GGTools.GOBS.ViewModelLayer.GOBSViewModel
+<div class="small-box bg-danger">
+    <div class="inner">
+        <h3>@sysTable.SysTableTitle</h3>
+        <p>@sysTable.Description</p>
+    </div>
+    <div class="icon">
+        <i class="fa fa-lock"></i>
+    </div>
+
+    @if (sysTable.SysTableName == "gobs_dataset")
+    {
+        <a href="@Url.Action("Get","GOBS", new { @objectType = sysTable.TableName })" class="small-box-footer">Load <i class="fas fa-arrow-circle-right"></i></a>
+    }
+    else
+    {
+        <a href="@Url.Action("GetAll","GOBS", new { @objectType = sysTable.TableName, @objectTitle = sysTable.SysTableTitle })" class="small-box-footer">Load <i class="fas fa-arrow-circle-right"></i></a>
+    }
+</div>

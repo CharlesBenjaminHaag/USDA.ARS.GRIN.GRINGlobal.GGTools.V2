@@ -1,0 +1,43 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+
+        <table id="data-table-web-order-request-items" class="table table-striped" style="width:100%;">
+            <thead>
+                <tr>
+                    <th width="5%">ID</th>
+                    <th>Accession</th>
+                    <th>Status</th>
+                    <th>Site</th>
+                    <th>Quant. Shipped</th>
+                    <th>Unit of Quant.</th>
+                    <th>Dist. Form</th>
+                    <th>Species</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var webOrderRequest in Model.DataCollectionItems)
+                {
+                    <tr>
+                        <td>@webOrderRequest.ID</td>
+                        <td>
+                            <a href="" target="_blank"></a>
+                            @webOrderRequest.AccessionText</td>
+                        <td>@webOrderRequest.StatusCode</td>
+                        <td>
+                            <a href="" target="_blank"></a>
+                            @webOrderRequest.SiteLongName (@webOrderRequest.SiteShortName)</td>
+                        
+                        <td>@webOrderRequest.QuantityShipped</td>
+                        <td>@webOrderRequest.UnitOfQuantity</td>
+                        <td>@webOrderRequest.DistributionForm</td>
+                        <td>
+                            <a href="" target="_blank"></a> @webOrderRequest.SpeciesName
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Get","WebOrderRequest", new { entityId = webOrderRequest.ID })" class="btn btn-default btn-sm pull-right">View</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+  

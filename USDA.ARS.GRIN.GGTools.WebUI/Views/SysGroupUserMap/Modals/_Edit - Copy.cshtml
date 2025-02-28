@@ -1,0 +1,92 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysGroupUserMapViewModel
+<div class="modal fade" id="modal-sys-group-user-map-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Edit Groups
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Can be Assigned To</h3>
+                            </div>
+                            <div id="section-available-sys-groups" class="card-body">
+                                <table id="data-table-available-cooperators" class="table table-striped" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @*@foreach (var result in Model.DataCollectionAvailableCooperators)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @result.ID
+                                                </td>
+                                                <td>
+                                                    @result.FullName
+                                                </td>
+                                            </tr>
+                                        }*@
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2" style="margin-top:5%;">
+                        <button id="btnAdd" class="btn btn-default btn-block" type="button">>></button>
+                        <button id="btnRemove" class="btn btn-default btn-block" type="button"><<</button>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">Currently Assigned To</h3>
+                            </div>
+                            <div id="section-current-sys-groups" class="card-body">
+                                <table id="data-table-current-sys-groups" class="table table-striped" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @*@foreach (var result in Model.DataCollectionCurrentCooperators)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @result.ID
+                                                </td>
+                                                <td>
+                                                    @result.FullName
+                                                </td>
+                                            </tr>
+                                        }*@
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    
+</script>
+

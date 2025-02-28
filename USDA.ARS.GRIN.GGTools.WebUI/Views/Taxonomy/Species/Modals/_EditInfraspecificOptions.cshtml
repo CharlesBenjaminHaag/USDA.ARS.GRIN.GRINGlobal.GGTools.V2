@@ -1,0 +1,94 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.InfraspecificOptionsViewModel
+<div class="modal fade" id="modal-edit-infraspecific-options" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Add Infraspecific Rank <span id="placeholder-rank-name"></span>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+                @using (Html.BeginForm("AddInfraspecific", "Species", FormMethod.Post, new { id = "frmEditInfraspecificOptions" }))
+                {
+                    @Html.HiddenFor(x => x.ParentSpeciesID)
+
+                    <p>Select one or more of the following fields to copy to the newly-created infraspecific name.</p>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Rank</label>
+                                @Html.DropDownListFor(x => x.SelectedRank, Model.Ranks, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="Copy protologue" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        @Html.CheckBoxFor(x => x.IsCopyProtologueRequired)
+                                        &nbsp;
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="Copy authority" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        @Html.CheckBoxFor(x => x.IsCopyAuthorityRequired)
+                                        &nbsp;
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="Copy note" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        @Html.CheckBoxFor(x => x.IsCopyNoteRequired)
+                                        &nbsp;
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="Generate autonym" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        @Html.CheckBoxFor(x => x.IsGenerateAutonymRequired)
+                                        &nbsp;
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="btnAddInfraspecificRank" type="button" class="btn btn-default" data-dismiss="modal">Continue Infraspecific Name Creation</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+﻿
+<nav id="section-sys-dataview-menu" class="mt-2">
+    <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column mt-2" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item">
+            <a href="@Url.Action("Navigate", "Home", new { applicationCode = "GGT-TAX" })" class="nav-link">
+                <i class="nav-icon fas fa-home"></i>
+                <p>Home</p>
+            </a>
+        </li>
+        
+        <li class="nav-header">DATAVIEWS</li>
+         
+            @{ Html.RenderAction("GetMenuList", "SysDataView"); }
+         
+        <li class="nav-header">SYSADMIN</li>
+        <li class="nav-item">
+            <a href="@Url.Action("Explorer","CodeValue")" class="nav-link">
+                <i class="nav-icon fas fa-table"></i>
+                <p>Code Values</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","Error")" class="nav-link">
+                <i class="nav-icon fas fa-bug"></i>
+                <p>Error Logs</p>
+            </a>
+        </li>
+    </ul>
+</nav>

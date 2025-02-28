@@ -1,0 +1,267 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GGTools @AppInfo.GetVersion()</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/dist/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/plugins/iCheck/square/blue.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <style type="text/css">
+        .register-box-body {
+            width: 500px;
+        }
+
+        .form-group has-feedback {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box" style="width:500px;">
+        <div class="login-logo">
+            <img src="~/Content/Images/GGlogo-color-sm.gif" style="margin:0px;" />&nbsp;<a href="https://adminlte.io/themes/AdminLTEindex2.html"><b>GG</b>Tools</a> @AppInfo.GetVersion()
+        </div>
+        <!-- /.login-logo -->
+        <div class="register-box-body">
+            <h3 style="margin:0px; padding-bottom:10px;"><img src="~/dist/img/GGlogo-color-sm.gif" />Request a New CT Account</h3>
+            @using (Html.BeginForm())
+            {
+                @Html.HiddenFor(x => x.EventAction)
+                @Html.HiddenFor(x => x.EventValue)
+                <div>
+                    <form action="../../index.html" method="post">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(x => x.Entity.EmailAddress, new { @class = "form-control", @placeholder = "Your email address" })
+                                    <span class="input-group-btn">
+                                        <button id="btnSearchCooperators" type="button" class="btn btn-default btn-flat" data-toggle="modal" data-target="#modal-species-lookup">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="section-employee-email" class="row" style="margin-top:15px;">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(x => x.Entity.EmailAddress, new { @class = "form-control", @placeholder = "Employee email address" })
+                                    <span class="input-group-btn">
+                                        <button id="btnSearchCooperators" type="button" class="btn btn-default btn-flat" data-toggle="modal" data-target="#modal-species-lookup">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="section-employee-details">
+                            <div class="row" style="margin-top:15px;">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.FirstName, new { @class = "form-control", @placeholder = "First name" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.LastName, new { @class = "form-control", @placeholder = "Last name" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.Organization, new { @class = "form-control", @placeholder = "Organization" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.Organization, new { @class = "form-control", @placeholder = "Job title" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div class="alert alert-warning alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <h4><i class="icon fa fa-warning"></i> Cooperator Record Found</h4>
+                                <strong>Name: </strong>Haag, Benjamin
+                                <address>
+                                    10118 McKenney Ave.<br />
+                                    Silver Spring, MD 20902
+                                </address>
+                                <strong>Site:</strong> DBMU
+                                <div style="text-align:right;">
+                                    <button class="btn btn-outline">Use this address.</button>
+                                    <button class="btn btn-outline">
+                                        I will enter a new one.
+                                    </button>
+                                </div>
+                            </div>*@
+
+                        <label>Postal Address</label>
+                        <div id="section-employee-address" class="row">
+                            <div class="col-md-12">
+                                <!-- ADDRESS -->
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="Address 1">
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="Address 2">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" placeholder="City">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" placeholder="State">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" placeholder="ZIP">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ENVIRONMENTS -->
+                        <label>Environment(s)</label>
+                        <div id="section-employee-environments" class="row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="text" disabled="" readonly class="form-control" value="Production">
+                                    <span class="input-group-addon">
+                                        <input id="cbxCopyNote" type="checkbox" checked="checked">
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="text" disabled="" readonly class="form-control" value="Training">
+                                    <span class="input-group-addon">
+                                        <input id="cbxCopyNote" type="checkbox" checked="checked">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:15px;">
+                            <div class="col-xs-4">
+                                <a href="@Url.Action("Index","Login")" class="btn btn-danger btn-block btn-flat">Cancel</a>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-xs-8">
+                                <button id="btnSubmitRequest" type="submit" class="btn btn-primary btn-block btn-flat">Submit Account Request</button>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+        <!-- /.login-box-body -->
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery 3 -->
+    <script src="https://adminlte.io/themes/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="https://adminlte.io/themes/AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- iCheck -->
+    <script src="https://adminlte.io/themes/AdminLTE/plugins/iCheck/icheck.min.js"></script>
+    <script>
+
+    </script>
+    @*<script src="~/Scripts/ggtools-common.js"></script>*@
+</body>
+</html>
+
+<div class="modal fade" id="modal-cooperator-confirm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Cooperator Exists</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-solid">
+                            A cooperator with the email address <strong>TODO EMAIL </strong> already exists.
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnOK" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+
+        try {
+            $("#section-employee-email :input").attr("disabled", true);
+            $("#section-employee-details :input").attr("disabled", true);
+            $("#section-employee-address :input").attr("disabled", true);
+            $("#section-employee-environments :input").attr("disabled", true);
+            $("#btnSubmitRequest").attr("disabled", true);
+        }
+        catch (exception) {
+        }
+    }
+
+    $(document).on("click", "[id='btnSearchCooperators']", function () {
+        // TODO
+        // Call cooperator search
+        // If record found, enable emp email
+        $("#section-employee-email :input").attr("disabled", false);
+    });
+
+</script>

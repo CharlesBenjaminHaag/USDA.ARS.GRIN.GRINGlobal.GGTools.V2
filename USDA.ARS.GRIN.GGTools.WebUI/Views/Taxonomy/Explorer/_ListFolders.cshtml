@@ -1,0 +1,14 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.FolderViewModel
+<div class="form-group">
+    @{ 
+        var controlId = "ddlSelectFolder_" + Model.SearchEntity.FolderType;
+    }
+
+    <select id=@controlId data-ggtools-folder-type="@Model.SearchEntity.FolderType" class="form-control">
+        <option value="-9">Select a folder</option>
+        @foreach (var result in Model.DataCollection)
+        { 
+            <option value="@result.ID">@result.FolderName</option>
+        }
+    </select>
+</div>

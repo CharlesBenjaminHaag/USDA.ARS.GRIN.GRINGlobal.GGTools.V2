@@ -1,0 +1,32 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<h5>Items</h5>
+    <table id="data-table-web-order-request-items" class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Accession</th>
+                <th>Site</th>
+                <th>Shipped</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model.DataCollectionItems)
+            {
+                <tr>
+                    <td>@result.ID</td>
+                    <td>@result.StatusCode</td>
+                    <td><a href="https://npgsweb.ars-grin.gov/gringlobal/accessiondetail?id=@result.AccessionID">@result.AccessionText</a></td>
+                    <td><a href="https://npgsweb.ars-grin.gov/gringlobal/site?id=@result.SiteID">@result.SiteLongName (@result.SiteShortName)</a></td>
+                    <td>@result.QuantityShipped</td>
+                    <td>@result.UnitOfQuantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-web-order-request-items");
+    });
+</script>

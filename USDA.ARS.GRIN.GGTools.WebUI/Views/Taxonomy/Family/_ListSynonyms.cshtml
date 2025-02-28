@@ -1,0 +1,64 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.FamilyViewModel
+
+            <table id="data-table-family-synonyms" class="table table-striped ggtools-table" style=" width:100%;">
+                <thead>
+                    <tr>
+                       
+                        <th width="5%">ID</th>
+                        <th>Family Name</th>
+                        <th>Authority</th>
+                        <th>Subfamily Name</th>
+                        <th>Tribe Name</th>
+                        <th>Subtribe Name</th>
+                        <th style="text-align:center;">Accepted</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollectionSynonyms)
+                    {
+                    <tr>
+
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Family", new { @entityId = result.ID })">
+                                @result.FamilyName
+                            </a>
+                        </td>
+                        <td>
+                            @result.FamilyAuthority
+                        </td>
+
+                        <td>
+
+                            @result.SubfamilyName
+
+                        </td>
+                        <td>
+
+                            @result.TribeName
+
+                        </td>
+                        <td>
+
+                            @result.SubtribeName
+
+                        </td>
+                        <td style="text-align:center;">
+                            @Html.Raw(Model.FormatBoolean(result.IsAcceptedName))
+                        </td>
+                        <td style="text-align:right;">
+                        </td>
+                    </tr>
+                    }
+                        
+                </tbody>
+            </table>
+        
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-family-synonyms");
+    });
+</script>

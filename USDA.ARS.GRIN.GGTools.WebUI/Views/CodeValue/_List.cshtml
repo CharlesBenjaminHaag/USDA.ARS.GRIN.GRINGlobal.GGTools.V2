@@ -1,0 +1,56 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CodeValueViewModel
+@Html.HiddenFor(x => x.EventAction)
+@Html.HiddenFor(x => x.EventValue)
+<table id="data-table-code-values" class="table table-striped ggtools-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Lang ID</th>
+            <th>Code</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Created</th>
+            <th>Last Modified</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.DataCollection.Count() > 0)
+        {
+            foreach (var result in Model.DataCollection)
+            {
+        <tr>
+            <td>
+                @result.ID
+            </td>
+            <td>@result.CodeValueID</td>
+            <td>@result.CodeValueLangID</td>
+            <td>@result.Code</td>
+            <td>@result.CodeTitle</td>
+            <td>@result.CodeDescription</td>
+            <td>
+                @result.CreatedDate.ToString("yyyy-MM-dd")
+            </td>
+            <td>
+                @if (result.ModifiedDate > DateTime.MinValue)
+                {
+                    @result.ModifiedDate.ToString("yyyy-MM-dd")
+                }
+            </td>
+            <td class="table-col-align-right">
+                <a href="@Url.Action("Edit", "CodeValue", new { entityId = result.CodeValueID })" class="btn btn-default btn-flat btn-sm pull-right row-edit">
+                    <i class="fa fa-edit"></i> Edit
+                </a>
+            </td>
+        </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-code-values");
+    });
+</script>

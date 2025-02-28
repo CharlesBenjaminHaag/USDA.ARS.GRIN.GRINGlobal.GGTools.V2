@@ -1,0 +1,105 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.FamilyMapViewModel
+<div class="card card-success">
+    <div class="card-header">
+        <h3 class="card-title">Families (@Model.DataCollection.Count)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results">
+            <table id="data_table_taxonomy_family_map" class="table table-striped ggtools-table" style=" width:100%;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th width="5%">ID</th>
+                        <th>Order Name</th>
+                        <th>Family Name</th>
+                        <th>Subfamily Name</th>
+                        <th>Tribe Name</th>
+                        <th>Subtribe Name</th>
+                        <th style="text-align:center;">Accepted</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollection)
+                    {
+                        <tr>
+                            <td>
+                                @result.ID
+                            </td>
+                            <td>
+                                @switch (result.Rank)
+                                {
+                                    case "SUBFAMILY":
+                                        <a href="@Url.Action("Edit", "FamilyMap", new { entityId = result.ID })">
+                                            [@result.ID]
+                                        </a>
+                                        break;
+                                    case "TRIBE":
+                                        <a href="@Url.Action("Edit", "FamilyMap", new { entityId = result.ID })">
+                                            [@result.ID]
+                                        </a>
+                                        break;
+                                    case "SUBTRIBE":
+                                        <a href="@Url.Action("Edit", "FamilyMap", new { entityId = result.ID })">
+                                            [@result.ID]
+                                        </a>
+                                        break;
+                                    default:
+                                        <a href="@Url.Action("Edit", "FamilyMap", new { entityId = result.ID })">
+                                            [@result.ID]
+                                        </a>
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Classification", new { @entityId = result.OrderID })">
+                                    @result.OrderName
+                                </a>
+                            </td>
+                            <td>
+                                @result.FamilyName
+                            </td>
+                            <td>
+                                @result.SubfamilyName
+                            </td>
+                            <td>
+                                @result.TribeName
+                            </td>
+                            <td>
+                                @result.SubtribeName
+                            </td>
+                            <td style="text-align:center;">
+                                @Html.Raw(Model.FormatBoolean(result.IsAcceptedName))
+                            </td>
+                            <td style="text-align:right;">
+                                @if (Model.EventAction == "FOLDER")
+                                {
+                                    <a href="@Url.Action("DeleteItem", "AppUserItemFolder", new { @folderId = result.FolderID, @appUserItemListId = result.AppUserItemListID })"
+                                       class="btn btn-danger btn-sm float-right row-edit margin-r-5">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Edit", "FamilyMap", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data_table_taxonomy_family_map");
+    });
+</script>

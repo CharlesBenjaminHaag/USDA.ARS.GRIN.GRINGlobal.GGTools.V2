@@ -1,0 +1,34 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+
+        <table id="data-table-source-cooperator-records-owned" class="table table-striped" style="width:100%;">
+            <thead>
+                <tr>
+                    <th width="5%"></th>
+                    <th>Table</th>
+                    <th>Owned</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollectionReportItems)
+                {
+                    if (result.ItemCount > 0)
+                    {
+                        <tr>
+                            <td>
+                                @result.Title
+                            </td>
+                            <td>
+                                @result.Title
+                            </td>
+                            <td>
+                                @result.ItemCount
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    
+<script type="text/javascript">
+    InitDataTableLightMultiSelect('data-table-source-cooperator-records-owned');
+</script>

@@ -1,0 +1,110 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+
+<div class="modal fade" id="modal-web-order-request-approve" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Approve Web Order Request #@Model.Entity.ID
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+
+                <!--BEGIN TEST-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Reason for approving this web order request (optional)</label>
+                        @Html.TextAreaFor(x=>x.EventNote, new { @class="form-control" })
+                    </div>
+                </div>
+                <br />
+                <div class="card card-primary collapsed-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Preview and Edit Email</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>From</label>
+                                @Html.TextBoxFor(x => x.ActionEmailFrom, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>To</label>
+                                @Html.TextBoxFor(x => x.ActionEmailTo, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Subject</label>
+                                @Html.TextBoxFor(x => x.ActionEmailSubject, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Body</label>
+                                @Html.TextAreaFor(x => x.ActionEmailBody, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- END TEST-->
+
+                <div class="row">
+                    <div class="col-md-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="btnSaveSpecies" type="button" class="btn btn-default" data-dismiss="modal">Send Email and Approve</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<div id="modal-web-order-request-approve" class="modal modal-success fade" role='dialog'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">
+                    <i class="fa fa-thumbs-up"></i> 
+                    Approve Web Order <span id="web-order-request-id"></span>
+                </h4>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <h4>
+                    This will return this web order request to <strong>Submitted</strong> status, and make it visble
+                    within the Order Wizard.
+                </h4>
+                <div class="form-group">
+                    <label>Add Note (Internal User Only)</label>
+                    <textarea id="txtApprovalNote" class="form-control note-format" rows="5"></textarea>
+                </div>
+                <div class="input-group">
+                    <input type="text" disabled="" readonly class="form-control" style="background-color: #00a65a; color:white;" value="Send email to curators">
+                    <span class="input-group-addon" style="background-color: #00a65a; color:white;">
+                        <input id="cbxApproveEmailCurators" type="checkbox" checked="checked">
+                    </span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSubmitApprove" class="btn btn-outline" data-dismiss="modal">Continue</button>
+                <button type="button" id="btn-approve-cancel" class="btn btn-outline pull-left" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>*@

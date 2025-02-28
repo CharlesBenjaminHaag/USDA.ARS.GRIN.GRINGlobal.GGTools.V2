@@ -1,0 +1,83 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+
+@{
+    string sectionId = Model.Entity.ID.ToString();
+    string hfGenusId = "hfGenusID" + Model.Entity.ID.ToString();
+    string txtSpeciesID = "txtSpeciesID" + Model.Entity.ID.ToString();
+    string txtGenusName = "txtGenusName" + Model.Entity.ID.ToString();
+    string hfGenusName= "hfGenusName" + Model.Entity.ID.ToString();
+    string txtSpeciesName = "txtSpeciesName" + Model.Entity.ID.ToString();
+    string hfSpeciesName = "hfSpeciesName" + Model.Entity.ID.ToString();
+    string txtProtologue = "txtProtologue" + Model.Entity.ID.ToString();
+
+    string txtAuthority = "txtAuthority" + Model.Entity.ID.ToString();
+
+    string btnOpenLookupModalGenus = "btnOpenLookupModalGenus" + Model.Entity.ID.ToString();
+    string btnOpenLookupModalProtologue = "btnOpenLookupModalProtologue" + Model.Entity.ID.ToString();
+    string btnOpenLookupModalAuthority = "btnOpenLookupModalAuthority" + Model.Entity.ID.ToString();
+    string btnSave = "btnSave" + Model.Entity.ID.ToString();
+    string btnUndo = "btnUndo" + Model.Entity.ID.ToString();
+}
+
+@using (Html.BeginForm("_Save", "Species", FormMethod.Post, new { id = "frmEdit" }))
+{
+    <div id="@sectionId" class="row">
+        <div class="col-md-1">
+            <div class="form-group">
+                @Html.TextBoxFor(x => x.Entity.ID, new { id = txtSpeciesID, @class = "form-control field-id", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+
+                <div class="input-group">
+                    @Html.TextBoxFor(x => x.Entity.GenusName, new { id = txtGenusName, @class = "form-control", })
+                    @Html.HiddenFor(x => x.Entity.GenusID, new { id = hfGenusId })
+                    <span class="input-group-append">
+                        <button id="@btnOpenLookupModalGenus" data-ggtools-action="genus" data-ggtools-id="@Model.Entity.ID" type="button" class="btn btn-default btn-flat btn-lookup">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                @Html.TextBoxFor(x => x.Entity.SpeciesName, new { id = txtSpeciesName, @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-3">
+
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.Entity.Protologue, new { id = txtProtologue, @class = "form-control" })
+                <span class="input-group-append">
+                    <button id="@btnOpenLookupModalProtologue" data-ggtools-action="protologue" data-ggtools-id="@Model.Entity.ID" type="button" class="btn btn-default btn-flat btn-lookup" data-toggle="modal" data-target="#modal-protologue-lookup">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group">
+                @Html.TextBoxFor(x => x.Entity.NameAuthority, new { id = txtAuthority, @class = "form-control" })
+                <input type="hidden" id=""
+                <span class="input-group-append">
+                    <button type="button" id="@btnOpenLookupModalAuthority" data-ggtools-action="authority" data-ggtools-id="@Model.Entity.ID" class="btn btn-default btn-flat btn-lookup" data-toggle="modal" data-target="#modal-protologue-lookup">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button id=@btnUndo type="button" class="btn btn-default btn-undo" data-ggtools-id="@Model.Entity.ID"><i class="fa fa-undo"></i></button>
+            <button id="@btnSave" type="button" class="btn btn-default btn-save" data-ggtools-id="@Model.Entity.ID"><i class="fa fa-save"></i></button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <span class="direct-chat-timestamp float-right">Last modified <strong>@Model.Entity.ModifiedDate</strong></span>
+        </div>
+    </div>
+}
+
+

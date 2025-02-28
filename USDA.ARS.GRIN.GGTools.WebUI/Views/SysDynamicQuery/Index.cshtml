@@ -1,0 +1,26 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDynamicQueryViewModel
+@{
+    ViewBag.Title = "Dynamic Query";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.HiddenFor(x => x.RowsAffected)
+<div class="row">
+    <div class="col-md-12">
+        @Html.Partial("~/Views/SysDynamicQuery/_Detail.cshtml")
+        @Html.Partial("~/Views/SysDynamicQuery/_SearchResultsList.cshtml")
+    </div>
+</div>
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "SQL" }); }
+<script type="text/javascript">
+    $('.table-selector').on('click', function () {
+        var data = $(this).attr('id');
+        var sql = "SELECT * FROM TABLE_NAME";
+        sql = sql.replace("TABLE_NAME", data);
+        $("#txtSQL").val(sql);
+    });
+
+    $('.field-selector').on('click', function () {
+        var data = $(this).attr('id');
+        alert("DEBUG FIELD IS " + data);
+    });
+</script>

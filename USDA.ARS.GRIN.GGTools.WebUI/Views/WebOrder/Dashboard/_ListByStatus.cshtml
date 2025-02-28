@@ -1,0 +1,31 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<!-- STATUS COUNTS -->
+<div class="row">
+    @foreach (var reportItem in Model.DataCollectionReportItems)
+    {
+        if (reportItem.Title != "SUBMITTED")
+        {
+            <div id="section-totals-by-status" class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box @reportItem.CSSClass">
+                    <span class="info-box-icon"><i class="fa @reportItem.IconName"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-nrr">
+                            <a class="dashboard-link" style="color:white;" href="@Url.Action("Search", "WebOrder", new { status = reportItem.Title })">
+                                @reportItem.Title
+                            </a>
+                        </span>
+                        <span class="info-box-number">@reportItem.ItemCount</span>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: @reportItem.ItemPercentage%"></div>
+                        </div>
+                        <span class="progress-description">
+                            @reportItem.ItemPercentage% of @Model.RowsAffected Web Orders   
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,95 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CommonNameViewModel
+<div class="modal fade" id="modal-common-name-batch-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Common Name Batch Edit
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @foreach (var result in Model.DataCollection)
+                { 
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Name</label>
+                                @Html.TextBox("txtName", result.Name, new { @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Species Name</label>
+                                @Html.TextBox("txtSpeciesName", result.SpeciesName, new { @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Citation</label>
+                                <select id="sel-common-name-@result.ID" class="form-control">
+                                    @foreach (var citation in result.Citations)
+                                    {
+                                        <option value="@citation.ID">[@citation.ID] @citation.AssembledName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="btnSaveCommonNameBatch" type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#btnSaveCommonNameBatch").click(function () {
+        var keyList = [];
+
+        $("select[id^='sel-common-name-']").each(function () {
+            var val = $(this).val();
+            var id = $(this).attr("id").replace("sel-common-name-", "");
+            var key = id + "_" + val;
+            keyList.push(key);
+        });
+        SaveBatch(keyList);
+    });
+
+    function SaveBatch(keyList) {
+        var link = '@Url.Action("BatchEdit","CommonName")';
+        var formData = new FormData();
+        formData.append("keyList", keyList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                $("#frmMain").submit();
+            },
+            error: function (ex) {
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+

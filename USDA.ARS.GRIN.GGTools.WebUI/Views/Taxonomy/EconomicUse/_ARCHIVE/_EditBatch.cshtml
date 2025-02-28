@@ -1,0 +1,140 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.EconomicUseViewModel
+@using (Ajax.BeginForm("BatchEdit", "EconomicUse", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "tab-content-taxonomy-economic-use", InsertionMode = InsertionMode.Replace }))
+{
+    <div class="card card-primary collapsed-card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-dollar-sign"></i> Economic Use</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            @Html.HiddenFor(x => Model.EventAction)
+            @Html.HiddenFor(x => Model.EventValue)
+            @Html.HiddenFor(x => Model.SpeciesIDList)
+            @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Usage Type</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Entity.AssembledName, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.HiddenFor(x => x.Entity.EconomicUsageTypeID)
+                            <span class="input-group-append">
+                                <a href="@Url.Action("Edit", "EconomicUsageType", new { @entityId = Model.Entity.EconomicUsageTypeID })" class="btn btn-default btn-flat">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                            </span>
+                            <span class="input-group-append">
+                                <button id="btnOpenEconomicUsageTypeLookupModal"
+                                        type="button"
+                                        class="btn btn-default btn-flat"
+                                        data-ggtools-action="EconomicUsageTypeID"
+                                        data-ggtools-value="AssembledName"
+                                        data-toggle="modal"
+                                        data-target="#modal-economic-usage-type-lookup">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Plant Part</label>
+                        @Html.DropDownListFor(x => x.Entity.PlantPartCode, Model.PlantPartCodes, "NULL", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Note</label>
+                        @Html.TextBoxFor(x => x.Entity.Note, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <table id="data_table_taxonomy_use" class="table table-striped ggtools-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th width="5%">ID</th>
+                        <th>Species Name</th>
+                        <th>Economic Use</th>
+                        <th>Plant Part</th>
+                        <th>Citation</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollection)
+                    {
+                        <tr>
+                            <td>
+                                @result.ID
+                            </td>
+                            <td>@result.ID</td>
+                            <td>
+                                <a href="@Url.Action("Edit","Species", new { @entityId = result.SpeciesID })">
+                                    @Html.Raw(result.SpeciesName)
+                                </a>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit","EconomicUsageType", new { @entityId = result.EconomicUsageTypeID })">
+                                    @result.AssembledName
+                                </a>
+                            </td>
+                            <td>@result.PlantPartDescription</td>
+                            <td>
+                                <a href="@Url.Action("Edit","Citation", new { @entityId = result.CitationID })">
+                                    @Html.Raw(result.CitationText)
+                                </a>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "EconomicUse", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                @if (Model.EventAction == "FOLDER")
+                                {
+                                    <a href="@Url.Action("DeleteItem", "AppUserItemFolder", new { @folderId = result.FolderID, @sysFolderItemMapId = result.SysFolderItemMapId })"
+                                       class="btn btn-danger btn-sm float-right row-edit margin-r-5">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+        <div class="card-footer">
+            <button id="btnGenerateEconomicUses" class="btn btn-default btn-block btn-flat float-right">Generate For Selected Species <i class="fas fa-fast-forward"></i></button>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data_table_taxonomy_use");
+    });
+
+    $("#btnGenerateEconomicUses").on('click', function (event) {
+        var selectedSpeciesIdList = GetSelectedEntityIDs("data-table-species-lookup");
+        $("#SpeciesIDList").val(selectedSpeciesIdList);
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

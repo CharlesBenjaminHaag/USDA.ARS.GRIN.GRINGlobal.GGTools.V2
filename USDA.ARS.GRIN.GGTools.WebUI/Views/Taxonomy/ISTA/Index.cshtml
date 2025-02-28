@@ -1,0 +1,69 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.ISTASeedViewModel
+@{
+    ViewBag.Title = ViewBag.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">@Model.DataCollection.Count Records Found</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div id="section-search-results" class="card-body">
+        <a href="@Url.Action("Export","ISTA")" class="btn btn-primary float-right m-1">
+            Generate ISTA Report
+        </a>
+        <table id="table-upov-data" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Species Name</th>
+                    <th>Accepted?</th>
+                    <th>Accepted Name</th>
+                    <th>Family Name</th>
+                    <th>Alt. Fam. Name</th>
+                    <th>UPOV Code</th>
+                    <th>Note</th>
+                    <th>Last Modified</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var istaSeed in Model.DataCollection)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Edit","Species", new { @entityId = istaSeed.SpeciesID})">
+                                @Html.Raw(istaSeed.ISTASpeciesName)
+                            </a>
+                        </td>
+                        <td>@istaSeed.NameStatus</td>
+                        <td>
+                            <a href="@Url.Action("Edit","Species", new { @entityId = istaSeed.AcceptedID})">
+                                @Html.Raw(istaSeed.ISTAAcceptedName)
+                            </a>
+                       </td>
+                        <td>
+                            <a href="@Url.Action("Edit","Family", new { @entityId = istaSeed.FamilyID})">@istaSeed.FamilyName</a>
+                        </td>
+                        <td>@istaSeed.FamilyAlternateName</td>
+                        <td>
+                            <a href="https://www.upov.int/genie/details.xhtml?cropId=@istaSeed.UPOVCodeID">
+                                @istaSeed.UPOVCode
+                            </a>
+                        </td>
+                        <td>@istaSeed.Note</td>
+                        <td>
+                            @if (istaSeed.ModifiedDate != DateTime.MinValue)
+                            {
+                                @istaSeed.ModifiedDate.ToString("yyyy-MM-dd")
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

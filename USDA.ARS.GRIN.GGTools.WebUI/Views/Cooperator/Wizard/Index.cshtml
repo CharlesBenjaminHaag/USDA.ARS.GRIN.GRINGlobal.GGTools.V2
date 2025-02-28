@@ -1,0 +1,30 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorWizardViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<div class="row" style="background-color:yellow;">
+    <div class="col-md-3">
+        @Model.CooperatorID
+    </div>
+    <div class="col-md-3">
+        @Model.SysUserID
+    </div>
+    <div class="col-md-3">
+        @Model.SysGroupUserMapCount
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+@{Html.RenderAction("RenderCooperatorWidget", "CooperatorWizard", new { @cooperatorId = Model.CooperatorID });}
+
+@if (Model.CooperatorID > 0)
+{
+    { Html.RenderAction("RenderSysUserWidget", "CooperatorWizard", new { @cooperatorId = Model.CooperatorID, @sysUserId = Model.SysUserID }); }
+}
+
+ @if(Model.SysUserID > 0)
+{
+    <h3>DEBUG GROUPS HERE</h3>
+}

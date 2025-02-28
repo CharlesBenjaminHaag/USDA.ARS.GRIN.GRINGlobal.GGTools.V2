@@ -1,0 +1,59 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.OrderRequestViewModel
+@using (Html.BeginForm("Edit", "Author", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.Entity.ID)
+    @Html.HiddenFor(x => x.AppUserItemFolderID)
+    @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+    <div class="row">
+        <div class="col-md-1">
+            <div class="form-group">
+                <label>ID</label>
+                @Html.TextBoxFor(x => x.Entity.ID, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="form-group">
+                <label>Local No.</label>
+                @Html.TextBoxFor(x => x.Entity.LocalNumber, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>Order Date</label>
+                @Html.TextBoxFor(x => x.Entity.OrderedDate, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>Type</label>
+                @Html.TextBoxFor(x => x.Entity.OrderTypeDescription, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Intended Use</label>
+                @Html.TextBoxFor(x => x.Entity.IntendedUseCode, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Obtained Via</label>
+                @Html.TextBoxFor(x => x.Entity.OrderObtainedVIA, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Obtained Via</label>
+                @Html.TextBoxFor(x => x.Entity.IntendedUseNote, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+}
+

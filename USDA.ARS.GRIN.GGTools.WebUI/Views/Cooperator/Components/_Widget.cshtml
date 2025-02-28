@@ -1,0 +1,54 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+
+
+                    <div class="card bg-light d-flex flex-fill">
+                        <div class="card-header text-muted border-bottom-0">
+                            @Model.Entity.EmailAddress
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="lead"><b>@Model.Entity.FullName</b></h2>
+                                    <p class="text-muted text-sm"><b>Organization: </b><br /> @Model.Entity.Organization @Model.Entity.OrganizationAbbrev @Model.Entity.OrganizationRegionCode </p>
+                                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                                        @*<li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: @Model.Entity.AddressLine1 @Model.Entity.City @Model.Entity.StateName @Model.Entity.PostalIndex</li>*@
+                                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: @Model.Entity.PrimaryPhone</li>
+                                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Site: @Model.Entity.SiteShortName</li>
+                                    </ul>
+                                </div>
+                                <div class="col-5 text-center">
+                                    <img src="~/dist/img/user-default.png" alt="user-avatar" class="img-circle img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="text-right">
+                                <a href="#" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-remove"></i>Deactivate
+                                </a>
+                                <a href="@Url.Action("Edit", "Cooperator", new { @entityId = Model.Entity.ID })" class="btn btn-sm btn-default">
+                                    <i class="fas fa-user"></i> View Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+               
+<script type="text/javascript">
+    InitWidgetDataTable("data-table-site-cooperators");
+    function InitWidgetDataTable(tableName) {
+        $(document).ready(function () {
+            tableName = "#" + tableName;
+            table = $(tableName).DataTable({
+                paging: false,
+                responsive: true,
+                select: {
+                    style: 'single'
+                },
+                searching: false,
+                columnDefs: [
+                    { targets: [0], visible: false }
+                ]
+            });
+        });
+    }
+</script>

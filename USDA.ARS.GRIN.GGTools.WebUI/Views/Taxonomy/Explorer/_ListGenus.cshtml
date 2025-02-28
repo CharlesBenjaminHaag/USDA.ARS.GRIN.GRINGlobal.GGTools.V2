@@ -1,0 +1,19 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GenusViewModel
+@foreach (var result in Model.DataCollection)
+{
+    <div class="card card-primary collapsed-card">
+        <div class="card-header">
+            <h3 class="card-title">@result.Name</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body" style="display:none;">
+            <div id="section-species-list-@result.ID" class="list-group">
+                @{ Html.RenderAction("_ListSpecies", "Explorer", new { genusId = result.ID }); }
+            </div>
+        </div>
+    </div>
+}

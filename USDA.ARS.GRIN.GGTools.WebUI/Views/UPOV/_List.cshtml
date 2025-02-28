@@ -1,0 +1,126 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.UPOVViewModel
+
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Accessions (@Model.DataCollection.Count)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("Import", "UPOV", FormMethod.Post, new { id = "frmMain" }))
+        {
+            <button class="btn btn-default btn-flat float-right" type="submit">Import</button>
+            <hr />
+        }
+        <div id="section-search-results-override">
+            <table id="table-upov-data" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>UPOV Code</th>
+                        <th>Principal Bot. Name</th>
+                        <th>Other Bot. Name</th>
+                        <th>(Matching) Species Name</th>
+                        <th>UPOV Common Name</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var upovRecord in Model.DataCollection)
+                    {
+                        <tr>
+                            <td><a href="https://www.upov.int/genie/details.xhtml?cropId=@upovRecord.UPOVCodeID">@upovRecord.UPOVCode</td>
+                            <td>@upovRecord.PrincipalBotanicalName</td>
+                            <td>@upovRecord.OtherBotanicalName</td>
+                            <td><a href="@Url.Action("Edit","Species", new { @entityId = upovRecord.SpeciesID })">@Html.Raw(@upovRecord.SpeciesName)</a></td>
+
+                            <td>@upovRecord.CommonNameText</td>
+                             
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitUPOVDataTable("table-upov-data");
+    });
+
+    function InitUPOVDataTable(tableName)
+    {
+
+
+    tableName = "#" + tableName;
+
+    $(document).ready(function () {
+        table = $(tableName).DataTable({
+            dom: "Bflrtip",
+            stateSave: true,
+            responsive: true,
+            paging: true,
+            "pageLength": 100,
+            select: true,
+            layout: {
+                topStart: {
+                    buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+                }
+            },
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, ':visible']
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 5]
+                    }
+                },
+                'colvis',
+                'selectAll',
+                'selectNone'
+                //{
+                //    text: 'Add to Folder',
+                //    action: function (e, dt, node, config) {
+                //        OpenAppUserItemFolderModal();
+                //    }
+                //},
+                //{
+                //    text: 'Edit Selected',
+                //    action: function (e, dt, node, config) {
+                //        BatchEdit();
+                //    }
+                //},
+                //{
+                //    text: 'Edit Filtered',
+                //    action: function (e, dt, node, config) {
+                //        BatchEditFiltered();
+                //    }
+                //}
+            ]
+        });
+
+        $('table.ggtools').on('click', 'tr', function () {
+            var data = table.row(this).data();
+            /*alert('You clicked on ' + data[0] + "'s row");*/
+        });
+    });
+
+
+    }
+
+</script>

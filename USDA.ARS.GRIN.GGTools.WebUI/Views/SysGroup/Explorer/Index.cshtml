@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewBag.Title = "Browse Groups";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<div class="row">
+    <div id="section-sys-group-list" class="col-md-3">
+        @{Html.RenderAction("Explorer_ListSysGroups","SysGroup");}
+        
+    </div>
+    <div id="section-sys-group" class="col-md-9">
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(window).on('load', function () {
+        // Select the first <li> inside the <ul> with the specific ID 'my-list'
+        var sysGroupId = $('#sys-group-list li:first').attr('id');
+
+        // Check if the ID exists and log it
+        if (sysGroupId) {
+            LoadSysGroup(sysGroupId);
+        } else {
+            console.log('No <li> elements found or ID not assigned.');
+        }
+    });
+
+    $(document).on('click', '#sys-group-list li', function () {
+        var sysGroupId = $(this).attr('id');
+        LoadSysGroup(sysGroupId);
+    });
+
+    function LoadSysGroup(sysGroupId) {
+        link = '@Url.Action("Explorer_Detail","SysGroup")';
+        var formData = new FormData();
+
+        formData.append("sysGroupId", sysGroupId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-sys-group").html(response);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+
+        $('#search-box').on('input', function () {
+            var query = $(this).val().trim();
+
+            // If the query is empty, hide the suggestion box
+            if (query.length === 0) {
+                $('#suggestions').hide();
+                return;
+            }
+
+
+            // Example: Trigger AJAX request to fetch the data
+            $.ajax({
+                url: '@Url.Action("Explorer_Filter","SysGroup")',  // Replace with your actual endpoint URL
+                type: 'GET',
+                data: { searchText: query },
+                dataType: 'json',
+                success: function (response) {
+                    
+                },
+                error: function () {
+                    // Handle AJAX request error
+                    $('#items-container').append('<p>An error occurred while fetching data.</p>');
+                }
+            });
+        });
+});
+
+
+
+</script>

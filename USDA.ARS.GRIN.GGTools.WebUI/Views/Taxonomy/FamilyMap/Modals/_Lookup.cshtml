@@ -1,0 +1,147 @@
+﻿<div id="modal-family-lookup" class="modal fade" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Family Lookup</h4>
+                <button id="btnFamilyNameLookup" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+                <form id="frmLookup">
+                    <input type="hidden" id="hfFamilyLookupIDFieldName" />
+                    <input type="hidden" id="hfFamilyLookupNameFieldName" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Name</label>
+                            <input type="text" id="txtLookupFamilyName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="margin">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-primary d-inline">
+                                        <input class="custom-control-input" type="checkbox" id="cbxLookupIsAcceptedName" value="option1">
+                                        <label for="cbxLookupIsAcceptedName">
+                                            Search accepted names only.
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="margin">
+                                <button id="btnReset" type="button" class="btn btn-danger">Reset</button>
+                                <button id="btnLookupFamily" type="button" class="btn btn-default float-right">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div id="section-family-lookup-search-results">
+
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $('#modal-family-lookup').on('keypress', function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            var link = '@Url.Action("Lookup", "FamilyMap")';
+            SearchFamily();
+            event.preventDefault();
+        }
+    });
+
+    $("#btnOpenFamilyLookupModal").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var eventValue = $(this).data("ggtools-value");
+        $("#hfFamilyLookupIDFieldName").val(eventAction);
+        $("#hfFamilyLookupNameFieldName").val(eventValue);
+    });
+
+    $("#btnLookupFamily").click(function () {
+        SearchFamily();
+    });
+
+    $(document).on("click", "[id*='btnSaveFamily']", function () {
+        var eventAction = $("#EventAction").val();
+        var eventValue = $("#EventValue").val();
+        var eventInfo = $("#EventInfo").val();
+        var idList = GetSelectedEntityIDs("data-table-family-lookup");
+
+        if (eventValue == "EditBatch") {
+            SaveFamilyToBatch(eventInfo, idList);
+        }
+        else {
+            SaveFamily();
+        }
+    });
+
+    function SaveFamily() {
+        var idField = $("#hfFamilyLookupIDFieldName").val();
+        var nameField = $("#hfFamilyLookupNameFieldName").val();
+        var idList = GetSelectedEntityIDs("data-table-family-lookup");
+        var nameList = GetSelectedEntityLabels("data-table-family-lookup");
+
+        //DEBUG
+        /*alert("ID FLD " + idField + " NAME FLD " + nameField + " ID " + idList + " NAME " + nameList);*/
+
+        $("#Entity_" + idField).val(idList);
+        $("#Entity_" + idField).trigger('change');
+
+        $("#Entity_" + nameField).val(nameList);
+        $("#Entity_" + nameField).trigger('change');
+
+        $('#modal-family-lookup').modal('hide');
+    }
+
+    function SearchFamily() {
+        var link = '@Url.Action("Lookup", "FamilyMap")';
+        var familyName = $("#txtLookupFamilyName").val();
+        var formData = new FormData();
+
+        formData.append("FamilyName", familyName);
+        if ($("#cbxLookupIsAcceptedName").is(":checked")) {
+            formData.append("IsAcceptedName", "Y");
+        }
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-family-lookup-search-results").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    function SelectFamily(ID, familyName) {
+        var eventAction = "";
+        var eventValue = "";
+
+        $('#modal-family-lookup').modal('hide');
+
+        eventValue = $("#hfModalEventValue").val();
+        if (eventValue == 'SPECIES') {
+            $("#Entity_FamilyName").val(familyName);
+        }
+        else {
+            $("#Entity_AcceptedID").val(ID);
+            $("#Entity_AcceptedName").val(familyName);
+        }
+    }
+</script>

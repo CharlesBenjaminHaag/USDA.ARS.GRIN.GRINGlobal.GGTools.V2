@@ -1,0 +1,66 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModelBase
+<div id="section-folder-confirmation"></div>
+@using (Html.BeginForm("Search", "Species", FormMethod.Post, new { id = "frmMain" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.AuthenticatedUserCooperatorID)
+    
+    <div class="card">
+        <div class="card-header p-2">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="nav-link active" href="#tab-search-criteria" data-toggle="tab">Search Criteria</a></li>
+                <li class="nav-item"><a class="nav-link" href="#tab-saved-searches" data-toggle="tab">Saved Searches</a></li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab-search-criteria">
+                    <div id="section-search-criteria">
+                        <div class="row">
+                            @Html.Partial("~/Views/Components/_ShowHideButtons.cshtml")
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    @Html.TextBoxFor(x => x.SearchEntity.Name, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <label>Accepted</label>
+                                @Html.DropDownListFor(x => x.SearchEntity.IsAcceptedName, Model.YesNoOptions, "Either", new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group form-horizontal">
+                                    <label>Synonym Code</label>
+                                    @Html.DropDownListFor(x => x.SearchEntity.SynonymCode, Model.SynonymCodes, "All Codes", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    @Html.Partial("~/Views/Taxonomy/Species/_DetailExtended.cshtml")
+                </div>
+                    <div>
+                        <button id="btnReset" type="button" class="btn btn-default">Reset</button>
+                        <div class="btn-group float-right">
+                            <button id="btnSearch" type="submit" data-ggtools-event-action="Species" data-ggtools-event-value="Search" class="btn btn-default">Search</button>
+                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu" role="menu" style="">
+                                <a id="btnOpenDynamicFolderModal" class="dropdown-item" href="#">Save Search</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-saved-searches" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,246 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<div>
+    @Html.HiddenFor(x => x.Entity.ID)
+    @Html.HiddenFor(x => x.Entity.WebCooperatorEmail)
+    <!--<div class="row">
+        <div class="col-12">
+            <h4>
+                <i class="fas fa-user"></i>&nbsp;-->
+                @*<a href="@Url.Action("Search","WebOrder")">*@
+                <!--@Model.Entity.WebCooperatorFullName [@Model.Entity.ID]-->
+                @*</a>*@
+
+                <!--@switch (Model.Entity.StatusCode)
+                {
+                    case "ACCEPTED":
+                        <span class="badge bg-success" style="margin-left:10px; font-size:12pt;">@Model.Entity.StatusCode</span>
+                        break;
+                    case "SUBMITTED":
+                        <span class="badge bg-indigo" style="margin-left: 10px; font-size: 12pt;">@Model.Entity.StatusCode</span>
+                        break;
+                    case "CANCELED":
+                        <span class="badge bg-yellow" style="margin-left: 10px; font-size: 12pt;">@Model.Entity.StatusCode</span>
+                        break;
+                    case "NRR_FLAG":
+                        <span class="badge bg-danger" style="margin-left: 10px; font-size: 12pt;">@Model.Entity.StatusCode</span>
+                        break;
+                }
+
+                <small class="float-right">Submitted: @Model.Entity.OrderDate.ToShortDateString() at @Model.Entity.OrderDate.ToShortTimeString()</small>
+            </h4>
+        </div>
+    </div>-->
+    @*<div class="row" style="margin-top: 15px; margin-bottom: 15px;">
+            <div class="col-sm-12">
+                <button id="btnOpenNoteModal" data-toggle="modal" data-target="#modal-note" class="btn btn-default btn-sm">
+                    <i class="fa fa-sticky-note"></i> Add Note
+                </button>
+                <button id="btnOpenRequestorModal" class="btn btn-default btn-sm">
+                    <i class="fa fa-envelope"></i> Email Requestor
+                </button>
+                <button id="btnOpenCuratorModal" class="btn btn-default btn-sm">
+                    <i class="fa fa-envelope"></i> Email Curator(s)
+                </button>
+                <button class="btn btn-default float-right btn-sm">
+                    <i class="fa fa-lock"></i> Begin Review and Lock
+                </button>
+
+                <div class="btn-group float-right">
+                    <button id="btnReject" type="button" class="btn btn-default btn-sm">
+                        <i class="fa fa-thumbs-down"></i> Reject
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                        <a id="btnOpenRejectModal" class="dropdown-item" href="#">
+                            <i class="fa fa-envelope"></i> Reject and Preview Email
+                        </a>
+                    </div>
+                </div>
+                <div class="btn-group float-right">
+                    <button id="btnApprove" type="button" class="btn btn-default btn-sm">
+                        <i class="fa fa-thumbs-up"></i>
+                        Approve
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                        <a id="btnOpenApproveModal" class="dropdown-item" href="#">
+                            <i class="fa fa-envelope"></i> Accept and Preview Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    @using (Html.BeginForm("Edit", "WebOrder", FormMethod.Post, new { id = "frmEdit" }))
+    {
+        @Html.HiddenFor(x => x.EventAction)
+        @Html.HiddenFor(x => x.EventValue)
+        @Html.HiddenFor(x => x.EventNote)
+        @Html.HiddenFor(x => x.TableName)
+        @Html.HiddenFor(x => x.TableCode)
+        @Html.HiddenFor(x => x.Entity.ID)
+        @Html.HiddenFor(x => x.PageTitle)
+        @Html.HiddenFor(x => x.SendInternalNotification)
+        @Html.HiddenFor(x => x.SendRequestorNotification)
+        @Html.HiddenFor(x => x.ActionEmailFrom)
+        @Html.HiddenFor(x => x.ActionEmailTo)
+        @Html.HiddenFor(x => x.ActionEmailBCC)
+        @Html.HiddenFor(x => x.ActionEmailSubject)
+        @Html.HiddenFor(x => x.ActionEmailBody)
+        @Html.HiddenFor(x => x.Entity.EmailAddressList)
+        @Html.HiddenFor(x => x.Entity.WebCooperatorID)
+        @Html.HiddenFor(x => x.Entity.IsPreviouslyNRRReviewed)
+        <div class="margin" style="margin-bottom:25px;">
+            @if ((!Model.Entity.IsLocked) && (Model.Entity.IsPreviouslyNRRReviewed == "Y"))
+            {
+                <div class="btn-group">
+                    <button id="btnLockAndReopen" type="button" class="btn btn-default margin-r-5" data-toggle="modal" data-target="#modal-reopen">
+                        <i class="fa fa-eye margin-r-5"></i>&nbsp;<span class="button-label">Re-Open This Web Request</span>
+                    </button>
+                </div>
+            }
+            @if ((!Model.Entity.IsLocked) && (Model.Entity.IsPreviouslyNRRReviewed == "N"))
+            {
+                <div class="btn-group">
+                    <button type="button" id="btnSubmitBeginReview" class="btn btn-default">
+                        <i class="fa fa-lock"></i>
+                        Lock and Begin Review
+                    </button>
+                </div>
+            }
+            @if ((Model.Entity.IsLocked) && (Model.Entity.OwnedByWebUserID == Model.AuthenticatedUserWebUserID))
+            {
+                <div class="btn-group float-right">
+                    <button type="submit" id="btnSubmitEndReview" class="btn btn-warning  btn-sm margin-r-5"><i class="fa fa-unlock"></i> End Review and Unlock</button>
+                    <button id="btnOpenApproveModal" type="button" class="btn btn-danger  btn-sm margin-r-5" data-toggle="modal" data-target="#modal-reject"><i class="fa fa-thumbs-down"></i><span class="button-label"> Reject</span></button>
+                    <button id="btnOpenRejectModal" type="button" class="btn btn-success  btn-sm" data-toggle="modal" data-target="#modal-approve"><i class="fa fa-thumbs-up"></i><span class="button-label"> Approve</span></button>
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Submitted By</label>
+                    @Model.Entity.WebCooperatorFullName
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Status</label>
+                        
+                            @{
+                                string statusCssClass = String.Empty;
+                                switch (Model.Entity.StatusCode.ToUpper())
+                                {
+                                    case "SUBMITTED":
+                                        statusCssClass = "badge bg-indigo";
+                                        break;
+                                    case "ACCEPTED":
+                                        statusCssClass = "badge bg-success";
+                                        break;
+                                    case "CANCELED":
+                                        statusCssClass = "badge bg-warning";
+                                        break;
+                                    case "NRR_FLAG":
+                                        statusCssClass = "badge bg-danger";
+                                        break;
+                                }
+                            }
+                            <span class="@statusCssClass">
+                                @Model.Entity.StatusCode
+                            </span>
+                        
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label>Email</label>
+                    @Model.Entity.WebCooperatorEmail
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Submitted</label>
+                    <div class="input-group">
+                        @Model.Entity.OrderDate.ToShortDateString() at @Model.Entity.OrderDate.ToShortTimeString()
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Intended Use</label>
+                    <div class="input-group">
+                        @Model.Entity.IntendedUseCode
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Intended Use Note</label>
+                    <p class="text-muted well well-sm no-shadow">
+                        @Model.Entity.IntendedUseNote
+                    </p>
+                </div>
+            </div>
+        </div>
+        if (!String.IsNullOrEmpty(Model.Entity.SpecialInstruction))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Special Instruction</label>
+                    <p class="text-muted well well-sm no-shadow">
+                        @Model.Entity.SpecialInstruction
+                    </p>
+                </div>
+            </div>
+        }
+        if (!String.IsNullOrEmpty(Model.Entity.Note))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Note</label>
+                    <p class="text-muted well well-sm no-shadow">
+                        @Model.Entity.Note
+                    </p>
+                </div>
+            </div>
+        }
+    }
+
+    @*<div class="row">
+        <div class="col-12 table-responsive">
+            <table id="table_web_order_request_items" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Status</th>
+                        <th>Accession</th>
+                        <th>Site</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollectionItems)
+                    {
+                        <tr>
+                            <td>@result.ID</td>
+                            <td>@result.StatusCode</td>
+                            <td>@result.AccessionText</td>
+                            <td>@result.SiteLongName</td>
+                            <td>@result.QuantityShipped</td>
+                            <td>@result.UnitOfQuantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>*@
+</div>
+<script type="text/javascript">
+    InitDataTable("table_web_order_request_items");
+</script>

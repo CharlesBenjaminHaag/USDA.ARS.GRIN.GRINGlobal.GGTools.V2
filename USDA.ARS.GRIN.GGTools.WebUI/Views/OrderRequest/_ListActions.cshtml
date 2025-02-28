@@ -1,0 +1,40 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.OrderRequestViewModel
+<div class="scrollable-table-section">
+    <table id="table_order_request_action" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>
+                    Name
+                </th>
+                <th>Start Date</th>
+                <th>Completed Date</th>
+                <th>Information</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var orderRequestAction in Model.DataCollectionAction)
+            {
+
+                <tr>
+                    <td>@orderRequestAction.ID</td>
+                    <td>@orderRequestAction.ActionNameCode</td>
+                    <td>
+                        @orderRequestAction.StartedDate.ToShortDateString();
+                    </td>
+                    <td>@orderRequestAction.CompletedDate.ToShortDateString()</td>
+                    <td>@orderRequestAction.ActionInformation</td>
+                    <td>
+                        @*<a href="@Url.Action("Edit", "OrderRequest", new { entityId = orderRequest.ID })" class="btn btn-default btn-sm pull-right">
+                                <i class="fa fa-eye"></i>
+                            </a>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    InitDataTable("table_order_request_action");
+</script>

@@ -1,0 +1,87 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AccessionInventoryAttachmentViewModel
+<div class="box box-default">
+    <div class="box-header with-border">
+        <i class="fa fa-search"></i>
+        <h3 class="box-title">Search Criteria</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>    
+    <div id="section-search-criteria" class="box-body">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Created</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.TimeFrame, Model.TimeFrameOptions, "Any time frame", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Created By</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.CreatedByCooperatorID, Model.Cooperators, "All Cooperators", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Owned By</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.OwnedByCooperatorID, Model.Cooperators, "All Cooperators", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Site</label>
+                    @*@Html.DropDownListFor(x => x.SearchEntity.OwnedByCooperatorSiteID, Model.Sites, "All Sites", new { @class = "form-control" })*@
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Accession Name</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.InventoryText, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Description Code</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.AttachnmentDescriptionCode, Model.AttachmentDescriptionCodes, "All codes", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Category Code</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.CategoryCode, Model.CategoryCodes, "All codes", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Web Visible</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.IsWebVisible, Model.YesNoOptions, "Either", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Virtual Path Valid</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.IsVirtualPathValid, Model.YesNoOptions, "Either", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Thumbnail Virtual Path Valid</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.IsThumbnailVirtualPathValid, Model.YesNoOptions, "Either", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Scanned</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.IsValidated, Model.YesNoOptions, "Either", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        </div>
+    <div class="box-footer">
+        <button id="btnReset" type="button" class="btn btn-danger pull-left">Reset</button>
+        @*<button id="btnSaveSearch" type="submit" class="btn btn-default pull-right">Save Search</button>*@
+        <button id="btnSubmitSearch" type="submit" class="btn btn-default pull-right">Search</button>
+    </div>
+</div>

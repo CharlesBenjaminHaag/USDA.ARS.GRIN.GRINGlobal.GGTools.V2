@@ -1,0 +1,41 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.UPOVViewModel
+@{
+    ViewBag.Title = ViewBag.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<table id="table-upov-data" class="table table-striped">
+    <thead>
+        <tr>
+            <th>UPOV Code</th>
+            <th>UPOV URL</th>
+            <th>UPOV Species Name</th>
+            <th>USDA Species Name</th>
+            <th>UPOV Other Species Name</th>
+            <th>UPOV Common Name</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var upovRecord in Model.DataCollectionImport)
+            {
+                <tr>
+                    <td><a hre@upovRecord.UPOVCode</td>
+                    <td>@upovRecord.upovCodeID</td>
+                    <td>@upovRecord.upovCode</td>
+                    <td>@upovRecord.principalBotanicalName</td>
+                    <td>@upovRecord.otherBotanicalName</td>
+                    <td>@upovRecord.commonNameEN</td>
+                    
+                </tr>
+            }
+    </tbody>
+</table>
+<script type="text/javascript">
+   
+
+    $(document).ready(function () {
+        InitDataTable("table-upov-data");
+    });
+
+</script>

@@ -1,0 +1,57 @@
+﻿<div class="modal fade" id="modal-inventory-lookup" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="search-progress-overlay-inventory-lookup" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Inventory Lookup
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+                @using (Html.BeginForm("Search", "Inventory", FormMethod.Post, new { id = "frmInventoryLookup", @class = "ggtools-lookup-form" }))
+                {
+                    <div id="section-panel-help" class="alert alert-info alert-dismissible" style="display: none;">
+                        <button type="button" class="close" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> Instructions</h5>
+                        <ul>
+                            <li>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Name</label>
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="margin">
+                                <button id="btnReset" type="button" class="btn btn-danger">Reset</button>
+                                <button id="btnLookupInventory" type="button" class="btn btn-default float-right">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div id="section-author-lookup-search-results" class="col-md-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+   
+
+</script>

@@ -1,0 +1,490 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CWRMapViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+
+<style type="text/css">
+    .dual-select {
+        min-height:450px;
+    }
+</style>
+
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/gringlobal-logo.jfif" alt="GRIN-Global Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- BEGIN EDIT PAGE MENU -->
+                    <ul class="navbar-nav">
+                        @if (Model.Entity.ID > 0)
+                        {
+                            Html.RenderAction("RenderRelatedFoldersMenu", "AppUserItemFolder", new { sysTableName = Model.TableName, entityId = Model.Entity.ID });
+                        }
+                    </ul>
+                    <!-- END EDIT PAGE MENU-->
+                </div>
+
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-user"></i>
+
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
+                            <span class="dropdown-item dropdown-header">@AppInfo.GetAuthenticatedUser().FullName</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-clock mr-2"></i> Logged In
+                                <span class="float-right text-muted text-sm"> </span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="@Url.Action("Logout","Login")" class="dropdown-item dropdown-footer bg-danger">Log Out</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                CWR Map Batch Edit
+                                @*<small>Example 3.0</small>*@
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-validation-errors" class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-ban"></i> Error!</h5>
+                        To generate a map, please:
+                        <ul>
+                            <li>Search for and select one or more species</li>
+                            <li>Specify the map attributes</li>
+                            <li>Search for and select one or more Crop For CWR records</li>
+                        </ul>
+                    </div>
+                    <div id="section-search-criteria" class="row">
+                        <div class="col-md-4">
+                            <div class="card card-primary card-outline dual-select">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-leaf"></i> Species
+                                    </h3>
+                                    @*<div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>*@
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.SearchEntity.SpeciesName, new { @class = "form-control" })
+                                                @Html.HiddenFor(x => x.SearchEntity.SpeciesID)
+                                                <span class="input-group-append">
+                                                    <button type="button" id="btnLookupSpecies" class="btn btn-default btn-flat"><i class="fa fa-search"></i></button>
+                                                </span>
+                                            </div>
+                                            <div class="form-group clearfix float-right" style="margin-top:10px;">
+                                                <div class="icheck-primary d-inline">
+                                                    @Html.CheckBoxFor(x => x.SearchEntity.SpeciesIsAcceptedNameOption)
+                                                    <label for="SearchEntity.SpeciesIsAcceptedNameOption">
+                                                        Search only accepted names
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="section-search-results-species" class="col-md-12">
+                                            <!-- DATA HERE -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="search-progress-overlay-species" class="overlay">
+                                    <i class="fas fa-2x fa-sync fa-spin"></i>
+                                </div>
+                                <div class="card-footer">
+                                    <button id="btnClearAllSpeciesA" class="btn btn-default">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card card-primary dual-select">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-link"></i>
+                                        Options
+                                    </h3>
+                                    @*<div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>*@
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group form-horizontal">
+                                        <label>Genepool Code</label>
+                                        @Html.DropDownListFor(x => x.Entity.GenepoolCode, Model.GenepoolCodes, "NULL", new { @class = "form-control" })
+                                    </div>
+                                    <div id="section-common-name" class="form-group form-horizontal">
+                                        <label>Crop Common Name</label>
+                                        @Html.TextBoxFor(x => x.Entity.CropCommonName, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group clearfix section-checkbox">
+                                        <div class="icheck-primary d-inline">
+                                            @Html.CheckBoxFor(x => x.Entity.IsCropOption, new { id = "cbxIsCrop" })
+                                            <label for="cbxIsCrop">
+                                                Crop
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix section-checkbox">
+                                        <div class="icheck-primary d-inline">
+                                            @Html.CheckBoxFor(x => x.Entity.IsGraftStockOption, new { id = "cbxIsGraftstock" })
+                                            <label for="cbxIsGraftstock">
+                                                Graftstock
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix section-checkbox">
+                                        <div class="icheck-primary d-inline">
+                                            @Html.CheckBoxFor(x => x.Entity.IsPotentialOption, new { id = "cbxIsPotential" })
+                                            <label for="cbxIsPotential">
+                                                Potential
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card card-primary card-outline dual-select">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-tree"></i>
+                                        Crop For CWR
+                                    </h3>
+                                    @*<div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>*@
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.SearchEntity.CropForCWRName, new { @class = "form-control" })
+                                                @Html.HiddenFor(x => x.SearchEntity.CropForCWRID)
+                                                <span class="input-group-append">
+                                                    <button type="button" id="btnLookupCropForCWR" class="btn btn-default btn-flat"><i class="fa fa-search"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="section-search-results-crop-for-cwr" class="col-md-12">
+                                            <!-- DATA HERE -->
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div id="search-progress-overlay-species-b" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>*@
+                                <div class="card-footer">
+                                    <button id="btnClearAllCropForCWR" class="btn btn-default">Reset</button>
+                                    <button id="btnGenerateMaps" class="btn btn-default float-right">Generate Maps</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">CWR Maps</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div id="section-cwr-maps" class="col-md-12">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @{Html.RenderAction("RenderLookupModal", "CropForCWR"); }
+                </div>
+            </div>
+
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+</body>
+</html>
+
+<script>
+    $("#search-progress-overlay-species").hide();
+    InitDataTableMinimal("table-status-codes");
+    $("#section-validation-errors").hide();
+    $("#section-common-name").hide();
+
+    /*
+     * ***************************************************************
+     * Species search logic
+     * ***************************************************************
+     */
+    $("#btnLookupSpecies").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var searchText = $("#SearchEntity_SpeciesName").val();
+        var isAcceptedName = "";
+
+        if ($("#SearchEntity_SpeciesIsAcceptedOption").is(":checked")) {
+            isAcceptedName = "Y";
+        }
+        SearchSpecies(eventAction, 0, searchText, isAcceptedName, "section-search-results-" + eventAction, "table-search-results-" + eventAction);
+    });
+
+    function SearchSpecies(eventAction, speciesId, searchText, isAcceptedName, searchResultSectionName, searchResultTableName) {
+        var link = '@Url.Action("Lookup","Species")';
+        var formData = new FormData();
+
+        formData.append("EventAction", eventAction);
+        formData.append("SearchEntity.SpeciesID", speciesId);
+        formData.append("SearchEntity.SpeciesName", searchText);
+        formData.append("SearchEntity.IsAcceptedName", isAcceptedName);
+        formData.append("SearchEntity.IsMultiSelect", "Y");
+
+         $("#search-progress-overlay-species").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-search-results-species").html(response);
+                $("#search-progress-overlay-species").hide();
+                InitDataTableSpeciesLookup("data-table-species-lookup");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    /*
+     * ***************************************************************
+     * Crop for CWR search logic
+     * ***************************************************************
+     */
+    $("#btnLookupCropForCWR").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var searchText = $("#SearchEntity_CropForCWRName").val();
+        SearchCropForCWR(eventAction, 0, searchText, "section-search-results-" + eventAction, "table-search-results-" + eventAction);
+    });
+
+    function SearchCropForCWR(eventAction, speciesId, searchText, searchResultSectionName, searchResultTableName) {
+        var link = '@Url.Action("Lookup","CropForCWR")';
+        var formData = new FormData();
+
+        formData.append("SearchEntity.Name", searchText);
+        formData.append("SearchEntity.IsMultiSelect", "Y");
+
+         $("#search-progress-overlay-crop-for-cwr").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-search-results-crop-for-cwr").html(response);
+                $("#search-progress-overlay-crop-for-cwr").hide();
+                InitDataTableLookupFormatWithMultiSelect("data-table-crop-for-cwr-lookup");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    /*
+     * ***************************************************************
+     * CWR Map batch logic
+     * ***************************************************************
+     */
+    $('#cbxIsCrop').click(function () {
+        if (!$(this).is(':checked')) {
+            $("#section-common-name").hide();
+            $("#Entity_CropCommonName").val("");
+            $("#Entity_IsCrop").val("Y");
+        }
+        else {
+            $("#section-common-name").show();
+            $("#Entity_IsCrop").val("Y");
+        }
+    });
+
+    $(document).on("click", "[id*='btnGenerateMaps']", function () {
+        GenerateMaps();
+    });
+
+    function GenerateMaps() {
+        var link = '@Url.Action("AddBatch", "CWRMap")';
+        var selectedSpeciesIdList = GetSelectedEntityIDs("data-table-species-lookup");
+        var selectedCropForCwrIdList = GetSelectedEntityIDs("data-table-crop-for-cwr-lookup");
+        var genepoolCode = $("#Entity_GenepoolCode").val();
+        var cropCommonName = $("#Entity_CropCommonName").val();
+        var formData = new FormData();
+
+        formData.append("SpeciesIDList", selectedSpeciesIdList);
+        formData.append("CropForCWRIDList", selectedCropForCwrIdList);
+        formData.append("Entity.GenepoolCode", genepoolCode);
+        formData.append("Entity.CropCommonName", cropCommonName);
+
+        if ($("#cbxIsCrop").is(":checked")) {
+            formData.append("Entity.IsCrop", "Y");
+        }
+
+        if ($("#cbxIsGraftstock").is(":checked")) {
+            formData.append("Entity.IsGraftstock", "Y");
+        }
+
+        if ($("#cbxIsPotential").is(":checked")) {
+            formData.append("Entity.IsPotential", "Y");
+        }
+
+        //DEBUG
+        //alert("DEBUG SPECIES ARE " + selectedSpeciesIDList);
+        //alert("DEBUG GEO ARE " + selectedGeographyIDList);
+        //alert("DEBUG STATUS IS " + selectedStatusCode);
+
+        // Ensure that all params are present.
+        if ((selectedSpeciesIdList.length == 0) || (selectedCropForCwrIdList.length == 0)) {
+            $("#section-validation-errors").show();
+            return;
+        }
+        else {
+            $("#section-validation-errors").hide();
+        }
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-cwr-maps").html(response);
+                InitDataTableSingleSelect("data-table-geography-maps");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    /*
+     * ***************************************************************
+     * Datatables logic
+     * ***************************************************************
+     */
+    function InitDataTableMinimal(tableName) {
+        $(document).ready(function () {
+            tableName = "#" + tableName;
+
+            if ($.fn.dataTable.isDataTable(tableName)) {
+                table = $(tableName).DataTable();
+            }
+            else {
+                table = $(tableName).DataTable({
+                    paging: true,
+                    responsive: true,
+                    select: {
+                        style: 'single'
+                    },
+                    searching: false,
+                    paging: false,
+                    columnDefs: [
+                        { targets: [0], visible: false }
+                    ]
+                });
+                table.row(':contains("Basionym")').select()
+            }
+        });
+    }
+
+    function InitDataTableSpeciesLookup(tableName) {
+        $(document).ready(function () {
+            tableName = "#" + tableName;
+            table = $(tableName).DataTable({
+                "bLengthChange": false,
+                scrollY: '300px',
+                scrollCollapse: true,
+                paging: true,
+                responsive: true,
+                select: {
+                    style: 'multi'
+                },
+                searching: true,
+                columnDefs: [
+                    {
+                        target: 0,
+                        visible: false,
+                        searchable: false,
+                    },
+                    {
+                        target: 1,
+                        visible: false,
+                    },
+                ]
+            });
+            table.row(':eq(0)', { page: 'current' }).select();
+        });
+    }
+</script>
+
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")

@@ -1,0 +1,46 @@
+﻿
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column mt-2" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item">
+            <a href="@Url.Action("Navigate", "Home", new { applicationCode = "GGT-TAX" })" class="nav-link">
+                <i class="nav-icon fas fa-home"></i>
+                <p>Home</p>
+            </a>
+        </li>
+        @Html.Partial("~/Views/Shared/Sidebars/Components/_MenuWorkspaces.cshtml")
+
+        <li class="nav-header">FOLDERS</li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index", "AppUserItemFolder")" class="nav-link">
+                <i class="nav-icon fas fa-search"></i>
+                <p>Search</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Import", "AppUserItemList")" class="nav-link">
+                <i class="nav-icon fas fa-folder"></i>
+                <p>CT Folders</p>
+            </a>
+        </li>
+
+        <li class="nav-header">MANAGE DATA</li>
+        
+        <!-- TODO Dymamic list of codes and groups -->
+
+
+        
+        <li class="nav-header">SYSADMIN</li>
+        <li class="nav-item">
+            <a href="@Url.Action("Explorer","CodeValue")" class="nav-link">
+                <i class="nav-icon fas fa-table"></i>
+                <p>Code Values</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","Error")" class="nav-link">
+                <i class="nav-icon fas fa-bug"></i>
+                <p>Error Logs</p>
+            </a>
+        </li>
+    </ul>
+</nav>

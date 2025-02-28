@@ -1,0 +1,18 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderViewModel
+@{
+    
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("Search", "SysFolder", FormMethod.Post, new { id = "frmMain" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.AuthenticatedUserCooperatorID)
+    @Html.HiddenFor(x => x.ItemIDList)
+    @Html.Partial("~/Views/SysFolder/_Detail.cshtml")
+}
+@Html.Partial("~/Views/SysFolder/_List.cshtml")

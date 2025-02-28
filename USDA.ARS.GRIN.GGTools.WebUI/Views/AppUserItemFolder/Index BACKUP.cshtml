@@ -1,0 +1,55 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @{Html.RenderAction("GetListsByTab", "AppUserItemList", new { @tabName = "Tab 1" });}
+    </div>
+    <div class="col-md-9"></div>
+</div>
+
+
+@using (Html.BeginForm("Search", "AppUserItemFolder", FormMethod.Post, new { id = "frmMain" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.AuthenticatedUserCooperatorID)
+    @Html.HiddenFor(x => x.ItemIDList)
+    @Html.Partial("~/Views/AppUserItemFolder/_Detail.cshtml")
+}
+@Html.Partial("~/Views/AppUserItemFolder/_List.cshtml")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+
+    function LoadFolderItems(folderTypeDescription, folderId)  {
+        var link = '@Url.Action("FolderItems", "CONTROLLER_NAME")';
+        link = link.replace("CONTROLLER_NAME", folderTypeDescription);
+
+        var formData = new FormData();
+        formData.append("FolderID", folderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-folder-items").html(response);
+            },
+            error: function (jqXHR) {
+                alert("Error loading folder contents");
+            }
+        });
+    }
+
+</script>

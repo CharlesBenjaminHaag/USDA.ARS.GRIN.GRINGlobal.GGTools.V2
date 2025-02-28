@@ -1,0 +1,60 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GenusViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("GetBatchEditor", "Genus", FormMethod.Post, new { id = "frmGetBatchEditor" }))
+{
+    @Html.HiddenFor(x => x.ItemIDList)
+}
+
+@Html.Partial("~/Views/Taxonomy/Genus/_Detail.cshtml")
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title"><i class="nav-icon fas fa-table"></i> Search Results [@Model.RowsAffected]</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results">
+            @Html.Partial("~/Views/Taxonomy/Genus/_List.cshtml")
+        </div>
+    </div>
+</div>
+
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Init();
+        SetExtendedFields();
+    });
+
+    //$(document).keypress(function (event) {
+    //    var keycode = (event.keyCode ? event.keyCode : event.which);
+    //    if (keycode == '13') {
+    //        $("#btnSearch").click();
+    //    }
+    //});
+
+    function Init() {
+        var genericRank = $("#EventValue").val();
+        var tabId = "tab-" + genericRank;
+        $("[id=" + tabId + "]").addClass("active");
+    }
+
+    $(document).on("click", "[id='btnSubmitSearch']", function () {
+        event.preventDefault();
+        if ($("#section-search-criteria").is(":visible")) {
+            $("#EventAction").val("SHOW-SEARCH");
+        }
+        $("#frmMain").submit();
+    });
+</script>

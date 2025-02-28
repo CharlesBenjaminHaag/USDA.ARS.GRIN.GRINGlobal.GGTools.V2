@@ -1,0 +1,166 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GenusViewModelBase
+<div class="modal fade" id="modal-genus-lookup" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            @*<div id="search-progress-overlay-genus-lookup" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>*@
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Genus Lookup
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+                @using (Html.BeginForm("Search", "Genus", FormMethod.Post, new { id = "frmGenusLookup", @class = "ggtools-lookup-form" }))
+                {
+                    <input type="hidden" id="modal-genus-lookup-value-field" />
+                    <input type="hidden" id="modal-genus-lookup-display-field" />
+                    <input type="hidden" id="modal-genus-lookup-use-long-name-format" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Name</label>
+                            @Html.TextBoxFor(x => x.SearchEntity.Name, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="margin">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-primary d-inline">
+                                        <input class="custom-control-input" type="checkbox" id="cbxLookupIsAcceptedName" value="option1">
+                                        <label for="cbxLookupIsAcceptedName">
+                                            Search accepted names only.
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="margin">
+                            <button id="btnReset" class="btn btn-danger">Reset</button>
+                            <button id="btnLookupGenus" class="btn btn-default float-right">Search</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="section-genus-lookup-search-results">
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $('#modal-genus-lookup').on('keypress', function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            SearchGenus();
+            event.preventDefault();
+        }
+    });
+
+    $(document).on("click", "[id*='btnOpenGenusLookupModal']", function () {
+        var idField = $(this).data("ggtools-id-field");
+        var nameField = $(this).data("ggtools-name-field");
+        var useLongNameFormat = $(this).data("ggtools-use-long-name-format");
+        OpenLookupModal("genus", idField, nameField);
+        
+    });
+
+    $("#btnLookupGenus").click(function () {
+        SearchGenus();
+    });
+
+    $(document).on("click", "[id*='btnSaveGenus']", function () {
+        var eventAction = $("#EventAction").val();
+        var eventValue = $("#EventValue").val();
+        var eventInfo = $("#EventInfo").val();
+        var idList = GetSelectedEntityIDs("data-table-genus-lookup");
+
+        if (eventValue == "EditBatch") {
+            SaveGenusToBatch(eventInfo, idList);
+        }
+        else {
+            SaveGenus();
+        }
+    });
+
+    function SaveGenus() {
+        var idField = $("#modal-genus-lookup-value-field").val();
+        var displayField = $("#modal-genus-lookup-display-field").val();
+        var idList = GetSelectedEntityIDs("data-table-genus-lookup");
+        var nameList = GetSelectedEntityLabels("data-table-genus-lookup");
+
+        idField = "#" + idField;
+        displayField = "#" + displayField;
+
+        console.log("DEBUG idField IS " + idField + " displayField IS " + displayField + " iDList IS " + idList + " nameList IS " + nameList);
+
+        $(idField).val(idList);
+
+        // TODO: Refactor into a SetValue() method? 
+        $(displayField).val(nameList);
+        $(displayField).trigger('change');
+
+        $(displayField + "-Placeholder").html(nameList);
+        $('#modal-genus-lookup').modal('hide');
+    }
+
+    function SearchGenus() {
+        var link = '@Url.Action("Lookup","Genus")';
+        var genusName = $("#SearchEntity_Name").val();
+        var formData = new FormData();
+
+        formData.append("SearchEntity.Name", genusName);
+        if ($("#cbxLookupIsAcceptedName").is(":checked")) {
+            formData.append("SearchEntity.IsAcceptedName", "Y");
+        }
+
+        $("#search-progress-overlay-genus-lookup").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-genus-lookup-search-results").html(response);
+                $("#search-progress-overlay-genus-lookup").hide();
+            },
+            error: function () {
+                alert("Error");
+                $("#search-progress-overlay-genus-lookup").hide();
+            }
+        });
+    }
+
+    function SelectGenus(ID, genusName) {
+        var eventAction = "";
+        var eventValue = "";
+
+        $('#modal-genus-lookup').modal('hide');
+
+
+        eventValue = $("#hfModalEventValue").val();
+        if (eventValue == 'SPECIES') {
+            $("#Entity_GenusName").val(genusName);
+        }
+        else {
+            $("#Entity_AcceptedID").val(ID);
+            $("#Entity_AcceptedName").val(genusName);
+        }
+    }
+</script>
+
+

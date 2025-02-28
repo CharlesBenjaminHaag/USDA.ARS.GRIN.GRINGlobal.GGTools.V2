@@ -1,0 +1,202 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDynamicQueryViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.HiddenFor(x => x.EventAction)
+@Html.HiddenFor(x => x.EventValue)
+@Html.HiddenFor(x => x.EventNote)
+<div class="card">
+    <div id="section-folder-options" class="card-header p-2">
+        <ul class="nav nav-pills">
+            <li id="tab-folder-detail" class="nav-item"><a class="nav-link active" href="#tab-content-detail" data-toggle="tab">Details</a></li>
+            <li id="tab-folder-sharing" class="nav-item"><a class="nav-link" href="#tab-content-sharing" data-toggle="tab">Sharing</a></li>
+        </ul>
+    </div>
+    <div class="card-body" id="section-search-criteria">
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-content-detail">
+                @Html.Partial("~/Views/SysDynamicQuery/_Edit.cshtml")
+            </div>
+            <div class="tab-pane" id="tab-content-sharing">
+                <div id="section_folder_cooperator_widget">
+                    @{Html.RenderAction("RenderWidget", "AppUserItemFolderCooperatorMap", new { @appUserItemFolderId = Model.Entity.ID });}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        @if (Model.Entity.ID > 0)
+        {
+            <button id="btnDelete" type="button" class="btn btn-danger">
+                Delete
+            </button>
+        }
+        <button id="btnAddCooperator" class="btn btn-default float-right" data-toggle="modal" data-target="#modal-folder-edit-cooperators">
+            <i class="fas fa-users"></i>
+            Edit Sharing Options
+        </button>
+    </div>
+</div>
+
+<div id="section_search_results">
+
+</div>
+
+@Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+@{Html.RenderAction("RenderEditModal", "AppUserItemFolderCooperatorMap", new { @appUserItemFolderId = Model.Entity.ID });}
+@{Html.RenderAction("RenderFolderItemDeleteModal", "AppUserItemFolder", new { @entityId = Model.Entity.ID });}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var isReadOnly = $("#IsReadOnly").val();
+        if (isReadOnly == "Y") {
+            SetReadOnly();
+        }
+    }
+
+    /*
+    * ***********************************************************
+    * Folder item logic
+    * ***********************************************************
+    */
+    function Load() {
+        var eventAction = $("#EventAction").val();
+        var eventValue = $("#EventValue").val();
+        var tableName = $("#EventNote").val();
+        LoadFolderItems(tableName, eventAction, eventValue);
+    }
+
+    function LoadFolderItems(tableName, eventAction, eventValue) {
+        var id = $("#Entity_ID").val();
+        var link = '@Url.Action("EVENT_VALUE", "EVENT_ACTION")';
+
+
+
+        link = link.replace("EVENT_VALUE", eventValue);
+        link = link.replace("EVENT_ACTION", eventAction);
+        //tableName = tableName.replace("link-","");
+
+        //DEBUG
+        /*alert("DEBUG TAB " + tableName + " ACT " + eventAction + " VAL " + eventValue);*/
+
+        $("#EventAction").val(eventAction);
+        $("#EventValue").val(eventValue);
+        $("#EventNote").val(tableName);
+
+        var formData = new FormData();
+
+        formData.append("appUserItemFolderId", id);
+        //DEBUG
+        //alert("ID IS " + id + " EVENT VALUE IS " + eventValue + " EVENT ACTION IS " + eventAction);
+
+        /*$("#section-tab-overlay").show();*/
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-sys-tables-content").html(response);
+                $("#section-tab-overlay").hide();
+            },
+            error: function () {
+                alert("Error calling " + link);
+                $("#section-tab-overlay").hide();
+            }
+        });
+    }
+
+    /*
+    * ***********************************************************
+    * Deletion logic
+    * ***********************************************************
+    */
+    $(document).on("click", "[id='btnDeleteBatch']", function () {
+        DeleteBatch();
+    });
+
+    function DeleteBatchPrompt() {
+        var tableName = $("#EventNote").val();
+        var selectedFolderItems = GetSelectedAppUserItemListIDs("data_table_" + tableName);
+        $("#section-item-count").html(selectedFolderItems.length);
+        $("#modal-batch-delete-confirm").modal("show");
+    }
+
+    function DeleteBatch() {
+        var link = '@Url.Action("DeleteItems","AppUserItemFolder")';
+        var refreshLink = '@Url.Action("Index","Taxonomy")';
+        var folderId = $("#Entity_ID").val();
+        var tableName = $("#EventNote").val();
+        var selectedFolderItems = GetSelectedAppUserItemListIDs("data_table_" + tableName);
+        var formData = new FormData();
+
+        $("#ItemIDList").val(selectedFolderItems);
+
+        formData.append("FolderID", folderId);
+        formData.append("ItemIDList", selectedFolderItems);
+
+        $("#section-item-count").html(selectedFolderItems.length);
+        /*$("#modal-batch-delete-confirm").modal("show");*/
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                Load();
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    /*
+    * ***********************************************************
+    * Sharing logic
+    * ***********************************************************
+    */
+    $('#section-folder-options ul.nav li').on('click', function () {
+        var id = $(this).attr('id');
+        if (id == "tab-folder-sharing") {
+            var folderId = $("#Entity_ID").val();
+            //LoadAvailableCollaborators(folderId);
+            //LoadCurrentCollaborators(folderId);
+        }
+    });
+
+    function RenderFolderCooperatorWidget() {
+        var link = '@Url.Action("RenderWidget", "AppUserItemFolderCooperatorMap")';
+        var folderId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        formData.append("appUserItemFolderId", folderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section_folder_cooperator_widget").html(response);
+            },
+            error: function () {
+                alert("Error loading folder-sharing widget");
+            }
+        });
+    }
+</script>
+

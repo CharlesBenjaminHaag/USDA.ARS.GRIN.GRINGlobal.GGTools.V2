@@ -1,0 +1,16 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.OrderRequestViewModel
+@foreach(var attachment in Model.DataCollectionAttachments)
+{ 
+<div class="col-md-3 col-sm-6 col-12">
+    <div class="info-box shadow">
+        <span class="info-box-icon bg-info"><i class="far fa-copy"></i></span>
+
+        <div class="info-box-content">
+            <span class="info-box-text"><a href="@attachment.VirtualPath" target="_blank">@attachment.Title</a></span>
+            <span class="info-box-number">@attachment.Description</span>
+        </div>
+        <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+</div>
+}

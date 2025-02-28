@@ -1,0 +1,63 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderCooperatorMapViewModel
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-users"></i>
+                    Can be Shared With
+                </h3>
+            </div>
+            <div class="card-body">
+                <button id="btnMapCooperators1" class="btn btn-default btn-block">Add >></button>
+                <div id="section-non-mapped">
+                    <table id="tblNonMappedCooperators" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var result in Model.DataCollectionNonMapped)
+                            { 
+                                <tr>
+                                    <td>@result.ID</td>
+                                    <td>@result.FullName</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <button id="btnMapCooperators2" class="btn btn-default btn-block">Add >></button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-users"></i>
+                    Shared With
+                </h3>
+            </div>
+            <div class="card-body">
+                <button id="btnUnMapCooperators1" class="btn btn-default btn-block"><< Remove</button>
+                <div id="section-mapped">
+                    <table id="tblMappedCooperators" class="table table-striped">
+                        <thead>
+                            @foreach (var result in Model.DataCollectionMapped)
+                            {
+                                <tr>
+                                    <td>@result.ID</td>
+                                    <td>@result.FullName</td>
+                                </tr>
+                            }
+                        </thead>
+                    </table>
+                </div>
+                <button id="btnUnMapCooperators2" class="btn btn-default btn-block"><< Remove</button>
+            </div>
+        </div>
+    </div>
+</div>

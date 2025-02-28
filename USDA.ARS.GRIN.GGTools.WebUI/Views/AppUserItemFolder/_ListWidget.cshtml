@@ -1,0 +1,144 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderViewModel
+
+<div class="row">
+     
+        @if (Model.DataCollection.Count > 0)
+        {
+            foreach (var result in Model.DataCollection)
+            {
+                <div class="col-md-4">
+                    @if (result.FolderType == "DYNAMIC")
+                    {
+                        <div class="info-box shadow">
+                            <span class="info-box-icon bg-info">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">
+                                    @if (result.IsFavorite == "Y")
+                                    {
+                                        <i class="fas fa-star text-warning"></i>
+                                    }
+                                    <a href="@Url.Action("Edit", "AppUserItemFolder", new { @entityId = result.ID })">
+                                        @result.DataTypeDescription -- @result.FolderName
+                                    </a>
+                                </span>
+                                <span class="info-box-number">
+                                    Created @result.CreatedDate.ToShortDateString()
+                                    <span class="badge badge-secondary float-right">
+                                        Dynamic
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        if (result.FolderType == "SQLQUERY")
+                        {
+                            <div class="info-box shadow">
+                                <span class="info-box-icon bg-info">
+                                    <i class="fas fa-database"></i>
+                                </span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">
+                                        @if (result.IsFavorite == "Y")
+                                        {
+                                            <i class="fas fa-star text-warning"></i>
+                                        }
+                                        <a href="@Url.Action("Edit", "SysDynamicQuery", new { @entityId = result.ID })">
+                                            @result.FolderName
+                                        </a>
+                                    </span>
+                                    <span class="info-box-number">
+                                        Created @result.CreatedDate.ToShortDateString()
+                                        <span class="badge badge-secondary float-right">
+                                            SQL Query
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="info-box shadow">
+                                <span class="info-box-icon bg-info">
+                                    <i class="far fa-folder"></i>
+                                </span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">
+                                        @if (result.IsFavorite == "Y")
+                                        {
+                                            <i class="fas fa-star text-warning"></i>
+                                        }
+                                        <a href="@Url.Action("Edit", "AppUserItemFolder", new { @entityId = result.ID })">
+                                            @result.FolderName
+                                        </a>
+                                    </span>
+                                    <span class="info-box-number">
+                                        Created @result.CreatedDate.ToShortDateString()
+                                        <span class="badge badge-secondary float-right">
+                                            Static (@result.TotalItems items)
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+        }
+        else
+        {
+
+            <div class="col-md-12">
+                <div class="alert alert-info alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-info"></i> No Folders Found</h5>
+                    There are currently no folders in this category.
+                </div>
+            </div>
+
+        }
+     
+</div>
+
+<script type="text/javascript">
+    //InitFolderDataTable("data_table_app_user_item_folder");
+
+    //function InitFolderDataTable(tableName) {
+    //    tableName = "#" + tableName;
+    //    $(document).ready(function () {
+    //        table = $(tableName).DataTable({
+    //            //dom: 'Blfrtip',
+    //            //paging: true,
+
+    //            "pageLength": 10,
+    //            responsive: true,
+    //            //buttons: [
+    //            //    'selectAll',
+    //            //    'selectNone',
+    //            //    'csv',
+    //            //    'excel',
+    //            //    'pdf',
+    //            //    {
+    //            //        text: 'Edit Batch',
+    //            //        action: function (e, dt, node, config) {
+    //            //            EditBatch();
+    //            //        }
+    //            //    }
+    //            //],
+    //            /*select: true,*/
+
+
+    //            /*lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],*/
+    //            //columnDefs: [
+    //            //    { targets: [0], visible: false }
+    //            //]
+    //        });
+
+    //    });
+    //}
+
+
+</script>

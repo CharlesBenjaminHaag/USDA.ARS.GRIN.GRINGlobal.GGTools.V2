@@ -1,0 +1,45 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.LiteratureViewModel
+<hr />
+<button id="btnSaveLiterature1" type="button" class="btn btn-default float-right ggtools-lookup" data-dismiss="modal">Add Selected Literature</button>
+<table id="data-table-literature-lookup" class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th width="5%">ID</th>
+            <th>Abbreviation</th>
+            <th>Reference Title</th>
+            <th>Author</th>
+            <th>Publication Year</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.DataCollection != null)
+        {
+            if (Model.DataCollection.Count() > 0)
+            {
+                foreach (var result in Model.DataCollection)
+                {
+                    <tr>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>@Html.Raw(result.Abbreviation)</td>
+                        <td>@Html.Raw(result.ReferenceTitle)</td>
+                        <td>@result.EditorAuthorName</td>
+                        <td>@result.PublicationYear</td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+<button id="btnSaveLiterature2" type="button" class="btn btn-default float-right ggtools-lookup" data-dismiss="modal">Add Selected Literature</button>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableLookupFormat("data-table-literature-lookup");
+    });
+</script>

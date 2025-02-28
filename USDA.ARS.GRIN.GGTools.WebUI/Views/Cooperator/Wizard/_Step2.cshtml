@@ -1,0 +1,66 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+@{
+    string cardTitle = "";
+    string cardCssClass = "";
+    string cardCardBodyCssStyle = "";
+    string cardButtonCssClass = "";
+    string cardClosedCssClass = "card card-primary shadow-sm collapsed-card";
+    string cardClosedCardBodyCssStyle = "display: none;";
+    string cardClosedButtonCssClass = "fas fa-plus";
+    string cardOpenCssClass = "card card-primary shadow-sm";
+    string cardOpenCardBodyCssStyle = "display: block;";
+    string cardOpenButtonCssClass = "fas fa-minus";
+}
+
+@using (Html.BeginForm("EditSysUser", "CooperatorWizard", FormMethod.Post, new { id = "frmEditCooperator" }))
+{
+    @Html.HiddenFor(x => x.Entity.CooperatorID)
+    @Html.HiddenFor(x => x.Entity.SysUserID)
+
+    if (Model.Entity.ID == 0)
+    {
+        cardTitle = "Add Sys User";
+        cardCssClass = cardOpenCssClass;
+        cardCardBodyCssStyle = cardOpenCardBodyCssStyle;
+        cardButtonCssClass = cardOpenButtonCssClass;
+    }
+    else
+    {
+        cardTitle = "Sys User";
+        cardCssClass = cardClosedCssClass;
+        cardCardBodyCssStyle = cardClosedCardBodyCssStyle;
+        cardButtonCssClass = cardClosedButtonCssClass;
+    }
+
+    <div class="@cardCssClass">
+        <div class="card-header">
+            <h3 class="card-title">@cardTitle</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="@cardButtonCssClass"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body" style="@cardCardBodyCssStyle">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>User Name</label>
+                        @Html.TextBoxFor(x => x.Entity.UserName, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        @Html.TextBoxFor(x => x.Entity.Password, new { @class = "form-control", @type = "text" })
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        @Html.TextBoxFor(x => x.Entity.PasswordConfirm, new { @class = "form-control", @type = "text" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-default float-right" type="submit">Save Sys User</button>
+        </div>
+    </div>
+}

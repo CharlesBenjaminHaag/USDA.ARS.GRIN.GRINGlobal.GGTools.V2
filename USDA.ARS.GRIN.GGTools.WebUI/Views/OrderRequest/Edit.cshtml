@@ -1,0 +1,101 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.OrderRequestViewModel
+@{
+    ViewBag.Title = ViewBag.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style>
+    .invoice-info {
+        margin-top: 25px;
+    }
+
+    .section-modal-reject-email-fields {
+        margin-top: 15px;
+    }
+</style>
+
+<!-- Main fields -->
+@Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+<div class="card card-outline card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Order Request Detail</h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        @Html.Partial("~/Views/OrderRequest/_Edit.cshtml")
+    </div>
+</div>
+
+<!-- Coops -->
+<div class="card card-outline card-primary collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-users"></i>
+        Cooperators</h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body" style="display:none;">
+        @Html.Partial("~/Views/OrderRequest/Components/_CooperatorListWidget.cshtml")
+    </div>
+</div>
+
+
+<!-- Related data -->
+<div class="card card-primary card-tabs">
+    <div class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+            <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+            </div>
+            <li class="nav-item">
+                <a class="nav-link active" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#tab-items" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="true">
+                    <i class="fas fa-list"></i>
+                    Items
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill" href="#tab-actions" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false">
+                    <i class="fas fa-lightbulb"></i>
+                    Actions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#tab-attachments" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">
+                    <i class="fas fa-paperclip"></i>
+                    Attachments
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#tab-phyto-log" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">
+                    <i class="fas fa-bug"></i>
+                    Phyto Log
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="section-search-results" class="card-body">
+        <div class="tab-content" id="custom-tabs-one-tabContent">
+            <div class="tab-pane fade show active" id="tab-items" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                @{Html.RenderAction("_ListItems", "OrderRequest", new { @orderRequestId = Model.Entity.ID }); }
+            </div>
+            <div class="tab-pane fade " id="tab-actions" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                @{Html.RenderAction("_ListActions", "OrderRequest", new { @orderRequestId = Model.Entity.ID }); }
+            </div>
+            <div class="tab-pane fade" id="tab-attachments" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                @{Html.RenderAction("_ListAttachments", "OrderRequest", new { @orderRequestId = Model.Entity.ID }); }
+            </div>
+            <div class="tab-pane fade" id="tab-phyto-log" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+                @{Html.RenderAction("_ListPhytoLog", "OrderRequest", new { @orderRequestId = Model.Entity.ID }); }
+            </div>
+        </div>
+    </div>
+</div>

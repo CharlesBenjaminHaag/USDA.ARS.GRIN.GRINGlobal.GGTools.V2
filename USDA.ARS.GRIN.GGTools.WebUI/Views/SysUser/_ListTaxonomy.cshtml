@@ -1,0 +1,92 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-users"></i> My Team
+        </h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            @foreach (var result in Model.DataCollection)
+            {
+                if (result.CooperatorID != Model.AuthenticatedUser.CooperatorID)
+                {
+                    <div class="col-md-4">
+                        <div class="card bg-light d-flex flex-fill">
+                            <div class="card-header text-muted border-bottom-0">
+                                @result.JobTitle
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h2 class="lead">
+                                            <a href="@Url.Action("Edit", "Cooperator", new { @entityId = result.CooperatorID })">
+                                                <b>@result.FullName</b>
+                                            </a>
+                                        </h2>
+                                        <p class="text-muted text-sm"><b>Site: </b> @result/SiteLongName (@result.SiteShortName) </p>
+                                        <ul class="ml-4 mb-0 fa-ul text-muted">
+                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: @result.Address</li>
+                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> Email: @result.EmailAddress</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-5 text-center">
+                                        <img src="~/dist/img/user-default.png" alt="user-avatar" class="img-circle img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="text-right">
+                                    <button id="btnDelete" data-ggtools-action="DELETE" data-ggtools-value="@result.ID" class="btn btn-sm bg-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <button id="btnOpenModalSysGroupUserMapLookup" data-ggtools-action="EDIT" data-ggtools-value="@result.ID" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-user"></i> Edit User Access
+                                    </button>
+                                    @*<a href="@Url.Action("Admin", "Taxonomy", new { @sysUserId = result.ID })" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-user"></i> Edit User Access
+                                        </a>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="@Url.Action("Admin","Taxonomy")" class="btn btn-default float-right">
+            <i class="fas fa-plus"></i> Add Taxonomy User
+        </a>
+    </div>
+</div>
+<script type="text/javascript">
+    
+
+    $(document).on("click", "[id*='btnDelete']", function () {
+        var eventAction = $(this).data("ggtools-action");
+        var eventValue = $(this).data("ggtools-value");
+        Delete(eventValue);
+        LoadSysUsers();
+    });
+
+    function Add() {
+
+    }
+
+    function Edit() {
+
+    }
+
+    function Delete(sysUserId) {
+
+    }
+
+    
+
+</script>

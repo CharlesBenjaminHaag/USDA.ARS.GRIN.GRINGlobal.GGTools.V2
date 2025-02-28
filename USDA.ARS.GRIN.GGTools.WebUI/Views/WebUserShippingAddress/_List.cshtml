@@ -1,0 +1,50 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebCooperatorViewModel
+<table id="data-table-web-user-shipping-address" class="table table-striped" style=" width:100%;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Default</th>
+            <th>Address 1</th>
+            <th>Address 2</th>
+            <th>Address 3</th>
+            <th>City</th>
+            <th>Postal Index</th>
+            <th>Country</th>
+            <th>Created</th>
+            <th>Last Modified</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollectionWebUserShippingAddress)
+        {
+        <tr>
+            <td>
+                @result.ID
+            </td>
+            <td>@result.AddressName</td>
+            <td>
+                @Html.Raw(Model.FormatBoolean(result.IsDefault))
+            </td>
+            <td>@result.AddressLine1</td>
+            <td>@result.AddressLine2</td>
+            <td>@result.AddressLine3</td>
+            <td>@result.City</td>
+            <td>@result.PostalIndex</td>
+            <td>@result.CountryCode</td>
+            <td>@result.CreatedDate.ToShortDateString()</td>
+            <td>
+                @if (result.ModifiedDate != DateTime.MinValue)
+                {
+                    <span>@result.ModifiedDate.ToShortDateString()</span>
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    InitDataTable("data-table-web-user-shipping-address");
+    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+</script>
+

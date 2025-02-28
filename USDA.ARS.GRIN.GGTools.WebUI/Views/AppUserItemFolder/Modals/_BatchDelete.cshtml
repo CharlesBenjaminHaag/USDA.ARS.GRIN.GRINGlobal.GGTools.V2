@@ -1,0 +1,79 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderViewModel
+@Html.HiddenFor(x=>x.ItemIDList)
+<div class="modal fade" id="modal-batch-delete-confirm" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Please Confirm</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This will permanently delete the (<span id="section-item-count"></span>) selected records from the <strong>@Model.Entity.FolderName</strong>
+                    folder. Are you sure?
+                </p>
+                @*@if (Model.Entity.IsShared == "Y")
+                { 
+                    <p>Please note that this folder is currently being shared. <span style="background-color:yellow;">INSERT PROMPT TO NOTIFY USERS HERE?</span></p>
+                }*@
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn bg-danger" data-dismiss="modal">Cancel</button>
+                <button id="btnDeleteBatch" type="button" class="btn btn-default" data-dismiss="modal">Yes, Please Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //$("#btnDelete").click(function () {
+    //    $("#modal-delete-confirm").modal("show");
+    //});
+
+    @*$("#btnDeleteConfirm").click(function () {
+        var refreshLink = '@Url.Action("Index","CropForCWR")';
+        Delete();
+    });*@
+
+    @*function Delete() {
+        var tableName = $("#TableName").val();
+        var tableCode = $("#TableCode").val();
+        var link = '@Url.Action("DeleteEntity","[ACTION]")';
+        var refreshLink = '@Url.Action("Index","[ACTION]")';
+        var entityId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        link = link.replace("[ACTION]", tableCode);
+        refreshLink = refreshLink.replace("[ACTION]", tableCode);
+
+        DEBUG
+        alert("DEBUG REFRESH LINK IS " + refreshLink);
+
+        formData.append("TableName", tableName);
+        formData.append("EntityID", entityId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                if (response.errorMessage == "547") {
+                    $("#modal-delete-dependency-warning").modal("show");
+                }
+                else {
+                    if (response.errorMessage == "50000") {
+                    }
+                    else {
+                        window.location.href = refreshLink;
+                    }
+                }
+            },
+            error: function () {
+                alert("Error calling " + link);
+            }
+        });
+    }*@
+</script>

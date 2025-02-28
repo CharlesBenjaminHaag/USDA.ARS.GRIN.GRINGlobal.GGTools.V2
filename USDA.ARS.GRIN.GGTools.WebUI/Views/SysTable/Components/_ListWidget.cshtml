@@ -1,0 +1,34 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysTableViewModel
+<div class="row">
+
+    @{ 
+        string widgetCssClass = "small-box bg-info";
+    }
+
+    @foreach (var result in Model.DataCollection)
+    {
+        if (result.IsMapped == "N")
+        {
+            widgetCssClass = "small-box";
+        }
+
+        <div class="col-md-6">
+            <div class="@widgetCssClass">
+                <div class="inner">
+                    <h4>@result.SysTableTitle</h4>
+                    <p>@Model.GetRecordCount(result.SysTableName).Value</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-table"></i>
+                </div>
+            
+                @if (result.IsMapped == "Y")
+                {
+                    <a href="@Url.Action("Index", result.TableCode, new { @sysTableName = result.SysTableName, @sysTableTitle = result.SysTableTitle })" class="small-box-footer">
+                        Search <i class="fas fa-search"></i>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,87 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemListViewModel
+
+        <table id="" class="table table-striped search-results ggtools-data-table" style=" width:100%;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>ID</th>
+                    <th>Item Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollection)
+                {
+                    <tr>
+                        <td></td>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>
+                            @result.EntityID
+                        </td>
+                        <td>
+                            @result.IDType
+                        </td>
+                                           </tr>
+                }
+            </tbody>
+        </table>
+     
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableAppUserItemListFormat("data_table_app_user_item_list");
+    });
+
+    function InitDataTableAppUserItemListFormat(tableName) {
+        //tableName = "#" + tableName;
+        tableName = ".ggtools-data-table";
+        $(document).ready(function () {
+            table = $(tableName).DataTable({
+                destroy: true,
+                dom: 'Blfrtip',
+                paging: true,
+                "pageLength": 10,
+                responsive: true,
+                buttons: [
+                    'selectAll',
+                    'selectNone',
+                    'csv',
+                    'excel',
+                    'pdfHtml5',
+                    {
+                        text: 'Import Selected',
+                        action: function (e, dt, node, config) {
+                            Import(2);
+                        }
+                    },
+                    {
+                        text: 'Import All',
+                        action: function (e, dt, node, config) {
+                            Import(1);
+                        }
+                    }
+                ],
+                select: true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                columnDefs: [
+                    {
+                        target: 0,
+                        visible: false,
+                        searchable: false,
+                    },
+                    {
+                        target: 1,
+                        visible: false,
+                        searchable: false,
+                    },
+                ]
+            });
+
+            $('table.ggtools').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                /*alert('You clicked on ' + data[0] + "'s row");*/
+            });
+        });
+    }
+</script>

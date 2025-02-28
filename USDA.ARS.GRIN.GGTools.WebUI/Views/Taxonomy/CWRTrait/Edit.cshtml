@@ -1,0 +1,212 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CWRTraitViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = null;
+}
+
+@{
+    string eventAction = @ViewContext.RouteData.Values["controller"].ToString();
+    string eventValue = @ViewContext.RouteData.Values["action"].ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/gringlobal-logo.jfif" alt="GRIN-Global Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    @{Html.RenderAction("GetMenu", "Menu", new { @eventAction = eventAction, @eventValue = eventValue });}
+                </div>
+                <!-- BEGIN RIGHT-ALIGNED NAV MENU -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    @if (Model.Entity.ID > 0)
+                    {
+                        <li id="nav-item-view-website" class="nav-item">
+                            <a class="nav-link" href="#" role="button">
+                                <i class="far fa-globe"></i>
+                                View on Website
+                            </a>
+                        </li>
+                    }
+                    @Html.Partial("~/Views/Shared/_NavbarRight.cshtml")
+                </ul>
+                <!-- END RIGHT-ALIGNED NAV MENU -->
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                @Html.Raw(ViewBag.Title)
+                                @*<small>Example 3.0</small>*@
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+                    @using (Html.BeginForm("Edit", "CWRTrait", FormMethod.Post, new { id = "frmEdit" }))
+                    {
+                        @Html.HiddenFor(x => x.PageTitle)
+                        @Html.HiddenFor(x => x.EventAction)
+                        @Html.HiddenFor(x => x.EventValue)
+                        @Html.HiddenFor(x => x.TableName)
+                        @Html.HiddenFor(x => x.TableCode)
+                        @Html.HiddenFor(x => x.Entity.ID)
+                        @Html.HiddenFor(x => x.Entity.CitationID)
+                        @Html.HiddenFor(x => x.Entity.SpeciesID)
+                        @Html.Partial("~/Views/Taxonomy/Shared/_RevisionHistory.cshtml")
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Summary</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>CWR Map</label>
+                                            <div class="input-group">
+                                                @Html.DropDownListFor(x => x.Entity.CWRMapID, Model.CWRMaps, "Select value", new { @class = "form-control" })
+                                                <span class="input-group-btn">
+                                                    <a href="@Url.Action("Edit","CWRMap", new { @entityId = Model.Entity.CWRMapID })" class="btn btn-default btn-flat">
+                                                        <i class="fa fa-link"></i>
+                                                    </a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-horizontal">
+                                            <label>Trait Class</label>
+                                            @Html.DropDownListFor(x => x.Entity.TraitClassCode, Model.TraitClassCodes, "NULL", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-horizontal">
+                                            <label>Breeding Type</label>
+                                            @Html.DropDownListFor(x => x.Entity.BreedingTypeCode, Model.BreedingTypeCodes, "NULL", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group form-horizontal">
+                                            <label>Ontology Trait Identifier</label>
+                                            @Html.TextBoxFor(x => x.Entity.OntologyTraitIdentifier, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="form-group clearfix" style="margin-top:40px;">
+                                            <div class="icheck-primary d-inline">
+                                                @Html.CheckBoxFor(x => x.Entity.IsPotentialOption, new { id = "cbxIsPotential" })
+                                                <label for="cbxIsPotential">
+                                                    Potential
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group form-horizontal">
+                                            <label>Breeding Usage Note</label>
+                                            @Html.TextBoxFor(x => x.Entity.BreedingUsageNote, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <!-- BEGIN NOTE FIELD -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>
+                                                Note
+                                                &nbsp;<a href="" data-toggle="modal" data-target="#modal-note-lookup"><i class="fa fa-search"></i></a>
+                                            </label>
+                                            <div class="input-group">
+                                                @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control", @style = "width:100%;" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div id="section-citation" class="col-md-12">
+                                                @*@{ Html.RenderAction("RenderWidget", "Citation", new { @entityId = Model.Entity.CitationID });}*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="@Url.Action("Refresh")" class="btn btn-default">Reset</a>
+                                @if (Model.Entity.ID > 0)
+                                {
+                                    <button id="btnDelete" type="button" class="btn btn-danger">
+                                        Delete
+                                    </button>
+                                }
+                                <button type="submit" class="btn btn-default float-right">Save</button>
+                            </div>
+                        </div>
+                        if (Model.Entity.ID > 0)
+                        {
+                            <div id="section-species-citation-widget">
+                                @{Html.RenderAction("RenderWidget", "Citation", new { @entityId = Model.Entity.CitationID });}
+                            </div>
+                        }
+                    }
+
+                    @if (Model.Entity.ID > 0)
+                    {
+                        Html.RenderAction("RenderSpeciesCitationLookupModal", "Citation", new { @tableName = Model.TableName, @speciesId = Model.Entity.SpeciesID });
+                        Html.RenderAction("RenderCloneModal", "CWRTrait", new { @cwrTraitId = Model.Entity.ID });
+                    }
+                    @Html.Partial("~/Views/Shared/Modals/_NoteLookup.cshtml")
+                    @Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+                    @{Html.RenderAction("GetEditModal", "SysFolder", new { sysTableName = Model.TableName }); }
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            Init();
+                            /*InitializeCKEditor();*/
+                        });
+
+                        function Init() {
+
+                        }
+                    </script>
+                    <br />
+                </div>
+            </div>
+
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+</body>
+</html>
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")

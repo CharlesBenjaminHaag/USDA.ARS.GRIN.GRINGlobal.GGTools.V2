@@ -1,0 +1,306 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style>
+    .row {
+        margin-top: 5px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-3">
+        <div id="section-sys-user-widget">
+            <div id="section-sys-user">
+                @{Html.RenderAction("RenderWidget", "SysUser", new { sysUserId = Model.Entity.SysUserID }); }
+            </div>
+            <div id="section-sys-group">
+                @{Html.RenderAction("RenderSysGroupWidget", "SysUser", new { sysUserId = Model.Entity.SysUserID }); }
+            </div>
+        </div>
+    </div>
+    <div id="section-input-fields" class="col-md-9">
+        @Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+        <div class="card">
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#tab-summary" data-toggle="tab">Summary</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tab-folders" data-toggle="tab">Folders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tab-application-settings" data-toggle="tab">Application Settings</a></li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-summary">
+                        <div class="margin">
+                            <a href="@Url.Action("Edit", "WebCooperator", new { entityId = Model.Entity.WebCooperatorID })" class="btn btn-default btn-sm">
+                                Web Cooperator
+                            </a>
+                        </div>
+                        @using (Html.BeginForm("Edit", "Cooperator", FormMethod.Post, new { id = "frmEditCooperator" }))
+                        {
+                            @Html.HiddenFor(x => x.PageTitle)
+                            @*@Html.HiddenFor(x => x.IsReadOnly)*@
+                            @Html.HiddenFor(x => x.EventAction)
+                            @Html.HiddenFor(x => x.EventValue)
+                            @Html.HiddenFor(x => x.TableName)
+                            @Html.HiddenFor(x => x.TableCode)
+                            @Html.HiddenFor(x => x.Entity.ID)
+                            @Html.HiddenFor(x => x.Entity.StatusCode)
+                            @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Status</label>
+                                        @Html.DropDownListFor(x => x.Entity.StatusCode, Model.Statuses, "Select value", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Salutation</label>
+                                        @Html.DropDownListFor(x => x.Entity.Salutation, Model.Salutations, "Select value", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>First Name</label>
+                                        @Html.TextBoxFor(x => x.Entity.FirstName, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Last Name</label>
+                                        @Html.TextBoxFor(x => x.Entity.LastName, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Job Title</label>
+                                    @Html.TextBoxFor(x => x.Entity.JobTitle, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>Organization</label>
+                                    @Html.TextBoxFor(x => x.Entity.Organization, new { @class = "form-control" })
+                                    <!--<div class="input-group">
+                    <span class="input-group-btn">-->
+                                    @*@Html.TextBoxFor(x => x.Entity.OrganizationAbbrev, new { @class = "form-control", @style = "width:80px;" })*@
+                                    <!--<button type="button" data-toggle="modal" data-target="#modal-organization-lookup" class="btn btn-default btn-flat">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>-->
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Abbrev</label>
+                                    @Html.TextBoxFor(x => x.Entity.OrganizationAbbrev, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Site</label>
+                                        @Html.DropDownListFor(x => x.Entity.SiteID, Model.Sites, "Select site", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Category</label>
+                                    @Html.DropDownListFor(x => x.Entity.CategoryCode, Model.Categories, "Select value", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        @Html.TextBoxFor(x => x.Entity.EmailAddress, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Secondary Email</label>
+                                        @Html.TextBoxFor(x => x.Entity.SecondaryEmailAddress, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Primary Phone</label>
+                                        @Html.TextBoxFor(x => x.Entity.PrimaryPhone, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Secondary Phone</label>
+                                        @Html.TextBoxFor(x => x.Entity.SecondaryPhone, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Primary Address</label>
+                                        @Html.TextBoxFor(x => x.Entity.AddressLine1, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.AddressLine2, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.AddressLine3, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        @Html.TextBoxFor(x => x.Entity.City, new { @class = "form-control" })
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>State/Geo</label>
+                                            @Html.DropDownListFor(x => x.Entity.GeographyID, Model.States, "Select state", new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Postal Code</label>
+                                            @Html.TextBoxFor(x => x.Entity.PostalIndex, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Secondary Address</label>
+                                        @Html.TextBoxFor(x => x.Entity.SecondaryAddressLine1, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.SecondaryAddressLine2, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.SecondaryAddressLine3, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        @Html.TextBoxFor(x => x.Entity.SecondaryCity, new { @class = "form-control" })
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>State/Geo</label>
+                                            @Html.DropDownListFor(x => x.Entity.SecondaryGeographyID, Model.States, "Select state", new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Postal Code</label>
+                                            @Html.TextBoxFor(x => x.Entity.SecondaryPostalIndex, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="section-edit-controls" class="edit-controls" style="margin-top:25px;">
+                                <button type="button" class="btn btn-danger">Cancel</button>
+                                <button type="submit" class="btn btn-default float-right">Save</button>
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane" id="tab-folders">
+                        <div class="alert alert-info alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h5><i class="icon fas fa-info"></i> Note!</h5>
+                            This data is available here for review and export only. Please use the Curator Tool
+                            to make edits.
+                        </div>
+                        @{ Html.RenderAction("_List", "AppUserItemList", new { cooperatorId = Model.Entity.ID }); }
+                    </div>
+                    <div class="tab-pane" id="tab-application-settings">
+                        <div class="alert alert-info alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h5><i class="icon fas fa-info"></i> Note!</h5>
+                            This data is available here for review and export only. Please use the Curator Tool
+                            to make edits.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/SysUser/Modals/_ResetPassword.cshtml")
+@{Html.RenderAction("RenderEditModal","SysUser");}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+
+    }
+    $('#btnSaveSysUser').on('click', function () {
+        AjaxFormSubmit();
+    });
+
+    $('#btnSubmitResetPassword').on('click', function () {
+        AjaxFormSubmit();
+    });
+
+    function RenderSysUserWidget(sysUserId) {
+        var link = '@Url.Action("RenderWidget","SysUser")';
+        var formData = new FormData();
+        formData.append("sysUserId", sysUserId);
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-sys-user").html(response);
+            }
+        });
+    }
+
+    function RenderSysGroupWidget() {
+        var link = '@Url.Action("RenderSysGroupWidget","SysUser")';
+        var formData = new FormData();
+        formData.append("sysUserId", sysUserId);
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-sys-group").html(response);
+            }
+        });
+    }
+
+    function AjaxFormSubmit() {
+        var link = $("#frmEditSysUser").attr("action");
+        var formData = new FormData();
+        formData.append("Entity.CooperatorID", $("#frmEditCooperator #Entity_ID").val());
+        formData.append("Entity.SysUserID", $("#Entity_SysUserID").val());
+        formData.append("Entity.UserName", $("#Entity_UserName").val());
+        formData.append("Entity.Password", $("#Entity_Password").val());
+        formData.append("Entity.PasswordConfirm", $("#Entity_PasswordConfirm").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                RenderSysUserWidget(data.sysUser.ID);
+                RenderSysGroupWidget(data.sysUser.ID);
+            },
+            error: function (ex) {
+                alert("Error");
+            }
+        });
+    }
+
+    function AjaxResetPasswordFormSubmit() {
+        var link = $("#frmSysUserResetPassword").attr("action");
+        //TODO
+    }
+</script>
+
+

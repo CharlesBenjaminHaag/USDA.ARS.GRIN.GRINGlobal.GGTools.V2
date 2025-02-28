@@ -1,0 +1,165 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    ViewBag.ID = Model.ID;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+<div id="section-search-results" class="card card-success">
+    <div class="card-header">
+        <h3 class="card-title">Species</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results">
+            <div id="section-search-results">
+                <table id="example" class="table table-striped" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Genus</th>
+                            <th>Epithet</th>
+                            <th>Authority</th>
+                            <th>Protologue</th>
+                            <th>URL</th>
+                            <th>Note</th>
+                            <th>Last Modified</th>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var editor = new DataTable.Editor({
+            ajax: '@Url.Action("EditBatch","Species")',
+            fields: [
+                {
+                    label: 'ID:',
+                    name: 'taxonomy_species.taxonomy_species_id'
+                },
+                
+                {
+                    label: 'Name:',
+                    name: 'taxonomy_species.species_name'
+                },
+                {
+                    label: 'Authority:',
+                    name: 'taxonomy_species.name_authority'
+                },
+                {
+                    label: 'Protologue:',
+                    name: 'taxonomy_species.protologue'
+                },
+                {
+                    label: 'Protologue:',
+                    name: 'taxonomy_species.protologue_virtual_path'
+                },
+                {
+                    label: 'Note:',
+                    name: 'taxonomy_species.note'
+                }
+            ],
+            table: '#example'
+        });
+
+        var table = $('#example').DataTable({
+            ajax: '@Url.Action("EditBatch","Species")',
+            autoFill: {
+                editor: editor
+            },
+            //RE-ENABLE ONCE DONE (CBH 9/4/24)
+            //buttons: [
+            //    {
+            //        extend: 'createInline',
+            //        editor: editor,
+            //        formOptions: {
+            //            submitTrigger: -2,
+            //            submitHtml: '<i class="fa fa-play"/>'
+            //        }
+            //    }
+            //],
+            columns: [
+                {
+                    data: 'taxonomy_species.taxonomy_species_id',
+                    render: function (data, type, row, meta) {
+                        var url = '@Url.Action("Edit","Species")' + '?entityId=' + row.taxonomy_species.taxonomy_species_id;
+                        return '<a href="' + url + '">' + data + '</a>';
+                    }
+                },
+                { data: 'taxonomy_genus.genus_name' },
+                { data: 'taxonomy_species.species_name' },
+                { data: 'taxonomy_species.name_authority' },
+                { data: 'taxonomy_species.protologue' },
+                { data: 'taxonomy_species.protologue_virtual_path' },
+                { data: 'taxonomy_species.note' },
+                { data: 'taxonomy_species.modified_date' }
+            ],
+            keys: {
+                /*columns: ':not(:first-child)',*/
+                columns: [2,3,4,5,6],
+                keys: [9],
+                editor: editor,
+                editOnFocus: true
+            },
+            layout: {
+                topStart: {
+                    buttons: [
+                        { extend: 'create', editor: editor },
+                        { extend: 'edit', editor: editor },
+                        { extend: 'remove', editor: editor }
+                    ]
+                }
+            },
+            order: [[1, 'asc']],
+            scrollX: true,
+            scrollY: 500,
+            paging: false,
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, 'All']
+            ],
+            dom: "Bflrtip",
+            select: {
+                blurable: true,
+                selector: 'td:first-child',
+                style: 'os'
+            }
+        });
+
+        // Activate an inline edit on click of a table cell
+        $('#example').on('click', 'tbody td:not(:first-child)', function (e) {
+            editor.inline(this, {
+                onBlur: 'submit'
+            });
+        });
+
+        function addBlankRows(count) {
+            
+
+            let newRecords = [
+                { "name": "Alice Johnson", "position": "Manager", "age": 40 },
+                { "name": "Bob Brown", "position": "Developer", "age": 29 }
+            ];
+
+            // Add new records to the Editor
+            editor.add(newRecords)
+                .submit()
+                .then(function () {
+                    console.log('New records added successfully!');
+                })
+                .catch(function (err) {
+                    console.error('Error adding records:', err);
+                });
+        }
+
+    });
+</script>

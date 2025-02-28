@@ -1,0 +1,28 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AccessionViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Accession/_Detail.cshtml")
+@Html.Partial("~/Views/Accession/_List.cshtml")
+
+<script type="text/javascript">
+    //$(document).keypress(function (event) {
+    //    var keycode = (event.keyCode ? event.keyCode : event.which);
+    //    if (keycode == '13') {
+    //        $("#btnSearch").click();
+    //    }
+    //});
+
+    $(document).ready(function () {
+        Init();
+        SetExtendedFields();
+    });
+
+    function Init() {
+        var eventAction = $("#EventAction").val();
+        if (eventAction == "SHOW-SEARCH") {
+            $("#section-search-criteria").show();
+        }
+    }
+</script>

@@ -1,0 +1,32 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderCooperatorMapViewModel
+<table id="data-table-non-mapped" class="table table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollectionNonMapped)
+        {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    @result.FullName
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableLightMultiSelect("data-table-non-mapped");
+    });
+</script>

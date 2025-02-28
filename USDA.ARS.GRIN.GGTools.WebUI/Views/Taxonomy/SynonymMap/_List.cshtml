@@ -1,0 +1,66 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SynonymMapViewModel
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">Synonyms (@Model.DataCollection.Count)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results" class="data-list">
+            <table id="data_table_taxonomy_species_synonym_map" class="table table-striped ggtools">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ID</th>
+                        <th>Taxon A ID</th>
+                        <th>Taxon A Name</th>
+                        <th>Synonym Type</th>
+                        <th>Taxon B ID</th>
+                        <th>Taxon B Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollection)
+                    {
+                    <tr>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>@result.SpeciesAID</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Species", new { entityId = result.SpeciesAID })">
+                                @Html.Raw(result.SpeciesAssembledNameSubject)
+                            </a>
+                        </td>
+                        <td>@result.SynonymDescription</td>
+                        <td>@result.SpeciesBID</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Species", new { entityId = result.SpeciesBName })">
+                                @Html.Raw(result.SpeciesAssembledNamePredicate)
+                            </a>
+                        </td>
+                        <td style="text-align:right;">
+                            <a href="@Url.Action("Edit", "SynonymMap", new { entityId = result.ID })" class="btn btn-primary btn-sm pull-right margin-r-5 row-edit">
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    InitDataTable("data_table_taxonomy_species_synonym_map");
+                });
+            </script>
+        </div>
+    </div>
+</div>
+

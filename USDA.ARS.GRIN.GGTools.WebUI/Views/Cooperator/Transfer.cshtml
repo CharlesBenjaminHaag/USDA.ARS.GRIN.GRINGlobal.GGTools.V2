@@ -1,0 +1,212 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorRecordTransferViewModel
+@{
+    ViewBag.Title = "RecordOwnershipEdit";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+
+<style>
+    .submit-progress-bg {
+        background-color: lightgray;
+        opacity: .5;
+    }
+
+    .submit-progress {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        height: 6em;
+        padding-top: 2.3em;
+    }
+</style>
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Target Cooperator</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        @Html.HiddenFor(x => x.SourceCooperatorID)
+        @Html.HiddenFor(x => x.TargetCooperatorID)
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label>Source Cooperator</label>
+                    @Html.DropDownListFor(x => x.SourceCooperatorID, Model.SourceCooperators, "All Cooperators", new { @id = "ddlSourceCooperators", @class = "form-control" })
+                </div>
+                <div id="section-source-cooperator-records-owned">
+
+                </div>
+            </div>
+            <div class="col-md-2" style="margin-top:5%;">
+                <div class="margin">
+                    <a id="btnTransfer" class="btn btn-app btn-block">
+                        <i class="fas fa-arrow-right"></i> Transfer
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label>Target Cooperator</label>
+                    @Html.DropDownListFor(x => x.TargetCooperatorID, Model.TargetCooperators, "All Cooperators", new { @id = "ddlTargetCooperators", @class = "form-control" })
+                </div>
+                <div id="section-target-cooperator-records-owned">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button id="btnDeleteSelectedPredicate" class="btn btn-danger">Remove Selected</button>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-user-warning" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">More Information Required</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="user-warning-message"></p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var sourceCooperatorId = $("#SourceCooperatorID").val();
+        if (sourceCooperatorId > 0) {
+            RenderRecordsOwnedList(sourceCooperatorId, "Source");
+        }
+
+        var targetCooperatorId = $("#TargetCooperatorID").val();
+        if (targetCooperatorId > 0) {
+            RenderRecordsOwnedList(targetCooperatorId, "Target");
+        }
+    }
+
+    $(document).on("click", "[id='btnTransfer']", function () {
+        Transfer();
+    });
+
+    $("#ddlSourceCooperators").change(function () {
+        var sourceCooperatorId = this.value;
+        RenderRecordsOwnedList(sourceCooperatorId,"Source");
+    });
+
+    $("#ddlTargetCooperators").change(function () {
+        var targetCooperatorId = this.value;
+        RenderRecordsOwnedList(targetCooperatorId, "Target");
+    });
+
+    function Transfer()
+    {
+        var link = '@Url.Action("Transfer", "Cooperator")';
+        var sourceCooperatorId = 0;
+        var targetCooperatorId = 0;
+        var selectedTableList = "";
+        var userWarningMessage = "";
+        var formData = new FormData();
+
+        sourceCooperatorId = $("#ddlSourceCooperators").val();
+        targetCooperatorId = $("#ddlTargetCooperators").val();
+
+        //TODO Get list of tables
+        selectedTableList = GetSelectedTableList("data-table-source-cooperator-records-owned");
+
+        if (sourceCooperatorId == 0 || targetCooperatorId == 0 || selectedTableList.length == 0) {
+            userWarningMessage = "Please specify:<ul><li>Both the cooperator from whom you are transferring ownership, and the cooperator to whom you are assigning these records</li>";
+            userWarningMessage += "<li>At least one table in which to reassign record ownership</li></ul>";
+        }
+
+        if (userWarningMessage.length > 0) {
+            $("#user-warning-message").html(userWarningMessage);
+            $("#modal-user-warning").modal("show");
+        }
+        else {
+
+            formData.append("SourceCooperatorId", sourceCooperatorId);
+            formData.append("TargetCooperatorId", targetCooperatorId);
+            formData.append("SourceTableList", selectedTableList);
+
+            $("body").addClass("submit-progress-bg");
+            $(".submit-progress").removeClass("hidden");
+
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    //Refresh both lists
+                    RenderRecordsOwnedList(sourceCooperatorId, "Source");
+                    RenderRecordsOwnedList(targetCooperatorId, "Target");
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+            $("body").removeClass("submit-progress-bg");
+            $(".submit-progress").addClass("hidden");
+        }
+    }
+
+    function GetSelectedTableList(tableName) {
+        var table = $('#' + tableName).DataTable();
+        var ids = $.map(table.rows('.selected').data(), function (item) {
+            return item[1]
+        });
+        console.log(ids)
+        return ids;
+    }
+
+    function RenderRecordsOwnedList(cooperatorId, category) {
+        var link = '@Url.Action("RenderRecordsOwnedList","Cooperator")';
+        var formData = new FormData();
+        var partialViewSectionName = "";
+
+        formData.append("CooperatorID", cooperatorId);
+        formData.append("Category", category);
+
+        if (category == "Source") {
+            partialViewSectionName = "#section-source-cooperator-records-owned";
+        }
+        else {
+            partialViewSectionName = "#section-target-cooperator-records-owned";
+        }
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $(partialViewSectionName).html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+</script>

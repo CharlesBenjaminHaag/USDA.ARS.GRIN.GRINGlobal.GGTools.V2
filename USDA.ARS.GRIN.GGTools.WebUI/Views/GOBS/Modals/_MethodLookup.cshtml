@@ -1,0 +1,117 @@
+﻿<div class="modal fade" id="modal-method-lookup" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="search-progress-overlay-method-lookup" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Method Lookup
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+                @using (Html.BeginForm("Search", "Method", FormMethod.Post, new { id = "frmMethodLookup", @class = "ggtools-lookup-form" }))
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>
+                                    Name
+                                </label>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="margin">
+                                <button id="btnReset" type="button" class="btn btn-danger">Reset</button>
+                                <button id="btnLookupMethod" type="button" class="btn btn-default float-right">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div id="section-method-lookup-search-results" class="col-md-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#search-progress-overlay-method-lookup").hide();
+
+    $('#modal-method-lookup').on('keypress', function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            /*alert("ENTER clicked");*/
+            SearchMethod();
+            event.preventDefault();
+        }
+    });
+
+    $("#btnLookupMethod").click(function () {
+        SearchMethod();
+    });
+   
+    $(document).on("click", "[id='btnOpenMethodLookupModal']", function () {
+        OpenLookupModal("method");
+    });
+
+    function SearchMethod() {
+        var link = '@Url.Action("_Search","Method")';
+        var formData = new FormData();
+
+        formData.append("SearchEntity.ShortName", $("#SearchEntity_ShortName").val());
+        formData.append("SearchEntity.IsShortNameExactMatchOption", $("#SearchEntity_IsShortNameExactMatchOption").val());
+        formData.append("SearchEntity.FullName", $("#SearchEntity_FullName").val());
+
+        $("#search-progress-overlay-Method-lookup").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-Method-lookup-search-results").html(response);
+                $("#search-progress-overlay-Method-lookup").hide();
+            }
+        });
+    }
+
+    $(document).on("click", "[id*='btnSaveMethod']", function () {
+        var nameField = $("#hfMethodLookupNameFieldName").val();
+        var tableName = $("#TableName").val();
+        $('#modal-Method-lookup').modal('hide');
+        var selectedMethod = GetSelectedEntityText("data-table-Method-lookup");
+        $("#" + nameField).val(selectedMethod);
+    });
+
+   
+    $(".fa-info-circle").on('click', function (event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        
+        if ($("#section-panel-help").is(":visible")) {
+            //
+        } else {
+            $("#section-panel-help").show();
+        }
+    });
+
+    $(".close").on('click', function (event) {
+        $("#section-panel-help").hide();
+    });
+
+</script>

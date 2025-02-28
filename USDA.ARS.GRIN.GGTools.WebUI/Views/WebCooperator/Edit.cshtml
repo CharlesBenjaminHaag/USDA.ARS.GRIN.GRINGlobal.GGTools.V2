@@ -1,0 +1,229 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebCooperatorViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div id="section-web-user-widget">
+            <div id="section-web-user">
+                @{Html.RenderAction("RenderWidget", "WebUser", new { entityId = Model.Entity.WebUserID }); }
+            </div>
+        </div>
+    </div>
+    <div id="section-input-fields" class="col-md-9">
+        @*@Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")*@
+        <div class="card">
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#tab-summary" data-toggle="tab">Summary</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tab-user-shipping-address" data-toggle="tab">Shipping Addresses</a></li>
+                    @*<li class="nav-item"><a class="nav-link" href="#tab-active-cart" data-toggle="tab">Active Cart(s)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tab-user-preference" data-toggle="tab">User Preferences</a></li>*@
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-summary">
+                        @using (Html.BeginForm("Edit", "WebCooperator", FormMethod.Post, new { id = "frmEditWebCooperator" }))
+                        {
+                            @Html.HiddenFor(x => x.PageTitle)
+                            @*@Html.HiddenFor(x => x.IsReadOnly)*@
+                            @Html.HiddenFor(x => x.EventAction)
+                            @Html.HiddenFor(x => x.EventValue)
+                            @Html.HiddenFor(x => x.TableName)
+                            @Html.HiddenFor(x => x.TableCode)
+                            @Html.HiddenFor(x => x.Entity.ID)
+                            @Html.HiddenFor(x => x.Entity.IsActive)
+                            @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Status</label>
+                                        <br />
+                                        @if (Model.Entity.IsActive == "Y")
+                                        {
+                                            <span class="badge bg-green">
+                                                ACTIVE
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            if (Model.Entity.IsActive == "N")
+                                            {
+                                                <span class="badge bg-warning">
+                                                    INACTIVE
+                                                </span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Salutation</label>
+                                        @Html.DropDownListFor(x => x.Entity.Title, Model.Salutations, "Select value", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label>First Name</label>
+                                        @Html.TextBoxFor(x => x.Entity.FirstName, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label>Last Name</label>
+                                        @Html.TextBoxFor(x => x.Entity.LastName, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        @Html.TextBoxFor(x => x.Entity.EmailAddress, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Phone</label>
+                                        @Html.TextBoxFor(x => x.Entity.PrimaryPhone, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Job Title</label>
+                                        @Html.TextBoxFor(x => x.Entity.JobTitle, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        @Html.DropDownListFor(x => x.Entity.CategoryCode, Model.Categories, "Select value", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-group">
+                                        <label>Organization</label>
+                                        @Html.TextBoxFor(x => x.Entity.Organization, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Abbrev</label>
+                                        @Html.TextBoxFor(x => x.Entity.OrganizationAbbrev, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        @Html.TextBoxFor(x => x.Entity.Address1, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.Address2, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.Entity.Address3, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        @Html.TextBoxFor(x => x.Entity.City, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>State/Geo</label>
+                                    @Html.DropDownListFor(x => x.Entity.GeographyID, Model.States, "Select state", new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Postal Code</label>
+                                    @Html.TextBoxFor(x => x.Entity.PostalCode, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div id="section-edit-controls" class="edit-controls" style="margin-top:25px;">
+                                <button type="button" class="btn btn-danger">Cancel</button>
+                                <button type="submit" class="btn btn-default float-right">Save</button>
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane" id="tab-user-shipping-address">
+                        @Html.Partial("~/Views/WebUserShippingAddress/_List.cshtml")
+                    </div>
+                    @*<div class="tab-pane" id="tab-active-cart">
+        </div>
+        <div class="tab-pane" id="tab-user-preference">
+        </div>*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*@{Html.RenderAction("RenderEditModal", "WebUser");}*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        SetReadOnly();
+    }
+   
+    function RenderWebUserWidget(sysUserId) {
+        var link = '@Url.Action("RenderWidget","WebUser")';
+        var formData = new FormData();
+        formData.append("sysUserId", sysUserId);
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-sys-user").html(response);
+            }
+        });
+    }
+
+    function AjaxFormSubmit() {
+        var link = $("#frmEditWebUser").attr("action");
+        var formData = new FormData();
+        formData.append("Entity.CooperatorID", $("#frmEditCooperator #Entity_ID").val());
+        formData.append("Entity.WebUserID", $("#frmEditWebUser #Entity_WebUserID").val());
+        formData.append("Entity.UserName", $("#frmEditWebUser #Entity_UserName").val());
+        formData.append("Entity.Password", $("#frmEditWebUser #Entity_Password").val());
+        formData.append("Entity.PasswordConfirm", $("#frmEditWebUser #Entity_PasswordConfirm").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                RenderWebUserWidget(data.sysUser.ID);
+                RenderSysGroupWidget(data.sysUser.ID);
+            },
+            error: function (ex) {
+                alert("Error");
+            }
+        });
+    }
+
+    function AjaxResetPasswordFormSubmit() {
+        var link = $("#frmWebUserResetPassword").attr("action");
+        //TODO
+    }
+</script>
+
+

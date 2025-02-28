@@ -1,0 +1,106 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyMapViewModel
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">
+            Distribution (@Model.DataCollectionBatch.Count)
+        </h3>
+        <div class="card-tools">
+            <button id="btnAddCitation" type="button" class="btn btn-tool">
+                <i class="fas fa-book"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results" class="data-list">
+            <table id="data_table_taxonomy_geography_map" class="table table-striped ggtools-table" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th width="5%">ID</th>
+                        <th>Species ID</th>
+                        <th>Species Name</th>
+                        <th>Status</th>
+                        <th>Country</th>
+                        <th>Assembled Name</th>
+                        <th>Admin 1</th>
+                        <th>Note</th>
+                        <th>Citation</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.DataCollectionBatch.Count > 0)
+                    {
+                        foreach (var result in Model.DataCollectionBatch)
+                        {
+                            <tr>
+                                <td>
+                                    @result.ID
+                                </td>
+                                <td>
+                                    @result.ID
+                                </td>
+                                <td>@result.SpeciesID</td>
+                                <td>
+                                    <a href="@Url.Action("Edit","Species", new { @entityId = result.SpeciesID })">
+                                        @result.SpeciesName
+                                    </a>
+                                </td>
+                                <td>
+                                    @result.GeographyStatusDescription
+                                </td>
+                                <td>@result.CountryName</td>
+                                <td>@result.AssembledName</td>
+                                <td>@result.Admin1</td>
+                                <td>@Html.Raw(result.Note)</td>
+                                <td>@Html.Raw(result.CitationText)</td>
+                                <td style="text-align:right;">
+                                    <a href="@Url.Action("Edit", "GeographyMap", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="section-batch-edit-modal">
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data_table_taxonomy_geography_map");
+    });
+
+     function EditBatch() {
+        var selectedIdList = GetSelectedEntityIDs("data_table_taxonomy_geography_map");
+        var link = '@Url.Action("RenderBatchEditModal","GeographyMap", new { entityIdList = "SELECTED_ID_LIST" })';
+        link = link.replace("SELECTED_ID_LIST", selectedIdList);
+        var formData = new FormData();
+
+        //DEBUG
+        /*alert("ID LIST " + selectedIdList); */
+
+        formData.append("idList", selectedIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-batch-edit-modal").html(response);
+                $("#modal-geography-map-batch-edit").modal("show");
+            }
+        });
+    }
+</script>
+

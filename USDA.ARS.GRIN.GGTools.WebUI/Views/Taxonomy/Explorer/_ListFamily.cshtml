@@ -1,0 +1,246 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.TaxonomyExplorerViewModel
+<div class="form-group" style="padding:.3rem;">
+    <label>Family</label>
+    <div class="input-group">
+        <input type="text" id="txtLookupFamily" class="form-control" value="Poa" />
+        <span class="input-group-btn">
+            <button id="btnFamilyNameLookup" type="button" data-toggle="modal" data-ggtools-action="AcceptedID" data-ggtools-value="AcceptedName" data-target="#modal-species-lookup" class="btn btn-default btn-flat">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+</div>
+
+<!-- BEGIN DEMO DATA -->
+<div class="card card-primary collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">SAMPLE FAMILY</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body" style="display: none; padding: .5rem;">
+
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">SAMPLE GENUS</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none; padding: .5rem;">
+                <ul id="list-taxa-1" class="nav nav-pills flex-column species-selector">
+                    <li id="-9" data-ggtools-value="1" class="nav-item" style="padding:.8rem;">
+                        <button type="button" class="btn btn-default btn-block">Add Species</button>
+                    </li>
+                    <li id="" data-ggtools-value="" class="nav-item active">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-leaf"></i> TEST SPECIES
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">SAMPLE GENUS</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none; padding: .5rem;">
+                <ul id="list-taxa-1" class="nav nav-pills flex-column species-selector">
+                    <li id="-9" data-ggtools-value="1" class="nav-item" style="padding:.8rem;">
+                        <button type="button" class="btn btn-default btn-block">Add Species</button>
+                    </li>
+                    <li id="" data-ggtools-value="" class="nav-item active">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-leaf"></i> TEST SPECIES
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">SAMPLE GENUS</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none; padding: .5rem;">
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="card card-primary collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">SAMPLE FAMILY</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body" style="display: none; padding: .5rem;">
+
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">SAMPLE GENUS</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none; padding: .5rem;">
+                <ul id="list-taxa-1" class="nav nav-pills flex-column species-selector">
+                    <li id="-9" data-ggtools-value="1" class="nav-item" style="padding:.8rem;">
+                        <button type="button" class="btn btn-default btn-block">Add Species</button>
+                    </li>
+                    <li id="" data-ggtools-value="" class="nav-item active">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-leaf"></i> TEST SPECIES
+                        </a>
+                    </li>
+                </ul>
+                <ul id="list-taxa-1" class="nav nav-pills flex-column species-selector">
+                    <li id="-9" data-ggtools-value="1" class="nav-item" style="padding:.8rem;">
+                        <button type="button" class="btn btn-default btn-block">Add Species</button>
+                    </li>
+                    <li id="" data-ggtools-value="" class="nav-item active">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-leaf"></i> TEST SPECIES
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">SAMPLE GENUS</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none; padding: .5rem;">
+
+
+            </div>
+        </div>
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">SAMPLE GENUS</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none; padding: .5rem;">
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="card card-primary collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">SAMPLE FAMILY</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body" style="display: none; padding: .5rem;">
+
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">SAMPLE GENUS</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none; padding: .5rem;">
+                <ul id="list-taxa-1" class="nav nav-pills flex-column species-selector">
+                    <li id="-9" data-ggtools-value="1" class="nav-item" style="padding:.8rem;">
+                        <button type="button" class="btn btn-default btn-block">Add Species</button>
+                    </li>
+                    <li id="" data-ggtools-value="" class="nav-item active">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-leaf"></i> TEST SPECIES
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">SAMPLE GENUS</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none; padding: .5rem;">
+                
+            </div>
+        </div>
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">SAMPLE GENUS</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: none; padding: .5rem;">
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- END DEMO DATA-->
+
+@foreach (var result in Model.DataCollectionFamily)
+{
+    <div class="card card-primary collapsed-card">
+        <div class="card-header">
+            <h3 class="card-title">@result.AssembledName</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body" style="display: none; padding: .5rem;">
+            @*@{ Html.RenderAction("_ListGenus", "Explorer", new { familyId = result.ID }); }*@
+        </div>
+    </div>
+}

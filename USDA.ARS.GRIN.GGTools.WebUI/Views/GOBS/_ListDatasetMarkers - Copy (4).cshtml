@@ -1,0 +1,32 @@
+﻿@model USDA.ARS.GRIN.GGTools.GOBS.ViewModelLayer.GOBSViewModel
+    <table id="data_table_datasets" class="table table-bordered ggtools">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Method</th>
+                <th>Type</th>
+                <th>Name</th>
+                <th>URL</th>
+                <th>Valid From</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dataset in Model.DataCollectionDatasets)
+            {
+                <tr>
+                    <td>@dataset.dataset_id</td>
+                    <td>@dataset.method</td>
+                    <td>@dataset.type</td>
+                    <td>@dataset.name</td>
+                    <td>@dataset.link</td>
+                    <td>@dataset.valid_from.ToShortDateString()</td>
+                    <td style="text-align:right;">
+                        <a href="@Url.Action("EditDataset", "GOBS", new { entityId = dataset.dataset_id })" class="btn btn-default btn-sm pull-right row-edit">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

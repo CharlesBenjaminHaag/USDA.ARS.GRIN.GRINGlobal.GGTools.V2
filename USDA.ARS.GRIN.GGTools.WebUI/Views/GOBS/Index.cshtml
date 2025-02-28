@@ -1,0 +1,351 @@
+﻿@model USDA.ARS.GRIN.GGTools.GOBS.ViewModelLayer.GOBSViewModel
+@{
+    ViewBag.Title = "My GGTools";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@foreach (var dataset in Model.DataCollectionDatasets)
+{
+    <div class="card card-info">
+        <div class="card-header">
+            <h3 class="card-title">Dataset: @dataset.name</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="placeholder_datasets">
+                @Html.Partial("~/Views/GOBS/_ListDatasets.cshtml")
+            </div>
+            @foreach (var datasetMarker in dataset.DatasetMarkers)
+            {
+                <!-- Dataset Marker -->
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">Dataset Marker: @datasetMarker.marker</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="data_table_dataset_markers" class="table table-striped ggtools">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Method</th>
+                                    <th>Marker</th>
+                                    <th>Trait?</th>
+                                    <th>Valid From</th>
+                                    <th>Owner</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@datasetMarker.dataset_marker_id</td>
+                                    <td><a href="#">@datasetMarker.method</a></td>
+                                    <td><a href="#">@datasetMarker.marker</a></td>
+                                    <td>@Html.Raw(Model.FormatBoolean(datasetMarker.is_trait.ToString()))</td>
+                                    <td>@dataset.valid_from.ToShortDateString()</td>
+                                    <td><a href="#">@dataset.controller_name</a></td>
+                                    <td style="text-align:right;">
+                                        @if (dataset.authorized == 1)
+                                        {
+                                            <a href="" class="btn btn-default btn-sm pull-right row-edit">
+                                                <i class="fa fa-users-cog"></i>
+                                            </a>
+                                            <a href="@Url.Action("EditDatasetMarker", "GOBS", new { datasetMarkerId = datasetMarker.dataset_marker_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="" class="btn btn-default btn-sm pull-right row-edit">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("EditDatasetMarker", "GOBS", new { datasetMarkerId = datasetMarker.dataset_marker_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        }
+
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <br />
+
+                        <div class="card card-primary collapsed-card">
+                            <div class="card-header" style="background-color:dodgerblue;">
+                                <h3 class="card-title">Dataset Marker Values</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body" style="display:none;">
+                                <table id="data_table_dataset_marker_values" class="table table-striped ggtools">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Method</th>
+                                            <th>Marker</th>
+                                            <th>Trait?</th>
+                                            <th>Valid From</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var datasetMarkerValue in datasetMarker.DatasetMarkerValues)
+                                        {
+                                            <tr>
+                                                <td>@datasetMarker.dataset_marker_id</td>
+                                                <td>@datasetMarker.method</td>
+                                                <td>@datasetMarker.marker</td>
+                                                <td>@datasetMarker.is_trait</td>
+                                                <td>@dataset.valid_from.ToShortDateString()</td>
+                                                <td style="text-align:right;">
+                                                    <a href="@Url.Action("EditDatasetmarker", "GOBS", new { entityId = dataset.dataset_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @*<div class="card card-warning">
+                                <div class="card-header">
+                                    <h3 class="card-title">Report Traits</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h3>REPORT TRAITS HERE</h3>
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+            }
+
+            <div class="card card-info collapsed-card">
+                <div class="card-header" style="background-color:royalblue;">
+                    <h3 class="card-title">Report Values</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="display:none;">
+                    <table id="data_table_report_values" class="table table-striped ggtools">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Method</th>
+                                <th>Marker</th>
+                                <th>Inventory</th>
+                                <th>Individual</th>
+                                <th>Value</th>
+                                <th>Valid From</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var reportValue in dataset.ReportValues)
+                            {
+                                <tr>
+                                    <td>@reportValue.report_value_id</td>
+                                    <td>@reportValue.method</td>
+                                    <td>@reportValue.marker</td>
+                                    <td>@reportValue.inventory</td>
+                                    <td>@reportValue.individual</td>
+                                    <td>@reportValue.value</td>
+                                    <td>@dataset.valid_from.ToShortDateString()</td>
+                                    <td style="text-align:right;">
+                                        <a href="@Url.Action("EditDatasetmarker", "GOBS", new { entityId = dataset.dataset_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <!-- RPT TRAITS -->
+                    <div class="card card-info collapsed-card">
+                        <div class="card-header" style="background-color:mediumaquamarine;">
+                            <h3 class="card-title">Report Traits</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="display:none;">
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="card card-info collapsed-card">
+                <div class="card-header" style="background-color:cornflowerblue;">
+                    <h3 class="card-title">Inventories</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="display:none;">
+                    <table id="data_table_report_values" class="table table-striped ggtools">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Method</th>
+                                <th>Inventory</th>
+                                <th>Valid From</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var datasetInventory in dataset.DatasetInventories)
+                            {
+                                <tr>
+                                    <td>@datasetInventory.dataset_inventory_id</td>
+                                    <td><a href="">@datasetInventory.method</a></td>
+                                    <td><a href="">@datasetInventory.inventory</a></td>
+                                    <td>@datasetInventory.valid_from.ToShortDateString()</td>
+                                    <td style="text-align:right;">
+                                        <a href="@Url.Action("EditDatasetInventory", "GOBS", new { datasetInventoryId = datasetInventory.dataset_inventory_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- RPT TRAITS -->
+            <div class="card card-info collapsed-card">
+                <div class="card-header" style="background-color:mediumaquamarine;">
+                    <h3 class="card-title">Report Traits</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="display:none;">
+                    <button class="btn btn-default btn-flat">Add</button>
+                </div>
+            </div>
+
+
+            <!-- DS VALUES -->
+            <div class="card card-info collapsed-card">
+                <div class="card-header" style="background-color:lightseagreen;">
+                    <h3 class="card-title">Dataset Values</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="display:none;">
+                    <table id="data_table_data_set_value" class="table table-striped ggtools">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Method</th>
+                                <th>Dataset Field</th>
+                                <th>Value</th>
+                                <th>Valid From</th>
+                                <th>Owner</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var datasetValue in dataset.DatasetValues)
+                            {
+                                <tr>
+                                    <td>@datasetValue.dataset_value_id</td>
+                                    <td><a href="">@datasetValue.method</a></td>
+                                    <td><a href="">@datasetValue.field</a> </td>
+                                    <td><a href="">@datasetValue.value</a></td>
+                                    <td>@dataset.valid_from.ToShortDateString()</td>
+                                    <td><a href="">@dataset.controller_name</a></td>
+                                    <td style="text-align:right;">
+                                        @if (dataset.authorized == 1)
+                                        {
+                                            <a href="@Url.Action("EditDatasetValue", "GOBS", new { datasetVaId = dataset.dataset_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("EditDatasetValue", "GOBS", new { datasetId = dataset.dataset_id })" class="btn btn-default btn-sm pull-right row-edit">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        }
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+@Html.Partial("~/Views/GOBS/Modals/_EditPermissions.cshtml")
+
+<script type="text/javascript">
+    @*$(document).ready(function () {
+        GetDatasets();
+    });
+
+    function GetDatasets() {
+        var link = '@Url.Action("GetAll","GOBS")';
+        var formData = new FormData();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#placeholder_datasets").html(response);
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                HandleError(errorMessage);
+            }
+        });
+    }
+
+    function HandleError(message) {
+        $("#section-error").show();
+        $("#section-error-message").html(message);
+
+    }*@
+</script>

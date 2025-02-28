@@ -1,0 +1,25 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.FamilyMapViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Taxonomy/FamilyMap/_Detail.cshtml")
+@Html.Partial("~/Views/Taxonomy/FamilyMap/_List.cshtml")
+@{Html.RenderAction("RenderEditModal", "AppUserItemFolder", new { @sysTableName = Model.TableName }); }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+        SetExtendedFields();
+    });
+
+    //$(document).keypress(function (event) {
+    //    var keycode = (event.keyCode ? event.keyCode : event.which);
+    //    if (keycode == '13') {
+    //        $("#btnSearch").click();
+    //    }
+    //});
+
+    function Init() {
+    }
+</script>

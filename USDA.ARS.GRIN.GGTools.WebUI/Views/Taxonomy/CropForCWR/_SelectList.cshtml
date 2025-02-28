@@ -1,0 +1,32 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CropForCWRViewModel
+<table id="data-table-crops-for-cwr" class="table table-responsive table-striped" style=" width:100%;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.DataCollection != null)
+        {
+            if (Model.DataCollection.Count() > 0)
+            {
+                foreach (var cropForCWR in Model.DataCollection)
+                {
+                    <tr>
+                        <td>
+                            <span class="badge">@cropForCWR.ID</span>
+                        </td>
+                        <td>
+                            @cropForCWR.Name
+                        </td>
+                        <td>
+                            <button value="@cropForCWR.Name" class="btn btn-default btn-sm proto pull-right" onclick="SelectCropForCWR(@cropForCWR.ID, this.value);return false;">Select</button>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>

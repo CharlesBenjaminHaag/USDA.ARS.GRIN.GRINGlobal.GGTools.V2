@@ -1,0 +1,145 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderCooperatorMapViewModel
+<div class="modal fade text-sm" id="modal-sys-folder-cooperator-map-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-users"></i>
+                    Share Folder
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button id="btnAddCooperators" class="btn btn-default btn-block">>></button>
+                        <div id="section-non-mapped-cooperators">
+                            @Html.Partial("~/Views/SysFolderCooperatorMap/Modals/_ListAvailable.cshtml")
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="btnRemoveCooperators" class="btn btn-default btn-block"><<</button>
+                        <div id="section-mapped-cooperators">
+                            @Html.Partial("~/Views/SysFolderCooperatorMap/Modals/_ListCurrent.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCloseEditSysGroupUserMapModal" type="button" class="btn btn-default float-right" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#btnAddCooperators").click(function () {
+        AddSysFolderCooperatorMaps();
+    });
+
+    $("#btnRemoveCooperators").click(function () {
+        DeleteSysFolderCooperatorMaps();
+    });
+
+    $("#btnCloseEditSysGroupUserMapModal").click(function () {
+        Component_Widget();
+    });
+
+    function AddSysFolderCooperatorMaps() {
+        var link = '@Url.Action("Add", "SysFolderCooperatorMap")';
+        var sysFolderId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-non-mapped");
+        var formData = new FormData();
+
+        formData.append("SysFolderID", sysFolderId);
+        formData.append("IDList", selectedItemIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                LoadNonMapped(sysFolderId);
+                LoadMapped(sysFolderId);
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    function DeleteSysFolderCooperatorMaps() {
+        var link = '@Url.Action("DeleteItems", "SysFolderCooperatorMap")';
+        var sysFolderId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-mapped");
+        var formData = new FormData();
+
+        formData.append("SysFolderID", sysFolderId);
+        formData.append("IDList", selectedItemIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                LoadNonMapped(sysFolderId);
+                LoadMapped(sysFolderId);
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    function LoadNonMapped(sysFolderId) {
+        var link = '@Url.Action("Component_NonMappedCooperatorList","SysFolderCooperatorMap")';
+        var formData = new FormData();
+
+        formData.append("SysFolderID", sysFolderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-non-mapped-cooperators").html(response);
+            },
+            error: function () {
+                alert("Error loading non-mapped");
+            }
+        });
+    }
+
+    function LoadMapped(sysFolderId) {
+        var link = '@Url.Action("Component_MappedCooperatorList", "SysFolderCooperatorMap", new { @sysFolderId = "SYS_FOLDER_ID"})';
+        link = link.replace("SYS_FOLDER_ID", sysFolderId);
+        var formData = new FormData();
+
+        formData.append("SysFolderID", sysFolderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-mapped-cooperators").html(response);
+            },
+            error: function () {
+                alert("Error loading mapped");
+            }
+        });
+    }
+</script>

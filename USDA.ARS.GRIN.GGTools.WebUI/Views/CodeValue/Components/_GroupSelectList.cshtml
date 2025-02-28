@@ -1,0 +1,25 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CodeValueViewModel
+<table id="data-table-code-values" class="table table-striped ggtools-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.DataCollection.Count() > 0)
+        {
+            foreach (var result in Model.DataCollection)
+            {
+                <tr>
+                    <td>
+                        @result.CodeValueID
+                    </td>
+                    <td>@result.CodeTitle</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+

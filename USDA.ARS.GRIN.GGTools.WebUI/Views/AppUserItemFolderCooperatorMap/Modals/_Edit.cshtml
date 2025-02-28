@@ -1,0 +1,148 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderCooperatorMapViewModel
+<div class="modal fade text-sm" id="modal-folder-edit-cooperators" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Folder
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button id="btnMapCooperators" class="btn btn-success btn-block">Add >></button>
+                        <div id="section-non-mapped">
+                            @Html.Partial("~/Views/AppUserItemFolderCooperatorMap/Modals/_ListNonMapped.cshtml")
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="btnUnMapCooperators" class="btn btn-danger btn-block"><< Remove</button>
+                        <div id="section-mapped">
+                            @Html.Partial("~/Views/AppUserItemFolderCooperatorMap/Modals/_ListMapped.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCloseEditCooperatorsModal" type="button" class="btn btn-default float-right" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#btnMapCooperators").click(function () {
+        var entityId = $("#Entity_ID").val();
+        MapCooperators();
+        LoadMappedCooperators(entityId);
+        LoadNonMappedCooperators(entityId);
+    });
+
+    $("#btnUnMapCooperators").click(function () {
+        var entityId = $("#Entity_ID").val();
+        UnMapCooperators();
+        LoadMappedCooperators(entityId);
+        LoadNonMappedCooperators(entityId);
+    });
+
+    $("#btnCloseEditCooperatorsModal").click(function () {
+        RenderFolderCooperatorWidget();
+    });
+
+    function MapCooperators() {
+        var link = '@Url.Action("Add","AppUserItemFolderCooperatorMap")';
+        var entityId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-available-cooperators");
+        var formData = new FormData();
+
+        formData.append("Entity.FolderID", entityId);
+        formData.append("ItemIDList", selectedItemIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                /*console.log(data);*/
+                /*ConfirmFolderSave(data.folder.FolderName);*/
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    function UnMapCooperators() {
+        var link = '@Url.Action("Delete", "AppUserItemFolderCooperatorMap")';
+        var entityId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-current-cooperators");
+        var formData = new FormData();
+
+        formData.append("Entity.FolderID", entityId);
+        formData.append("ItemIDList", selectedItemIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    function LoadNonMappedCooperators(folderId) {
+        var link = '@Url.Action("_ListNonMapped","AppUserItemFolderCooperatorMap")';
+        var formData = new FormData();
+
+        formData.append("appUserItemFolderId", folderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-non-mapped").html(response);
+            },
+            error: function () {
+                alert("Error loading non-mapped cooperators");
+            }
+        });
+    }
+
+    function LoadMappedCooperators(folderId) {
+        var link = '@Url.Action("_ListMapped","AppUserItemFolderCooperatorMap")';
+        var formData = new FormData();
+
+        formData.append("appUserItemFolderId", folderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-mapped").html(response);
+            },
+            error: function () {
+                alert("Error loading non-mapped cooperators");
+            }
+        });
+    }
+</script>

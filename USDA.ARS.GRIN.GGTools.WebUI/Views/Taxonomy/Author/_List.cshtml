@@ -1,0 +1,47 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.AuthorViewModel
+
+@{ 
+    string pageTitle = "";
+    pageTitle = "Search Results (" + @Model.DataCollection.Count + ")";
+}
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">@pageTitle</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div id="section-search-results" class="card-body">
+        <table id="data_table_taxonomy_author" class="table table-striped ggtools">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Short Name</th>
+                    <th>Full Name</th>
+                    <th>Note</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollection)
+                {
+                <tr>
+                    <td>@result.ID</td>
+                    <td>@result.ShortName</td>
+                    <td>@Html.Raw(result.FullName)</td>
+                    <td>@Html.Raw(result.Note)</td>
+                    <td style="text-align:right;">
+                        <a href="@Url.Action("Edit", "Author", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

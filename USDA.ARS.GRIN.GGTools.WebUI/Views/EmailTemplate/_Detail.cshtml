@@ -1,0 +1,98 @@
+﻿@model USDA.ARS.GRIN.GGTools.OrderManagement.ViewModelLayer.WebOrderRequestViewModel
+<div id="section-controls" class="box box-default" style="border:none;">
+    <div class="box-header">
+        @*<div class="btn-group">
+            <button type="button" id="btnOpenBatchCancelModal" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Batch-cancel multiple orders.">
+                <i class="fa fa-bars"></i>
+                Batch-Process
+            </button>
+        </div>*@
+        <div class="btn-group pull-right">
+            <button id="btnToggleFilterView" type="button" class="btn btn-default pull-right" data-widget="collapse">
+                <span class="toolbar-text"><i class="fa fa-filter"></i></span>
+            </button>
+        </div>
+        <div class="btn-group pull-right">
+            <a href="@Url.Action("Search","WebOrder")" class="btn btn-danger">Reset</a>
+            <button id="btnSubmitSearch" type="submit" class="btn btn-default">Search</button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div id="section-search-criteria" class="box-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tab-pane active" id="section-family">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <div class="form-group form-horizontal">
+                                <label>ID</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.ID, new { @class = "form-control", Value = "" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div id="section-alternate-name" class="form-group form-horizontal">
+                                <label>Requestor First Name</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.WebCooperatorFirstName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div id="section-alternate-name" class="form-group form-horizontal">
+                                <label>Requestor Last Name</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.WebCooperatorLastName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div id="section-alternate-name" class="form-group form-horizontal">
+                                <label>Requestor Email</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.WebCooperatorEmailAddress, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div id="section-alternate-name" class="form-group form-horizontal">
+                                <label>Requestor Organization</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.WebCooperatorOrganization, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <label>Has Order</label>
+                            @Html.DropDownListFor(x => x.SearchEntity.HasOrders, Model.YesNoOptions, "Either", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group form-horizontal">
+                                <label>Time Frame</label>
+                                @Html.DropDownListFor(x => x.SearchEntity.TimeFrame, Model.TimeFrameOptions, "All time frames", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div id="section-family-name" class="form-group form-horizontal">
+                                <label>Year</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.Year, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Intended Use</label>
+                            @Html.DropDownListFor(x => x.SearchEntity.IntendedUseCode, Model.IntendedUseCodes, "All", new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-2">
+                            <label>Status</label>
+                            @Html.DropDownListFor(x => x.SearchEntity.StatusCode, Model.Statuses, "All", new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group form-horizontal">
+                                <label>Owned By</label>
+                                @Html.DropDownListFor(x => x.SearchEntity.OwnedByWebUserID, Model.Cooperators, "All committee members", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <label>Locked</label>
+                            @Html.DropDownListFor(x => x.SearchEntity.IsLocked, Model.YesNoOptions, "Either", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

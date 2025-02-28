@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{902C87A6-FB1F-4C16-B816-5F7678B1EF01}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>USDA.ARS.GRIN.GGTools.DataLayer</RootNamespace>
+    <AssemblyName>USDA.ARS.GRIN.GGTools.DataLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.3.0\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.3.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EntityClasses\InventorySearch.cs" />
+    <Compile Include="EntityClasses\Inventory.cs" />
+    <Compile Include="EntityClasses\ExplorationMapSearch.cs" />
+    <Compile Include="EntityClasses\ExplorationSearch.cs" />
+    <Compile Include="EntityClasses\ExplorationMap.cs" />
+    <Compile Include="EntityClasses\Exploration.cs" />
+    <Compile Include="EntityClasses\InventoryLocation.cs" />
+    <Compile Include="EntityClasses\AccessionMCPD.cs" />
+    <Compile Include="EntityClasses\AccessionInvAnnotationSearch.cs" />
+    <Compile Include="EntityClasses\AccessionInvAnnotation.cs" />
+    <Compile Include="EntityClasses\AppUserGUISetting.cs" />
+    <Compile Include="EntityClasses\FamilySearch.cs" />
+    <Compile Include="EntityClasses\Family.cs" />
+    <Compile Include="EntityClasses\ISTASeedSearch.cs" />
+    <Compile Include="EntityClasses\OrderRequestPhytoLog.cs" />
+    <Compile Include="EntityClasses\OrderRequestAttachment.cs" />
+    <Compile Include="EntityClasses\OrderRequestItemAction.cs" />
+    <Compile Include="EntityClasses\ISTASeed.cs" />
+    <Compile Include="EntityClasses\SpeciesDTO.cs" />
+    <Compile Include="EntityClasses\SpeciesMatch.cs" />
+    <Compile Include="EntityClasses\GOBS\GOBSMarker.cs" />
+    <Compile Include="EntityClasses\GOBS\GOBSDatasetMarker.cs" />
+    <Compile Include="EntityClasses\GOBS\GOBSDatasetInventory.cs" />
+    <Compile Include="EntityClasses\GOBS\GOBSDatasetAttachment.cs" />
+    <Compile Include="EntityClasses\AccessionSearch.cs" />
+    <Compile Include="EntityClasses\Accession.cs" />
+    <Compile Include="EntityClasses\AccessionInventoryAttachment.cs" />
+    <Compile Include="EntityClasses\AccessionInventoryAttachmentSearch.cs" />
+    <Compile Include="EntityClasses\Address.cs" />
+    <Compile Include="EntityClasses\AppSetting.cs" />
+    <Compile Include="EntityClasses\AppUserDynamicQuerySearch.cs" />
+    <Compile Include="EntityClasses\AppUserDynamicQuery.cs" />
+    <Compile Include="EntityClasses\AppUserItemDynamicFolder.cs" />
+    <Compile Include="EntityClasses\AppUserItemFolderCooperatorMapSearch.cs" />
+    <Compile Include="EntityClasses\AppUserItemFolderCooperatorMap.cs" />
+    <Compile Include="EntityClasses\AppUserItemFolderSearch.cs" />
+    <Compile Include="EntityClasses\AppUserItemListSearch.cs" />
+    <Compile Include="EntityClasses\AppUserItemList.cs" />
+    <Compile Include="EntityClasses\Author.cs" />
+    <Compile Include="EntityClasses\AuthorReference.cs" />
+    <Compile Include="EntityClasses\AuthorSearch.cs" />
+    <Compile Include="EntityClasses\Citation.cs" />
+    <Compile Include="EntityClasses\CitationSearch.cs" />
+    <Compile Include="EntityClasses\AppUserItemFolder.cs" />
+    <Compile Include="EntityClasses\CitedAppEntityBase.cs" />
+    <Compile Include="EntityClasses\Classification.cs" />
+    <Compile Include="EntityClasses\ClassificationSearch.cs" />
+    <Compile Include="EntityClasses\AppEntityRecord.cs" />
+    <Compile Include="EntityClasses\CWRTraitTable.cs" />
+    <Compile Include="EntityClasses\GOBS\GOBSDatasetField.cs" />
+    <Compile Include="EntityClasses\GOBS\GOBSDatasetSearch.cs" />
+    <Compile Include="EntityClasses\GOBS\GOBSType.cs" />
+    <Compile Include="EntityClasses\GOBS\GOBSDataset.cs" />
+    <Compile Include="EntityClasses\Method.cs" />
+    <Compile Include="EntityClasses\RegulationTable.cs" />
+    <Compile Include="EntityClasses\RegulationMapTable.cs" />
+    <Compile Include="EntityClasses\FamilyTable.cs" />
+    <Compile Include="EntityClasses\SysDataViewSQL.cs" />
+    <Compile Include="EntityClasses\EconomicUsageTypeSearch.cs" />
+    <Compile Include="EntityClasses\EconomicUsageType.cs" />
+    <Compile Include="EntityClasses\CodeValue.cs" />
+    <Compile Include="EntityClasses\CodeValueSearch.cs" />
+    <Compile Include="EntityClasses\CommonName.cs" />
+    <Compile Include="EntityClasses\CommonNameLanguage.cs" />
+    <Compile Include="EntityClasses\CommonNameLanguageSearch.cs" />
+    <Compile Include="EntityClasses\CommonNameSearch.cs" />
+    <Compile Include="EntityClasses\CooperatorStatus.cs" />
+    <Compile Include="EntityClasses\Cooperator.cs" />
+    <Compile Include="EntityClasses\CooperatorGroup.cs" />
+    <Compile Include="EntityClasses\CooperatorMapSearch.cs" />
+    <Compile Include="EntityClasses\CooperatorMap.cs" />
+    <Compile Include="EntityClasses\CooperatorSearch.cs" />
+    <Compile Include="EntityClasses\Country.cs" />
+    <Compile Include="EntityClasses\CropForCWR.cs" />
+    <Compile Include="EntityClasses\CropForCWRSearch.cs" />
+    <Compile Include="EntityClasses\CropGermplasmCommittee.cs" />
+    <Compile Include="EntityClasses\CropGermplasmCommitteeDocumentSearch.cs" />
+    <Compile Include="EntityClasses\CropGermplasmCommitteeDocument.cs" />
+    <Compile Include="EntityClasses\CWRMap.cs" />
+    <Compile Include="EntityClasses\CWRMapSearch.cs" />
+    <Compile Include="EntityClasses\CWRTrait.cs" />
+    <Compile Include="EntityClasses\CWRTraitSearch.cs" />
+    <Compile Include="EntityClasses\EconomicUse.cs" />
+    <Compile Include="EntityClasses\EconomicUseSearch.cs" />
+    <Compile Include="EntityClasses\EmailTemplate.cs" />
+    <Compile Include="EntityClasses\EmailTemplateSearch.cs" />
+    <Compile Include="EntityClasses\FamilyMap.cs" />
+    <Compile Include="EntityClasses\FamilyMapSearch.cs" />
+    <Compile Include="EntityClasses\FileMetadata.cs" />
+    <Compile Include="EntityClasses\Folder.cs" />
+    <Compile Include="EntityClasses\FolderSearch.cs" />
+    <Compile Include="EntityClasses\Genus.cs" />
+    <Compile Include="EntityClasses\GenusSearch.cs" />
+    <Compile Include="EntityClasses\Geography.cs" />
+    <Compile Include="EntityClasses\GeographyMap.cs" />
+    <Compile Include="EntityClasses\GeographyMapSearch.cs" />
+    <Compile Include="EntityClasses\GeographySearch.cs" />
+    <Compile Include="EntityClasses\Literature.cs" />
+    <Compile Include="EntityClasses\LiteratureSearch.cs" />
+    <Compile Include="EntityClasses\OrderRequestAction.cs" />
+    <Compile Include="EntityClasses\OrderRequestItem.cs" />
+    <Compile Include="EntityClasses\PostalAddress.cs" />
+    <Compile Include="EntityClasses\ReferenceSearch.cs" />
+    <Compile Include="EntityClasses\Region.cs" />
+    <Compile Include="EntityClasses\Regulation.cs" />
+    <Compile Include="EntityClasses\RegulationMap.cs" />
+    <Compile Include="EntityClasses\RegulationMapSearch.cs" />
+    <Compile Include="EntityClasses\RegulationSearch.cs" />
+    <Compile Include="EntityClasses\Site.cs" />
+    <Compile Include="EntityClasses\SiteSearch.cs" />
+    <Compile Include="EntityClasses\GenusTable.cs" />
+    <Compile Include="EntityClasses\SpeciesTable.cs" />
+    <Compile Include="EntityClasses\SpeciesImport.cs" />
+    <Compile Include="EntityClasses\Species.cs" />
+    <Compile Include="EntityClasses\SpeciesSearch.cs" />
+    <Compile Include="EntityClasses\SpeciesSynonymMap.cs" />
+    <Compile Include="EntityClasses\SpeciesSynonymMapSearch.cs" />
+    <Compile Include="EntityClasses\State.cs" />
+    <Compile Include="EntityClasses\Subfamily.cs" />
+    <Compile Include="EntityClasses\SubfamilySearch.cs" />
+    <Compile Include="EntityClasses\Subtribe.cs" />
+    <Compile Include="EntityClasses\SubtribeSearch.cs" />
+    <Compile Include="EntityClasses\ErrorLog.cs" />
+    <Compile Include="EntityClasses\ErrorLogSearch.cs" />
+    <Compile Include="EntityClasses\SysApplication.cs" />
+    <Compile Include="EntityClasses\SysApplicationSearch.cs" />
+    <Compile Include="EntityClasses\Report.cs" />
+    <Compile Include="EntityClasses\SysDataViewParameter.cs" />
+    <Compile Include="EntityClasses\SysDataViewSearch.cs" />
+    <Compile Include="EntityClasses\SysDataViewFieldSearch.cs" />
+    <Compile Include="EntityClasses\SysDBErrorSearch.cs" />
+    <Compile Include="EntityClasses\SysDBError.cs" />
+    <Compile Include="EntityClasses\SysDynamicSearchCriterion.cs" />
+    <Compile Include="EntityClasses\SysDynamicSearch.cs" />
+    <Compile Include="EntityClasses\SysDynamicQueryCriterion.cs" />
+    <Compile Include="EntityClasses\SysDynamicQuerySearch.cs" />
+    <Compile Include="EntityClasses\SysDynamicQuery.cs" />
+    <Compile Include="EntityClasses\SysFolderCooperatorMapSearch.cs" />
+    <Compile Include="EntityClasses\SysFolderSearch.cs" />
+    <Compile Include="EntityClasses\SysFolder.cs" />
+    <Compile Include="EntityClasses\SysFolderCooperatorMap.cs" />
+    <Compile Include="EntityClasses\SysFolderItemMap.cs" />
+    <Compile Include="EntityClasses\SysFolderProperties.cs" />
+    <Compile Include="EntityClasses\SysGroupSearch.cs" />
+    <Compile Include="EntityClasses\SysGroup.cs" />
+    <Compile Include="EntityClasses\SysGroupUserMap.cs" />
+    <Compile Include="EntityClasses\SysGroupUserMapSearch.cs" />
+    <Compile Include="EntityClasses\SysPermissionSearch.cs" />
+    <Compile Include="EntityClasses\SysPermission.cs" />
+    <Compile Include="EntityClasses\SysPermissionField.cs" />
+    <Compile Include="EntityClasses\SysDataView.cs" />
+    <Compile Include="EntityClasses\SysDataViewField.cs" />
+    <Compile Include="EntityClasses\SysTableField.cs" />
+    <Compile Include="EntityClasses\SysTableSearch.cs" />
+    <Compile Include="EntityClasses\SysTable.cs" />
+    <Compile Include="EntityClasses\SysTagSearch.cs" />
+    <Compile Include="EntityClasses\SysTag.cs" />
+    <Compile Include="EntityClasses\UPOVEncodedSpecies.cs" />
+    <Compile Include="EntityClasses\UPOV\upovCodeItemSearch.cs" />
+    <Compile Include="EntityClasses\UPOV\upovCodeItem.cs" />
+    <Compile Include="EntityClasses\WebUserShipppingAddress.cs" />
+    <Compile Include="EntityClasses\WebUserSearch.cs" />
+    <Compile Include="EntityClasses\WebUser.cs" />
+    <Compile Include="EntityClasses\SysUser.cs" />
+    <Compile Include="EntityClasses\SysUserSearch.cs" />
+    <Compile Include="EntityClasses\SysUserSearchMetadata.cs" />
+    <Compile Include="EntityClasses\Tribe.cs" />
+    <Compile Include="EntityClasses\TribeSearch.cs" />
+    <Compile Include="ManagerClasses\AccessionInventoryAttachmentManager.cs" />
+    <Compile Include="ManagerClasses\AccessionInvAnnotationManager.cs" />
+    <Compile Include="ManagerClasses\ISTASeesdManager.cs" />
+    <Compile Include="ManagerClasses\UPOVManager.cs" />
+    <Compile Include="ManagerClasses\InventoryManager.cs" />
+    <Compile Include="ManagerClasses\ExplorationMapManager.cs" />
+    <Compile Include="ManagerClasses\ExplorationManager.cs" />
+    <Compile Include="ManagerClasses\FamilyManager.cs" />
+    <Compile Include="ManagerClasses\SysFolderCooperatorMapManager.cs" />
+    <Compile Include="ManagerClasses\SysTagManager.cs" />
+    <Compile Include="ManagerClasses\SysFolderManager.cs" />
+    <Compile Include="ManagerClasses\GOBSManager.cs" />
+    <Compile Include="ManagerClasses\AppUserItemFolderCooperatorMapManager.cs" />
+    <Compile Include="ManagerClasses\AppUserItemListManager.cs" />
+    <Compile Include="ManagerClasses\AuthorManager.cs" />
+    <Compile Include="ManagerClasses\CooperatorMapManager.cs" />
+    <Compile Include="ManagerClasses\AccessionManager.cs" />
+    <Compile Include="ManagerClasses\EconomicUsageTypeManager.cs" />
+    <Compile Include="ManagerClasses\GRINGlobalDataManagerBase.cs" />
+    <Compile Include="ManagerClasses\CitationManager.cs" />
+    <Compile Include="ManagerClasses\ClassificationManager.cs" />
+    <Compile Include="ManagerClasses\CodeValueManager.cs" />
+    <Compile Include="ManagerClasses\CommonNameLanguageManager.cs" />
+    <Compile Include="ManagerClasses\CommonNameManager.cs" />
+    <Compile Include="ManagerClasses\CooperatorManager.cs" />
+    <Compile Include="ManagerClasses\CropGermplasmCommitteeDocumentManager.cs" />
+    <Compile Include="ManagerClasses\CropForCWRManager.cs" />
+    <Compile Include="ManagerClasses\CWRMapManager.cs" />
+    <Compile Include="ManagerClasses\CWRTraitManager.cs" />
+    <Compile Include="ManagerClasses\EconomicUseManager.cs" />
+    <Compile Include="ManagerClasses\EmailTemplateManager.cs" />
+    <Compile Include="ManagerClasses\FamilyMapManager.cs" />
+    <Compile Include="ManagerClasses\GenusManager.cs" />
+    <Compile Include="ManagerClasses\GeographyManager.cs" />
+    <Compile Include="ManagerClasses\GeographyMapManager.cs" />
+    <Compile Include="ManagerClasses\IManager.cs" />
+    <Compile Include="ManagerClasses\LiteratureManager.cs" />
+    <Compile Include="ManagerClasses\OrderRequestManager.cs" />
+    <Compile Include="ManagerClasses\ReferenceManager.cs" />
+    <Compile Include="ManagerClasses\RegulationManager.cs" />
+    <Compile Include="ManagerClasses\RegulationMapManager.cs" />
+    <Compile Include="ManagerClasses\ReportManager.cs" />
+    <Compile Include="ManagerClasses\SysDynamicQueryManager.cs" />
+    <Compile Include="ManagerClasses\SysDataViewManager.cs" />
+    <Compile Include="ManagerClasses\SysTableManager.cs" />
+    <Compile Include="ManagerClasses\SiteManager.cs" />
+    <Compile Include="ManagerClasses\SpeciesManager.cs" />
+    <Compile Include="ManagerClasses\SpeciesSynonymMapManager.cs" />
+    <Compile Include="ManagerClasses\ErrorLogManager.cs" />
+    <Compile Include="ManagerClasses\SysApplicationManager.cs" />
+    <Compile Include="ManagerClasses\SysGroupManager.cs" />
+    <Compile Include="ManagerClasses\SysGroupUserMapManager.cs" />
+    <Compile Include="ManagerClasses\SysPermissionManager.cs" />
+    <Compile Include="ManagerClasses\WebUserManager.cs" />
+    <Compile Include="ManagerClasses\SysUserManager.cs" />
+    <Compile Include="EntityClasses\OrderRequest.cs" />
+    <Compile Include="EntityClasses\OrderRequestSearch.cs" />
+    <Compile Include="ManagerClasses\WebCooperatorManager.cs" />
+    <Compile Include="ManagerClasses\WebOrderRequestManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EntityClasses\ReportItem.cs" />
+    <Compile Include="EntityClasses\WebCooperator.cs" />
+    <Compile Include="EntityClasses\WebCooperatorSearch.cs" />
+    <Compile Include="EntityClasses\WebOrderRequest.cs" />
+    <Compile Include="EntityClasses\WebOrderRequestAction.cs" />
+    <Compile Include="EntityClasses\WebOrderRequestActionGroup.cs" />
+    <Compile Include="EntityClasses\WebOrderRequestItem.cs" />
+    <Compile Include="EntityClasses\WebOrderRequestSearch.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\USDA.ARS.GRIN.Common.DataLayer.SqlServer\USDA.ARS.GRIN.Common.DataLayer.SqlServer.csproj">
+      <Project>{ab887e72-bd5e-47d2-b4f9-4323cb43e607}</Project>
+      <Name>USDA.ARS.GRIN.Common.DataLayer.SqlServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\USDA.ARS.GRIN.Common.DataLayer\USDA.ARS.GRIN.Common.DataLayer.csproj">
+      <Project>{4d384f7b-0650-4d28-824c-963aad902dcd}</Project>
+      <Name>USDA.ARS.GRIN.Common.DataLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\USDA.ARS.GRIN.Common.Library\USDA.ARS.GRIN.Common.Library.csproj">
+      <Project>{79ce8eb3-0993-4b8d-a6e4-9d89ca7fe4ee}</Project>
+      <Name>USDA.ARS.GRIN.Common.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\USDA.ARS.GRIN.GGTools.AppLayer\USDA.ARS.GRIN.GGTools.AppLayer.csproj">
+      <Project>{ca168b27-64aa-4258-aa66-6bd1bed5ecef}</Project>
+      <Name>USDA.ARS.GRIN.GGTools.AppLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\USDA.ARS.GRIN.GRINGlobal.DTO\USDA.ARS.GRIN.GRINGlobal.DTO.csproj">
+      <Project>{b8f69ef8-93f5-4ea9-b5f5-3c67da0e2846}</Project>
+      <Name>USDA.ARS.GRIN.GRINGlobal.DTO</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,51 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyMapViewModel
+<button 
+    id="btnAddCitation" 
+    type="button" 
+    data-toggle="modal"
+    data-target="#modal-citation-lookup-by-species"
+    class="btn btn-default btn-sm btn-block">
+    <i class="fas fa-book"></i> Cite Selected Maps
+</button>
+<br />
+<table id="data_table_taxonomy_geography_map" class="table table-striped ggtools-table" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Geography</th>
+            <th>Status</th>
+            @*<th></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+        <tr>
+            <td>
+                @result.ID
+            </td>
+            <td>
+                @result.ID
+            </td>
+            <td>@result.GeographyDescription</td>
+            <td>
+                @result.GeographyStatusDescription
+            </td>
+
+            @*<td style="text-align:right;">
+            <a href="@Url.Action("Delete", "GeographyMap", new { entityId = result.ID })" class="btn btn-danger btn-sm pull-right row-edit">
+                <i class="fa fa-trash"></i>
+            </a>
+        </td>*@
+        </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableGeo("data_table_taxonomy_geography_map");
+    });
+</script>
+
+

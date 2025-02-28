@@ -1,0 +1,35 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        @{ Html.RenderAction("_RenderSysUserEdit", "Synch", new { entityID = Model.Entity.SysUserID, environment = "PRODUCTION" }); }
+        @{ Html.RenderAction("_RenderCooperatorEdit", "Synch", new { entityID = Model.Entity.ID, environment = "PRODUCTION" }); }
+        @{ Html.RenderAction("_RenderWebUserEdit", "Synch", new { entityID = Model.Entity.WebUserID, environment = "PRODUCTION" }); }
+        @{ Html.RenderAction("_RenderWebCooperatorEdit", "Synch", new { entityID = Model.Entity.WebCooperatorID, environment = "PRODUCTION" }); }
+    </div>
+    <div class="col-md-6">
+        @{ Html.RenderAction("_RenderSysUserEdit", "Synch", new { entityID = Model.Entity.SysUserID, environment = "TRAINING" }); }
+        @{ Html.RenderAction("_RenderCooperatorEdit", "Synch", new { entityID = Model.Entity.ID, environment = "TRAINING" }); }
+        @{ Html.RenderAction("_RenderWebUserEdit", "Synch", new { entityID = Model.Entity.WebUserID, environment = "TRAINING" }); }
+        @{ Html.RenderAction("_RenderWebCooperatorEdit", "Synch", new { entityID = Model.Entity.WebCooperatorID, environment = "TRAINING" }); }
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+
+    }
+
+    $(document).on("click", "[id*='btnSave']", function () {
+        var value = $(this).data("ggtools-value");
+        
+    });
+
+</script>

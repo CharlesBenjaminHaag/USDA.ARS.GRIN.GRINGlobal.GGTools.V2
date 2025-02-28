@@ -1,0 +1,208 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+@{
+    ViewBag.Title = "Edit Sys User";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "SysUser", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.IsReadOnly)
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.Entity.ID)
+    @Html.HiddenFor(x => x.Entity.SysUserID)
+    @Html.HiddenFor(x => x.Entity.UserName)
+    @Html.HiddenFor(x => x.Entity.SysUserName)
+    @Html.HiddenFor(x => x.DisplayUserName)
+    @Html.HiddenFor(x => x.Entity.EmailAddress)
+
+    <div class="card card-primary edit-controls">
+        <div class="card-header">
+            <h3 class="card-title">Summary</h3>
+        </div>
+        <div class="card-body">
+            @*<div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-info"></i> The new password must:</h5>
+                <ul>
+                    <li>be at least 12 characters long.</li>
+                    <li>be no longer than 255 characters.</li>
+                    <li>contain at least one digit.</li>
+                    <li>contain at least one lowercase letter.</li>
+                    <li>contain at least one uppercase letter.</li>
+                    <li>contain at least one special character.</li>
+                </ul>
+            </div>*@
+            @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>User Name</label><br />
+                        @Html.TextBoxFor(x => x.DisplayUserName, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Password</label>
+                        @Html.TextBoxFor(x => x.Entity.Password, new { @class = "form-control", @type = "password", autocomplete = "new-password" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Confirm</label>
+                        @Html.TextBoxFor(x => x.Entity.PasswordConfirm, new { @class = "form-control", @type = "password", autocomplete = "new-password" })
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Expires</label>
+                        @Html.TextBoxFor(x => x.Entity.SysUserPasswordExpirationDate, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group clearfix float-right" style="margin-top:10px;">
+                        <div class="icheck-primary d-inline">
+                            @Html.CheckBoxFor(x => x.SendNotificationOption)
+                            <label for="SendNotificationOption">
+                                Send password-reset notification to user.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="section-edit-controls" class="card-footer">
+            <button type="button" class="btn btn-danger">Cancel</button>
+            <button type="submit" class="btn btn-default float-right">Save</button>
+        </div>
+    </div>
+}
+
+<div class="card card-primary edit-controls">
+    <div class="card-header">
+        <h3 class="card-title">Groups</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div id="section-available-sys-groups" class="col-md-6">
+                
+                @{Html.RenderAction("_ListAvailableSysGroups", "SysUser", new { sysUserId = Model.Entity.ID }); }
+            </div>
+            <div id="section-assigned-sys-groups" class="col-md-6">
+                
+                @{Html.RenderAction("_ListAssignedSysGroups", "SysUser", new { sysUserId = Model.Entity.ID }); }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var isReadOnly = $("#IsReadOnly").val();
+        if (isReadOnly == "Y") {
+            SetReadOnly();
+        }
+    }
+
+    $("#btnAssign").click(function () {
+        var link = '@Url.Action("AssignGroups", "SysUser")';
+        var refreshLink = '@Url.Action("_ListAvailableSysGroups", "SysUser")';
+        var entityId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-available-sys-groups");
+        var formData = new FormData();
+
+        formData.append("sysUserID", entityId);
+        formData.append("IDList", selectedItemIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                LoadAvailableGroups();
+                LoadAssignedGroups();
+            }
+        });
+    });
+
+    $("#btnUnAssign").click(function () {
+        var link = '@Url.Action("UnAssignGroups", "SysUser")';
+        var refreshLink = '@Url.Action("_ListAssignedSysGroups", "SysUser")';
+        var entityId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-assigned-sys-groups");
+        var formData = new FormData();
+
+        formData.append("sysUserId", entityId);
+        formData.append("IDList", selectedItemIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-assigned-sys-groups").html(response);
+                InitDataTable();
+            }
+        });
+    });
+
+    function LoadAvailableGroups() {
+        var link = '@Url.Action("_ListAvailableSysGroups", "SysUser")';
+        var entityId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        formData.append("sysUserID", entityId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-available-sys-groups").html(response);
+                InitDataTable();
+            }
+        });
+    }
+
+    function LoadAssignedGroups() {
+        var link = '@Url.Action("_ListAssignedSysGroups", "SysUser")';
+        var entityId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        formData.append("sysUserID", entityId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-assigned-sys-groups").html(response);
+                InitDataTable();
+            }
+        });
+    }
+
+</script>

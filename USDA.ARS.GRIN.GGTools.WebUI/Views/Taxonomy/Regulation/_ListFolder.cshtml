@@ -1,0 +1,51 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.RegulationViewModel
+
+<table id="data_table_taxonomy_regulation" class="table table-striped" style=" width:100%;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Item</th>
+            <th>Key</th>
+            <th>Geography</th>
+            <th>Type</th>
+            <th>Level</th>
+            <th>Description</th>
+            <th>Last Modified</th>
+            <th>Modified By</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+        <tr>
+            <td>@result.ID</td>
+            <td>@result.SysFolderItemMapID</td>
+            <td>@result.EntityKey</td>
+            <td>@result.GeographyDescription</td>
+            <td>@result.RegulationTypeDescription</td>
+            <td>@result.RegulationLevelDescription</td>
+            <td>@result.Description</td>
+            <td>
+                @if (result.ModifiedDate > DateTime.MinValue)
+                {
+                    @result.ModifiedDate.ToShortDateString()
+                }
+            </td>
+            <td>
+                @result.ModifiedByCooperatorName
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Regulation", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableFolderFormat("data_table_taxonomy_regulation");
+    });
+</script>

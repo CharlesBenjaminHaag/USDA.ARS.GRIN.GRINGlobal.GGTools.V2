@@ -1,0 +1,42 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyViewModel
+<table id="data-table-geography-administrative-unit" class="table table-hover" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Admin</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+            <tr>
+                <td></td>
+                <td>
+                    <div class="icheck-primary">
+                        <input type="checkbox" value="" id="check_@result.ID" class="ggtools-check-administrative-unit">
+                        <label for="check_@result.ID">@result.AssembledName</label>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        InitDataTableGeo("data-table-geography-administrative-unit");
+
+        $(".ggtools-check-administrative-unit").on('change', function () {
+            var selectedAdministrativeUnits = GetSelectedAdministrativeUnits();
+            
+            if (selectedAdministrativeUnits.length == 0) {
+                $("#section-generate-map-options").hide();
+            }
+            else {
+                $("#section-generate-map-options").show();
+            }
+        });
+    });
+
+</script>

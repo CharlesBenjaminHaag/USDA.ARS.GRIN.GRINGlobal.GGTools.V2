@@ -1,0 +1,73 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+
+<div class="box box-default">
+    <div class="box-header with-border">
+        <h3 class="box-title">Search Results</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <table id="data-table-cooperators" class="table table-responsive table-striped" style=" width:100%;">
+            <thead>
+                <tr>
+                    <th width="5%"></th>
+                    <th>ID</th>
+                    <th>Status</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Sys User Name</th>
+                    <th>Site</th>
+                    <th>Created</th>
+                    <th>Last Modified</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.DataCollection != null)
+                {
+                    if (Model.DataCollection.Count() > 0)
+                    {
+                        foreach (var result in Model.DataCollection)
+                        {
+                <tr>
+                    <td>
+                        @result.ID
+                    </td>
+                    <td>
+                        @result.ID
+                    </td>
+                    <td>@result.StatusCode</td>
+                    <td>@Html.Raw(result.FirstName)</td>
+                    <td>@Html.Raw(result.LastName)</td>
+                    <td>@Html.Raw(result.EmailAddress)</td>
+                    <td>@result.SysUserName</td>
+                    <td>@result.SiteName</td>
+                    <td>@result.CreatedDate.ToShortDateString()</td>
+                    <td>
+                        @if (result.ModifiedDate != DateTime.MinValue)
+                        {
+                            <span>@result.ModifiedDate.ToShortDateString()</span>
+                        }
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Cooperator", new { entityId = result.ID })" class="btn btn-default btn-flat btn-sm pull-right row-edit">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                    </td>
+                </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+  
+</div>
+
+
+

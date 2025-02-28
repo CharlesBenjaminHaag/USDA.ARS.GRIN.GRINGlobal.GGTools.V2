@@ -1,0 +1,218 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.HomeViewModel
+@{
+    ViewBag.Title = "My GGTools";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+<div class="row">
+    <div class="col-md-3">
+        @{Html.RenderAction("RenderWidget", "SysUser", new { sysUserId = Model.AuthenticatedUser.SysUserID }); }
+    </div>
+    <div class="col-md-9">
+        <!-- TODO Refactor into quicklinks section-->
+        <div id="accordion">
+
+            @if ((Model.AuthenticatedUser.IsInRole("ADMINS")) || (Model.AuthenticatedUser.IsInRole("MANAGE_TAXONOMY")))
+            {
+                <div class="card card-success">
+                    <div class="card-header bg-blue">
+                        <h4 class="card-title w-100">
+                            <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseOne" style="color:white;" aria-expanded="false">
+                                <i class="fas fa-leaf"></i> Taxonomy
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="collapse" data-parent="#accordion" style="">
+                        <div class="card-body">
+                            <a class="btn btn-app" href="@Url.Action("Add", "Species")">
+                                <i class="fas fa-plus"></i> Add a new Species
+                            </a>
+                            <a class="btn btn-app" href="@Url.Action("Index", "Species")">
+                                <i class="fas fa-search"></i>Search Species
+                            </a>
+                            <a class="btn btn-app" href="@Url.Action("AddBatch", "Species")">
+                                <i class="fas fa-list"></i> Bulk-Add Species
+                            </a>
+                            <a class="btn btn-app" href="@Url.Action("Explorer", "SysFolder")">
+                                <i class="fas fa-folder"></i> My Folders
+                            </a>
+                            <a class="btn btn-app" href="@Url.Action("Index", "Ista")">
+                                <i class="fas fa-leaf"></i> ISTA Report Generation
+                            </a>
+                            <a class="btn btn-app" href="@Url.Action("Index", "UPOV")">
+                                <i class="fas fa-leaf"></i> UPOV
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if ((Model.AuthenticatedUser.IsInRole("ADMINS")) || (Model.AuthenticatedUser.IsInRole("MANAGE_COOPERATOR")))
+            {
+                <div class="card card-default ">
+                    <div class="card-header bg-blue">
+                        <h4 class="card-title w-100">
+                            <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseTwo" style="color:white;" aria-expanded="false">
+                                <i class="fas fa-users"></i> Manage Curators and User Access
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="collapse" data-parent="#accordion" style="">
+                        <div class="card-body">
+                            <a class="btn btn-app" href="@Url.Action("New","Account")">
+                                <i class="fas fa-plus"></i> Add a new user
+                            </a>
+                            <a class="btn btn-app" href="@Url.Action("Index","Cooperator")">
+                                <i class="fas fa-search"></i>Search curators
+                            </a>
+                            <a class="btn btn-app" href="@Url.Action("Explorer","SysGroup")">
+                                <i class="fas fa-users"></i>Manage Groups
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if ((Model.AuthenticatedUser.IsInRole("ADMINS")) || (Model.AuthenticatedUser.IsInRole("MANAGE_NRR")) || (Model.AuthenticatedUser.IsInRole("GGTOOLS_ORDERS")))
+            {
+                <div class="card card-default ">
+                    <div class="card-header bg-blue">
+                        <h4 class="card-title w-100">
+                            <a class="d-block w-100" data-toggle="collapse" href="#collapseThree" style="color:white;" aria-expanded="false">
+                                <i class="fas fa-shopping-cart"></i> NRR Review and Order Tracking
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="collapse" data-parent="#accordion" style="">
+                        <div class="card-body">
+                            <a class="btn btn-app" href="@Url.Action("Explorer","WebOrderRequest")">
+                                <i class="fas fa-globe"></i> Web Order Request Explorer
+                            </a>
+                            <a class="btn btn-app" href="@Url.Action("Index","WebOrderRequest")">
+                                <i class="fas fa-search"></i>Search
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="card card-warning ">
+                <div class="card-header bg-blue">
+                    <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" href="#collapseThree" style="color:white;" aria-expanded="true">
+                            <i class="fas fa-wrench"></i> Tools
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="collapse show" data-parent="#accordion" style="">
+                    <div class="card-body">
+                        <a class="btn btn-app disabled" href="@Url.Action("Index","Import")">
+                            <i class="fas fa-toolbox"></i> Data Import
+                        </a>
+                        <a class="btn btn-app" href="@Url.Action("Index","SysDynamicQuery")">
+                            <i class="fas fa-search"></i>SQL Query Tool
+                        </a>
+                        <a class="btn btn-app disabled" href="@Url.Action("Index","SysDataview")">
+                            <i class="fas fa-table"></i>Dataview Explorer
+                        </a>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card card-warning ">
+                <div class="card-header bg-blue">
+                    <h4 class="card-title w-100">
+                        <a class="d-block w-100" data-toggle="collapse" style="color:white;" href="#collapseDemo">
+                            <i class="fas fa-lightbulb"></i> Demo
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseDemo" class="collapse" data-parent="#accordion" style="">
+                    <div class="card-body">
+                        <a class="btn btn-app" href="@Url.Action("Index","Exploration")">
+                            <i class="fas fa-table"></i> Manage Exploration Data
+                        </a>
+                       
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+       
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        @{Html.RenderAction("Components_SiteUsersWidget", "Site", new { siteId = Model.AuthenticatedUser.SiteID });}
+    </div>
+</div>
+
+<div class="modal fade" id="modal-error" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Error</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Error adding cooperator</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).on("click", "[id='btnSaveCooperator']", function () {
+        $("#modal-cooperator-add").modal("hide");
+        SaveCooperator();
+    });
+
+    function SaveCooperator() {
+        var link = $("#frmEditCooperator").attr("action");
+
+        //Add the Field values to FormData object.
+        var formData = new FormData();
+        formData.append("Entity.StatusCode", "ACTIVE");
+        formData.append("Entity.ID", $("#frmEditCooperator #Entity_ID").val());
+        formData.append("Entity.Salutation", $("#Entity_Salutation").val());
+        formData.append("Entity.FirstName", $("#Entity_FirstName").val());
+        formData.append("Entity.LastName", $("#Entity_LastName").val());
+        formData.append("Entity.JobTitle", $("#Entity_JobTitle").val());
+        formData.append("Entity.Organization", $("#Entity_Organization").val());
+        formData.append("Entity.OrganizationAbbrev", $("#Entity_OrganizationAbbrev").val());
+        formData.append("Entity.EmailAddress", $("#frmEditCooperator #Entity_EmailAddress").val());
+        formData.append("Entity.PrimaryPhone", $("#Entity_PrimaryPhone").val());
+        formData.append("Entity.CategoryCode", $("#Entity_CategoryCode").val());
+        formData.append("Entity.SiteID", $("#Entity_SiteID").val());
+        formData.append("Entity.AddressLine1", $("#Entity_AddressLine1").val());
+        formData.append("Entity.AddressLine1", $("#Entity_AddressLine1").val());
+        formData.append("Entity.AddressLine2", $("#Entity_AddressLine2").val());
+        formData.append("Entity.AddressLine3", $("#Entity_AddressLine3").val());
+        formData.append("Entity.City", $("#Entity_City").val());
+        formData.append("Entity.GeographyID", $("#Entity_GeographyID").val());
+        formData.append("Entity.PostalIndex", $("#Entity_PostalIndex").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                if (data.cooperator.ID < 0) {
+                    $("#modal-error").modal("show");
+                }
+            }
+        });
+    }
+
+</script>

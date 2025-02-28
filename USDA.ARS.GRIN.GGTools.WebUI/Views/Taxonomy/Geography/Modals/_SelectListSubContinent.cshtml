@@ -1,0 +1,41 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyViewModel
+<table id="table-geography-subcontinent" class="table table-hover" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Subcontinents</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollectionSubContinents)
+        {
+            <tr>
+                <td></td>
+                <td>
+                    <div class="icheck-primary">
+                        <input type="checkbox" value="@result.ID" id="check_@result.SubContinent" class="ggtools-check-subcontinent">
+                        <label for="check_@result.SubContinent">@result.SubContinent</label>
+                    </div>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableGeo("table-geography-subcontinent");
+    });
+
+    $(".ggtools-check-subcontinent").on('change', function () {
+        var selectedContinents = GetSelectedContinents();
+        var selectedSubContinents = GetSelectedSubContinents();
+        var selectedSubContinentRegionIDs = GetSelectedSubContinentRegionIDs();
+        var selectedCountries = GetSelectedCountries();
+
+        LoadCountries(selectedContinents, selectedSubContinents);
+        LoadAdministrativeUnits(selectedSubContinentRegionIDs, selectedCountries);
+    });
+</script>

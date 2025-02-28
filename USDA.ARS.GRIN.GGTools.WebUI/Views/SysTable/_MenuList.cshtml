@@ -1,0 +1,11 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysTableViewModel
+@foreach (var result in Model.DataCollection)
+{
+    <li class="nav-item">
+        <a href="@Url.Action("Index", result.TableCode, new { @sysTableName = result.SysTableName, @sysTableTitle = result.SysTableTitle })" class="nav-link">
+            <i class="far fas fa-table nav-icon"></i>
+            <p>@result.SysTableTitle</p>
+        </a>
+    </li>
+}
+

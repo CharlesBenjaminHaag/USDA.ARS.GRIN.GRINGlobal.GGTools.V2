@@ -1,0 +1,426 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesBatchEditViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav text-sm">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                    <img src="~/dist/img/GGlogo_BW.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- BEGIN EDIT PAGE MENU -->
+                    <ul class="navbar-nav">
+                        <!-- TODO What do we need here? -->
+                    </ul>
+                    <!-- END EDIT PAGE MENU-->
+                </div>
+                <!-- BEGIN RIGHT-ALIGNED NAV MENU -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    @Html.Partial("~/Views/Shared/_NavbarRight.cshtml")
+                </ul>
+                <!-- END RIGHT-ALIGNED NAV MENU -->
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                Species Batch Edit
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+                    <div id="section-search-criteria" class="row">
+                        <div class="col-md-4">
+                            <div class="card card-primary card-outline card-outline-tabs">
+                                <div class="card-header p-0 border-bottom-0">
+                                    <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true"><i class="fas fa-search"></i> Search Species</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false"><i class="fas fa-folder"></i> Load From Folder</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <div class="tab-content" id="custom-tabs-four-tabContent">
+                                        <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+                                            @using (Html.BeginForm(new { id = "frmSpeciesLookup", onsubmit = "return false;" }))
+                                            {
+                                                <input type="hidden" id="hfSpeciesLookupIDFieldName" />
+                                                <input type="hidden" id="hfSpeciesLookupNameFieldName" />
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        @Html.TextBoxFor(x => x.SearchEntity.SpeciesName, new { @id = "txtLookupSpeciesName", @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="margin">
+                                                            <div class="form-group clearfix">
+                                                                <div class="icheck-primary d-inline">
+                                                                    <input class="custom-control-input" type="checkbox" id="cbxLookupIsAcceptedName" value="option1">
+                                                                    <label for="cbxLookupIsAcceptedName">
+                                                                        Search accepted names only.
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="margin">
+                                                        <button id="btnReset" type="button" class="btn btn-default">Reset</button>
+                                                        <button id="btnLookupSpecies" type="button" class="btn btn-default float-right">Search</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div id="section-species-lookup-search-results" class="col-md-12">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+                                            <h3>TODO FOLDERS</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="section_overlay_species" class="overlay">
+                                    <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="fas fa-book"></i> Citations</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    @{Html.RenderAction("BatchEdit", "Citation");}
+                                    <div class="row">
+                                        <div id="section-citation-batch-edit" class="col-md-12">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <span class="input-group-append">
+                                        <button id="btnGenerateCitations" type="button" class="btn btn-default btn-flat btn-block">Generate Citations From Selected Literature <i class="fas fa-fast-forward"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div id="tab-content-taxonomy-geography-map">
+                                @{Html.RenderAction("BatchEdit", "GeographyMap");}
+                            </div>
+                            <div id="tab-content-taxonomy-economic-use">
+                                @{Html.RenderAction("BatchEdit", "EconomicUse");}
+                            </div>
+                            <div id="tab-content-taxonomy-commmon-name">
+                                @{Html.RenderAction("BatchEdit", "CommonName");}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+    @{Html.RenderAction("RenderLookupModal", "Literature"); }
+    @{Html.RenderAction("RenderLookupModal", "EconomicUsageType"); }
+    <!-- BEGIN ERROR MODAL-->
+    <div class="modal fade" id="modal-validation-error" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-danger">
+                <div class="modal-header">
+                    <h4 class="modal-title">Validation Error</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="error-msg"></p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-light">Save changes</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- END ERROR MODAL -->
+
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#section-overlay-citation").hide();
+        $("#section_overlay_species").hide();
+    });
+
+    $("#btnGenerateCitations").click(function () {
+        var selectedSpeciesIdList = GetSelectedEntityIDs("data-table-species-lookup");
+        //var selectedLiteratureIdList = GetSelectedEntityIDs("data-table-literature-lookup");
+        var selectedLiteratureIdList = $("#Entity_LiteratureID").val();
+
+        if (selectedSpeciesIdList.length == 0)
+        {
+            $("#error-msg").html("Please select at least one species.");
+            $("#modal-validation-error").modal("show");
+            return;
+        }
+
+        if ((selectedLiteratureIdList.length == 0) || (selectedLiteratureIdList == 0)) {
+            $("#error-msg").html("Please identify the literature for which to generate citations.");
+            $("#modal-validation-error").modal("show");
+            return;
+        }
+        GenerateCitations(selectedSpeciesIdList, selectedLiteratureIdList);
+    });
+
+    $("#btnGenerateGeographyMaps").on('click', function (event) {
+        event.preventDefault();
+        var selectedSpeciesIdList = GetSelectedEntityIDs("data-table-species-lookup");
+
+        if (selectedSpeciesIdList.length == 0) {
+
+            $("#error-msg").html("Please select at least one species.");
+            $("#modal-validation-error").modal("show");
+        }
+        else {
+            $("#SpeciesIDList").val(selectedSpeciesIdList);
+            $("#frmTaxonomyGeographyMapBatchEdit").submit();
+        }
+    });
+
+    $("#btnGenerateCommonNames").on('click', function (event) {
+        event.preventDefault();
+        var selectedSpeciesIdList = GetSelectedEntityIDs("data-table-species-lookup");
+
+        if (selectedSpeciesIdList.length == 0) {
+
+            $("#error-msg").html("Please select at least one species.");
+            $("#modal-validation-error").modal("show");
+        }
+        else {
+            $("#frmCommonNameBatchEdit #SpeciesIDList").val(selectedSpeciesIdList);
+            $("#frmCommonNameBatchEdit").submit();
+        }
+    });
+
+    function GenerateCitations(selectedSpeciesIdList, selectedLiteratureIdList)
+    {
+        var link = '@Url.Action("AddBatch","Citation")';
+        var formData = new FormData();
+
+        formData.append("speciesIdList", selectedSpeciesIdList);
+        formData.append("literatureIdList", selectedLiteratureIdList);
+
+        $("#section-overlay-citation").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-citation-batch-edit").html(response);
+                InitDataTable("data-table-citation-lookup");
+                $("#section-overlay-citation").hide();
+            },
+            error: function (ex) {
+                alert("Error");
+                $("#section-overlay-citation").hide();
+            }
+        });
+    }
+
+    //$('#modal-species-lookup').on('keypress', function (event) {
+    //    var keycode = (event.keyCode ? event.keyCode : event.which);
+    //    if (keycode == '13') {
+    //        /*alert("ENTER clicked");*/
+    //        SearchSpecies();
+    //        event.preventDefault();
+    //    }
+    //});
+
+    //$("#btnOpenSpeciesLookupModal").click(function () {
+    //    var eventAction = $(this).data("ggtools-action");
+    //    var eventValue = $(this).data("ggtools-value");
+    //    $("#hfSpeciesLookupIDFieldName").val(eventAction);
+    //    $("#hfSpeciesLookupNameFieldName").val(eventValue);
+    //    $("#search-progress-overlay").hide();
+    //});
+
+    $("#btnLookupSpecies").click(function () {
+        SearchSpecies();
+    });
+
+    function SearchSpecies() {
+        var link = '@Url.Action("Lookup","Species")';
+        var speciesName = $("#txtLookupSpeciesName").val();
+        var formData = new FormData();
+
+        formData.append("SearchEntity.SpeciesName", speciesName);
+        if ($("#cbxLookupIsAcceptedName").is(":checked")) {
+            formData.append("SearchEntity.IsAcceptedName", "Y");
+        }
+
+        $("#section_overlay_species").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-lookup-search-results").html(response);
+                InitSpeciesBatchEditDataTable("data-table-species-lookup");
+                $("#section_overlay_species").hide();
+            },
+            error: function (ex) {
+                alert("Error");
+                $("#section_overlay_species").hide();
+            }
+        });
+    }
+
+    //$("#btnSaveSpecies").click(function () {
+    //    var idField = $("#hfSpeciesLookupIDFieldName").val();
+    //    var nameField = $("#hfSpeciesLookupNameFieldName").val();
+    //    var isAcceptedName = "";
+    //    var idList = GetSelectedEntityIDs("data-table-species-lookup");
+    //    var nameList = GetSelectedEntityLabels("data-table-species-lookup");
+
+    //    //DEBUG
+    //    //alert("DEBUG SET SPECIES ID FLD " + idField + " NAME FLD " + nameField);
+
+    //    $("#Entity_" + idField).val(idList);
+    //    $("#Entity_" + nameField).val(nameList);
+    //    $('#modal-species-lookup').modal('hide');
+    //});
+
+
+    //function SelectSpecies(ID, speciesName) {
+    //    var eventAction = "";
+    //    var eventValue = "";
+
+    //    $('#modal-species-lookup').modal('hide');
+
+
+    //    eventValue = $("#hfModalEventValue").val();
+    //    if (eventValue == 'SPECIES') {
+    //        $("#Entity_SpeciesName").val(speciesName);
+    //    }
+    //    else {
+    //        $("#Entity_AcceptedID").val(ID);
+    //        $("#Entity_AcceptedName").val(speciesName);
+    //    }
+    //} 
+
+    @*function GeographyMapBatchEditAddRow() {
+        var link = '@Url.Action("BatchEditAddRow","GeographyMap")';
+        var formData = new FormData();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content-taxonomy-geography-map").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }*@
+
+    //$(document).on("click", "[id*='btnCommonNameBatchEditAddRow']", function () {
+    //    $("#EventAction").val("ADDROW");
+    //    //TODO
+    //    //Make AJAX call to method that will return view with newly-added record.
+    //});
+
+    //$(document).on("click", "[id*='btnEconomicBatchEditAddRow']", function () {
+    //    $("#EventAction").val("BATCHEDIT");
+    //    $("#EventValue").val("ADDROW");
+    //    //TODO
+    //    //Make AJAX call to method that will return view with newly-added record.
+    //});
+
+    function InitSpeciesBatchEditDataTable(tableName) {
+        $(document).ready(function () {
+            tableName = "#" + tableName;
+            table = $(tableName).DataTable({
+                "bLengthChange": false,
+                scrollY: '300px',
+                scrollCollapse: true,
+                paging: true,
+                responsive: true,
+                select: {
+                    style: 'multi'
+                },
+                searching: true,
+                columnDefs: [
+                    {
+                        target: 0,
+                        visible: false,
+                        searchable: false,
+                    },
+                    {
+                        target: 1,
+                        visible: false,
+                    },
+                ]
+            });
+            /*table.row(':eq(0)', { page: 'current' }).select(); */
+
+            //table.on('select', function (e, dt, type, indexes) {
+            //    if (type === 'row') {
+            //        var data = table.rows(indexes).data().pluck(1);
+
+            //        alert('DEBUG You clicked on ' + data[1] + "'s row");
+            //    }
+            //});
+        });
+    }
+
+</script>
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")

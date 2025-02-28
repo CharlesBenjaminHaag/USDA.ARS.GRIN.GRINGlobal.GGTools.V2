@@ -1,0 +1,58 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebUserViewModel
+@{
+    string cssClassCard = "card card-primary collapsed-card";
+    string cssClassCardBody = "display: none;";
+    string cssClassExpandCollapseButton = "fas fa-plus";
+
+    if (Model.Entity.ID == 0)
+    {
+        cssClassCard = "card card-danger";
+        cssClassCardBody = "collapse in show";
+        cssClassExpandCollapseButton = "fas fa-minus";
+    }
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Web User</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div id="section-sys-user" class="card-body">
+        @using (Html.BeginForm("Save", "WebUser", FormMethod.Post, new { id = "frmEditWebUser" }))
+        {
+            @Html.HiddenFor(x => x.EventAction)
+            @Html.HiddenFor(x => x.EventValue)
+            @Html.HiddenFor(x => x.TableName)
+            @Html.HiddenFor(x => x.TableCode)
+            @Html.HiddenFor(x => x.Entity.ID)
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>User Name</label><br />
+                        @Html.TextBoxFor(x => x.Entity.WebUserName, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Password</label>
+                        @Html.TextBoxFor(x => x.Entity.WebUserPassword, new { @class = "form-control", type = "text" })
+                    </div>
+                </div>
+            </div>
+            @Html.Partial("~/Views/Shared/_RevisionHistorySimple.cshtml")
+
+        }
+    </div>
+    <div class="card-footer">
+        <button id="btnSaveWebUser" type="button" class="btn btn-default float-right">Save</button>
+        @if (Model.Entity.ID == 0)
+        {
+            <button id="btnCopyWebUser" type="button" class="btn btn-default">Create From Sys User</button>
+            <button id="btnSearchWebUser" type="button" class="btn btn-default">Search</button>
+        }
+    </div>
+</div>

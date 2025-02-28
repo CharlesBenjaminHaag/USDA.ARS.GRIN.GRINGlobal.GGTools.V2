@@ -1,0 +1,16 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+<div class="form-group">
+    <label>Species Authority</label>
+    <div class="input-group">
+        @Html.TextBoxFor(x => x.Entity.SpeciesAuthority, new { @class = "form-control" })
+        <span class="input-group-append">
+            <button id="btnOpenAuthorityLookupModalSpecies"
+                    type="button"
+                    class="btn btn-default btn-flat"
+                    data-ggtools-id-field="" 
+                    data-ggtools-name-field="Entity_SpeciesAuthority">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+</div>

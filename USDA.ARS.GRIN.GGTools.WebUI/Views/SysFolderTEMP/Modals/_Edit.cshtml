@@ -1,0 +1,265 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderViewModel
+<div class="modal fade text-sm" id="modal-sys-folder-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-folder"></i>
+                    Static Folder
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header p-2">
+                        <ul id="section-folder-options" class="nav nav-pills">
+                            <li id="btnSelectCreateFolder" class="nav-item"><a id="create" class="nav-link active" href="#folder-create" data-toggle="tab">Create A New Folder</a></li>
+                            <li id="btnSelectUpdateFolder" class="nav-item"><a id="update" class="nav-link" href="#folder-select" data-toggle="tab">Update An Existing Folder</a></li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="folder-create">
+                                @Html.Partial("~/Views/SysFolder/_Edit.cshtml")
+                            </div>
+                            <div class="tab-pane" id="folder-select">
+                                <div class="row">
+                                    <div id="section-folder-list" class="col-md-12">
+                                        <table id="data_table_app_user_item_folder_list" class="table table-striped ggtools" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>ID</th>
+                                                    <th>Title</th>
+                                                    <th>Category</th>
+                                                    <th>Items</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button id="btnUpdateSelectedFolder" class="btn btn-default float-right">Update Selected Folder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <div class="col-md-12">
+                    <button id="btnSave" type="button" class="btn btn-default float-right" data-dismiss="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+*************************************************************************************************
+Modal that appears if no record is selected for folder addition.
+*************************************************************************************************
+-->
+<div class="modal fade" id="modal-validation-warning" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">No Record(s) Selected</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please first select at least one record to add to the folder.</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light float-right" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableLookupFormat("data_table_app_user_item_folder_list");
+    });
+
+    $("#btnSave").click(function () {
+        var activeLink = $('#section-folder-options a.active');
+        console.log(activeLink.attr('id')); // Outputs the href of the active link
+
+        // If the "new folder" tab is active -- create a new folder. Otherwise, add selected items to the existing
+        // folder (after first verifying that the user has selected one).
+        switch (activeLink.attr('id')) {
+            case "create":
+                CreateFolder();
+                break;
+            case "update":
+                break;
+        }
+
+        /*SaveNewFolder();*/
+    });
+
+    function OpenAppUserItemFolderModal() {
+        var tableName = $("#TableName").val();
+        var dataTableName = "data_table_" + tableName;
+
+        //DEBUG
+        console.log("DEBUG TABLE NAME IS " + dataTableName);
+
+        var selectedItemIdList = GetSelectedEntityIDs(dataTableName);
+
+        if (selectedItemIdList.length < 1) {
+            $("#modal-validation-warning").modal("show");
+        }
+        else {
+            $("#EventInfo").val(selectedItemIdList);
+            $("#modal-sys-folder-edit").modal("show");
+        }
+    }
+
+    /*
+     * Adds a batch of selected items to an existing folder
+     */
+    function UpdateFolder() {
+        var link = '@Url.Action("AddItems", "AppUserItemFolder")';
+        var eventValue = $("#EventValue").val();
+        var entityId = $("#frmAppUserItemFolder #Entity_ParentID").val();
+        var appUserItemFolderId = GetSelectedEntityIDs("data_table_app_user_item_folder_list");
+        var tableName = $("#TableName").val();
+        var dataTableName = "data_table_" + tableName;
+        var formData = new FormData();
+        var selectedItemIdList = "";
+
+        //DEBUG
+        /*alert("EVENT VAL " + eventValue + " PARENT ENTITY " + entityId);*/
+
+        if (eventValue == "SINGLE") {
+            selectedItemIdList = entityId;
+            
+           
+        }
+        else {
+            selectedItemIdList = GetSelectedEntityIDs("data_table_" + $("#TableName").val());
+        }
+
+        if (selectedItemIdList.length < 1) {
+            alert("ERROR: No items selected");
+        }
+
+        if (typeof selectedItemIdList == 'undefined') {
+            alert("ERROR: Item ID list undefined");
+        }
+
+        formData.append("Entity.ID", appUserItemFolderId);
+        formData.append("EntityIDList", selectedItemIdList);
+        formData.append("Entity.TableName", tableName);
+
+        // TEST Show confirmation alert once folder done.
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-folder-confirmation").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    /*
+     * Adds a batch of items to a newly-created folder
+    */
+    function CreateFolder() {
+        var link = '@Url.Action("Edit", "SysFolder")';
+        var tableName = $("#TableName").val();
+        var title = $("#Entity_Title").val();
+        var description = $("#Entity_Description").val();
+        var itemIdList = $("#EventInfo").val();
+
+        var tagText = $("#newTag").val();
+        var tagFormatString = $("#tagColor").val();
+
+        console.log("Table: " + tableName + " Title: " + title + " Desc: " + description + " ID list: " + itemIdList + " Tag: " + tagText);
+
+        if (itemIdList.length < 1) {
+            alert("ERROR: No items selected");
+        }
+
+        var formData = new FormData();
+
+        formData.append("Entity.TableName", $("#TableName").val());
+        formData.append("Entity.Title", title);
+        formData.append("Entity.Description", description);
+        formData.append("Entity.TypeCode", "STC");
+        formData.append("ItemIDList", itemIdList);
+        formData.append("TagEntity.TagText", tagText);
+        formData.append("TagEntity.TagFormatString", tagFormatString);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-folder-confirmation").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    function ConfirmFolderSave(folderTitle) {
+        $("#new-folder-name").html(folderTitle);
+        $("#alert-folder-confirmation").show();
+    }
+
+    function SaveFolderItems(folderId) {
+        var link = '@Url.Action("AddItems", "Folder")';
+        var tableName = $("#TableName").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-order");
+        var formData = new FormData();
+
+        formData.append("FolderID", folderId);
+        formData.append("TableName", tableName);
+
+        if (typeof selectedItemIdList != 'undefined') {
+            formData.append("IDList", selectedItemIdList);
+        }
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+</script>
+

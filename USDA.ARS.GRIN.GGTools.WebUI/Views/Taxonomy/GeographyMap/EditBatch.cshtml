@@ -1,0 +1,284 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyMapViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+
+<style type="text/css">
+    .dual-select {
+        min-height:450px;
+    }
+</style>
+
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/gringlobal-logo.jfif" alt="GRIN-Global Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- BEGIN EDIT PAGE MENU -->
+                    <ul class="navbar-nav">
+                        @if (Model.Entity.ID > 0)
+                        {
+                            Html.RenderAction("RenderRelatedFoldersMenu", "AppUserItemFolder", new { sysTableName = Model.TableName, entityId = Model.Entity.ID });
+                        }
+                    </ul>
+                    <!-- END EDIT PAGE MENU-->
+                </div>
+
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="far fa-user"></i>
+
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
+                            <span class="dropdown-item dropdown-header">@AppInfo.GetAuthenticatedUser().FullName</span>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-clock mr-2"></i> Logged In
+                                <span class="float-right text-muted text-sm"> </span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="@Url.Action("Logout","Login")" class="dropdown-item dropdown-footer bg-danger">Log Out</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                Geography Map Batch Edit
+                                @*<small>Example 3.0</small>*@
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.Partial("~/Views/Taxonomy/Geography/Modals/_SelectListContinent.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+</body>
+</html>
+
+<script>
+    $("#search-progress-overlay-species").hide();
+    InitDataTableMinimal("table-status-codes");
+    $("#section-validation-errors").hide();
+
+    // *******************************************************************
+    // IMPORTANT: Any DataTable that is not visible when rendered must
+    // be adjusted once it does become visible (modal shown, tab clicked),
+    // to enable column headings to render correctly. -- CBH, 6/26/23
+    // *******************************************************************
+    $("#modal-geography-lookup").on('shown.bs.modal', function () {
+        $($.fn.dataTable.tables(true)).DataTable()
+            .columns.adjust();
+    });
+
+    $("#btnLookupSpecies").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var searchText = $("#SearchEntity_SpeciesName").val();
+        var isAcceptedName = "";
+
+        if ($("#SearchEntity_SpeciesIsAcceptedOption").is(":checked")) {
+            isAcceptedName = "Y";
+        }
+        SearchSpecies(eventAction, 0, searchText, isAcceptedName, "section-search-results-" + eventAction, "table-search-results-" + eventAction);
+    });
+
+    function SearchSpecies(eventAction, speciesId, searchText, isAcceptedName, searchResultSectionName, searchResultTableName) {
+        var link = '@Url.Action("Lookup","Species")';
+        var formData = new FormData();
+
+        formData.append("EventAction", eventAction);
+        formData.append("SearchEntity.SpeciesID", speciesId);
+        formData.append("SearchEntity.SpeciesName", searchText);
+        formData.append("SearchEntity.IsAcceptedName", isAcceptedName);
+        formData.append("SearchEntity.IsMultiSelect", "Y");
+
+         $("#search-progress-overlay-species").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-search-results-species").html(response);
+                $("#search-progress-overlay-species").hide();
+                InitDataTableSpeciesLookup("data-table-species-lookup");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    function InitDataTableMinimal(tableName) {
+        $(document).ready(function () {
+            tableName = "#" + tableName;
+
+            if ($.fn.dataTable.isDataTable(tableName)) {
+                table = $(tableName).DataTable();
+            }
+            else {
+                table = $(tableName).DataTable({
+                    paging: true,
+                    responsive: true,
+                    select: {
+                        style: 'single'
+                    },
+                    searching: false,
+                    paging: false,
+                    columnDefs: [
+                        { targets: [0], visible: false }
+                    ]
+                });
+                table.row(':contains("Basionym")').select()
+            }
+        });
+    }
+
+
+    function InitDataTableSpeciesLookup(tableName) {
+        $(document).ready(function () {
+            tableName = "#" + tableName;
+            table = $(tableName).DataTable({
+                "bLengthChange": false,
+                scrollY: '300px',
+                scrollCollapse: true,
+                paging: true,
+                responsive: true,
+                select: {
+                    style: 'multi'
+                },
+                searching: true,
+                columnDefs: [
+                    {
+                        target: 0,
+                        visible: false,
+                        searchable: false,
+                    },
+                    {
+                        target: 1,
+                        visible: false,
+                    },
+                ]
+            });
+            table.row(':eq(0)', { page: 'current' }).select();
+        });
+    }
+
+
+    function LoadGeographies(geographyIdList)
+    {
+        var link = '@Url.Action("_ListGeography","GeographyMap")';
+        var formData = new FormData();
+
+        formData.append("idList", geographyIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-search-results-geography").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    $(document).on("click", "[id*='btnGenerateMaps']", function () {
+        GenerateMaps();
+    });
+
+    function GenerateMaps() {
+        var link = '@Url.Action("Add", "GeographyMap")';
+        var selectedSpeciesIDList = GetSelectedEntityIDs("data-table-species-lookup");
+        var selectedStatusCode = GetSelectedEntityIDs("table-status-codes");
+        var selectedGeographyIDList = GetSelectedEntityIDs("data-table-geography-lookup");
+        var formData = new FormData();
+
+        //DEBUG
+        //alert("DEBUG SPECIES ARE " + selectedSpeciesIDList);
+        //alert("DEBUG GEO ARE " + selectedGeographyIDList);
+        //alert("DEBUG STATUS IS " + selectedStatusCode);
+
+        // Ensure that all params are present.
+        if ((selectedSpeciesIDList.length == 0) ||
+            (selectedGeographyIDList.length == 0)) {
+            (selectedStatusCode.length == 0)
+            $("#section-validation-errors").show();
+            return;
+        }
+        else {
+            $("#section-validation-errors").hide();
+        }
+
+        formData.append("StatusCode", selectedStatusCode);
+        formData.append("SpeciesIDList", selectedSpeciesIDList);
+        formData.append("GeographyIDList", selectedGeographyIDList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-geography-maps").html(response);
+                InitDataTableSingleSelect("data-table-geography-maps");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+</script>
+
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")

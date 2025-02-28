@@ -1,0 +1,29 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderViewModel
+
+<div class="row">
+    <div class="col-md-3">
+
+        <div class="info-box shadow">
+            <span class="info-box-icon bg-info">
+                <i class="far fa-folder"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">
+                    @if (Model.Entity.IsFavorite == "Y")
+                    {
+                        <i class="fas fa-star text-warning"></i>
+                    }
+                    <a href="@Url.Action("Edit", "AppUserItemFolder", new { @entityId = Model.Entity.ID })">
+                        @Model.Entity.FolderName
+                    </a>
+                </span>
+                <span class="info-box-number">
+                    Created @Model.Entity.CreatedDate.ToShortDateString()
+                    @*<button id="btnDeleteItemByEntityID" type="button" data-ggtools-action="AppUserItemFolder" data-ggtools-value="DeleteItemByEntityID" data-ggtools-id=@Model.Entity.ID class="btn btn-sm btn-flat btn-danger float-right">Remove</button>*@
+                </span>
+            </div>
+        </div>
+
+
+    </div>
+</div>

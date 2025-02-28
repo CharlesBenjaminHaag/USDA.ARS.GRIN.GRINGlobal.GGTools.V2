@@ -1,0 +1,102 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.LiteratureViewModelBase
+            <div id="section-search-criteria">
+              
+                <div class="row">
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="margin">
+                            <button id="btnReset" class="btn btn-danger">Reset</button>
+                            <button id="btnLookupLiterature" class="btn btn-default float-right">Search</button>
+                        </div>                    
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="section-literature-lookup-search-results" class="col-md-12">
+                        <!--SEARCH RESULTS HERE-->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button id="btnGenerateCitations" type="button" class="btn btn-default float-right">Generate Citations From Selected Literature</button>
+                </div>
+            </div>
+            <div class="row">
+                <div id="section-literature-lookup-search-results" class="col-md-12">
+                    <!--SEARCH RESULTS HERE-->
+                </div>
+            </div>
+        
+<script>
+
+    //$(document).keypress(function (event) {
+    //    var keycode = (event.keyCode ? event.keyCode : event.which);
+    //    if (keycode == '13') {
+    //        $("#btnLookupLiterature").click();
+    //    }
+    //});
+
+    $(document).ready(function () {
+        $(document).on("click", "[id='btnLookupLiterature']", function () {
+            var link = '@Url.Action("Lookup", "Literature")';
+            LookupLiterature(link);
+        });
+
+        $(document).on("click", "[id='btnSaveLiterature']", function () {
+            SaveLiterature();
+        });
+    });
+
+    function LookupLiterature(link) {
+        var tableName = $("#TableName").val();
+        var typeCode = $("#ddlLiteratureTypeCode").val();
+        var abbreviation = $("#txtLiteratureAbbreviation").val();
+        var referenceTitle = $("#txtLiteratureReferenceTitle").val();
+        var editorAuthorName = $("#txtLiteratureEditorAuthorName").val();
+        var publicationYear = $("#txtLiteraturePublicationYear").val();
+        var formData = new FormData();
+
+        formData.append("TableName", tableName);
+        formData.append("LiteratureTypeCode", typeCode);
+        formData.append("Abbreviation", abbreviation);
+        formData.append("ReferenceTitle", referenceTitle);
+        formData.append("EditorAuthorName", editorAuthorName);
+        formData.append("PublicationYear", publicationYear);
+
+        try {
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-literature-lookup-search-results").html(response);
+                }
+            });
+        }
+        catch (ex) {
+        }
+    }
+
+    function SaveLiterature(link, refreshLink) {
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-literature-lookup");
+        var selectedItemNameList = GetSelectedCitationText("data-table-literature-lookup");
+        $("#Entity_LiteratureID").val(selectedItemIdList);
+        $("#Entity_Abbreviation").val(selectedItemNameList);
+    }
+
+    function GetSelectedCitationText(tableName) {
+        var table = $('#' + tableName).DataTable();
+        var ids = $.map(table.rows('.selected').data(), function (item) {
+            return item[2]
+        });
+        console.log(ids)
+        return ids;
+    }
+
+</script>

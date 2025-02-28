@@ -1,0 +1,39 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebCooperatorViewModel
+<div class="box box-default">
+    <div class="box-header with-border">
+        <i class="fa fa-info"></i>
+        <h3 class="box-title">Web Cooperator</h3>
+    </div>
+    <div class="box-body">
+        <img class="profile-user-img img-responsive img-circle" style="width:128px; height:128px;" src="https://npgsweb.ars-grin.gov/gringlobal/images/admin/user-default.png" alt=@Model.Entity.FullName>
+        <h3 class="profile-username text-center">@Model.Entity.FirstName @Model.Entity.LastName</h3>
+        <p style="border-bottom: 1px solid #ddd; padding-bottom: 15px;" class="text-muted text-center">
+        </p>
+
+        <strong><i class="fa fa-envelope margin-r-5"></i> Email</strong>
+        <p style="border-bottom: 1px solid #ddd; padding-bottom: 5px;" class="text-muted">
+            @Model.Entity.EmailAddress
+        </p>
+        <strong><i class="fa fa-phone margin-r-5"></i> Phone</strong>
+        <p style="border-bottom: 1px solid #ddd; padding-bottom: 5px;" class="text-muted">
+            @Model.Entity.PrimaryPhone
+        </p>
+        <strong><i class="fa fa-globe margin-r-5"></i> Site</strong>
+        <p style="border-bottom: 1px solid #ddd; padding-bottom: 5px;" class="text-muted">
+            @Model.Entity.SiteName
+        </p>
+        <strong><i class="fa fa-calendar margin-r-5"></i> Created</strong>
+        <p style="border-bottom: 1px solid #ddd; padding-bottom: 5px;" class="text-muted">
+            @Model.Entity.CreatedDate
+        </p>
+        <strong><i class="fa fa-calendar margin-r-5"></i> Last Modified</strong>
+        <p style="border-bottom: 1px solid #ddd; padding-bottom: 5px;" class="text-muted">
+            @Model.Entity.ModifiedDate
+        </p>
+    </div>
+    <div class="box-footer">
+        <a href="@Url.Action("Edit","WebCooperator", new { entityId = Model.Entity.ID })" class="btn btn-default btn-block disabled">
+            Edit My Web Cooperator Record
+        </a>
+     </div>
+</div>

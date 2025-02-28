@@ -1,0 +1,33 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.FamilyMapViewModel
+<hr />
+<button id="btnSaveFamily1" type="button" class="btn btn-default float-right ggtools-lookup" data-dismiss="modal">Add Selected Family</button>
+<table id="data-table-family-lookup" class="table table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Accepted</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+            <tr>
+                <td>@result.ID</td>
+                <td>@result.AssembledName</td>
+                <td>@result.ID</td>
+                <td>@Html.Raw(result.AssembledName)</td>
+                <td>@Html.Raw(Model.FormatBoolean(result.IsAcceptedName))</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<button id="btnSaveFamily2" type="button" class="btn btn-default float-right ggtools-lookup" data-dismiss="modal">Add Selected Family</button>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableWithAssembledName("data-table-family-lookup");
+    });
+</script>

@@ -1,0 +1,101 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.FolderViewModel
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- TODO: Refactor this element into a partial shared across sidebars-->
+        <li class="nav-item">
+            <a href="@Url.Action("Index","Home")" class="nav-link">
+                <i class="fas fa-home nav-icon"></i>
+                <p>Home</p>
+            </a>
+        </li>
+        <li class="nav-item menu-open">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-compass"></i>
+                <p>
+                    Navigation
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="@Url.Action("Navigate","Home", new { applicationCode = "GGT-NRR"})" class="nav-link">
+                        <i class="fas fa-cogs nav-icon"></i>
+                        <p>NRR Tool</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Navigate","Home", new { applicationCode = "GGT-TAX"})" class="nav-link">
+                        <i class="fas fa-cogs nav-icon"></i>
+                        <p>Taxonomy</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Navigate","Home", new { applicationCode = "GGT-ARM"})" class="nav-link">
+                        <i class="fas fa-cogs nav-icon"></i>
+                        <p>Users</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Navigate","Home", new { applicationCode = "GGT-CUR"})" class="nav-link">
+                        <i class="fas fa-cogs nav-icon"></i>
+                        <p>Curators</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon far fa-clock"></i>
+                <p>
+                    Folder Type
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="../mailbox/mailbox.html" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Author</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../mailbox/compose.html" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Crop For CWR</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../mailbox/read-mail.html" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>This Month</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+
+
+        <li class="nav-header">MANAGE DATA</li>
+        <li class="nav-item">
+            <a href="@Url.Action("Search","WebOrder")" class="nav-link">
+                <i class="nav-icon fas fa-table"></i>
+                <p>Web Orders</p>
+            </a>
+        </li>
+        <li class="nav-header">SYSADMIN</li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","CodeValue")" class="nav-link">
+                <i class="nav-icon fas fa-table"></i>
+                <p>Code Values</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="@Url.Action("Index","Error")" class="nav-link">
+                <i class="nav-icon fas fa-bug"></i>
+                <p>Error Logs</p>
+            </a>
+        </li>
+    </ul>
+</nav>

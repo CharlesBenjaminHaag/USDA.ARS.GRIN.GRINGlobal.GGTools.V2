@@ -1,0 +1,53 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+@if (Model.DataCollectionGroups.Count > 0)
+{
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-users"></i>
+                Groups (@Model.DataCollectionGroups.Count)
+            </h3>
+        </div>
+        <div class="card-body">
+            <div id="external-events">
+                @foreach (var result in Model.DataCollectionGroups)
+                {
+                    <span class="badge badge-info" style="margin:2px;">
+                        @result.GroupTag
+                    </span>
+                }
+            </div>
+        </div>
+
+        @if (Model.AuthenticatedUser.IsInRole("ADMINS"))
+        {
+            <div id="section-edit-controls" class="card-footer">
+                <button id="btnEditGroups" class="btn btn-default btn-block" data-toggle="modal" data-target="#modal-sys-group-user-map-edit">Edit Groups</button>
+            </div>
+        }
+    </div>
+}
+else
+{
+<div class="card bg-warning">
+    <div class="card-header">
+        <h3 class="card-title">Sys User Groups</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        This user must be a member of at least one group to use Curator Tool functions.
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-block btn-outline-dark" data-toggle="modal" data-target="#modal-sys-group-user-map-edit">Edit</button>
+    </div>
+</div>
+}
+<script>
+    $(document).on("click", "[id*='btnSaveCooperator']", function () {
+        SaveCooperator();
+    });
+</script>

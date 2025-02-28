@@ -1,0 +1,13 @@
+﻿@if (Model.ValidationMessages.Count > 0)
+{
+    <div id="section-input-error" class="alert alert-danger alert-dismissible ggtools-input-error">
+        @*<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>*@
+        <h5><i class="icon fas fa-ban"></i> Input Error</h5>
+        <ul>
+            @foreach (var message in Model.ValidationMessages)
+            {
+                <li>@message.Message</li>
+            }
+        </ul>
+    </div>
+}

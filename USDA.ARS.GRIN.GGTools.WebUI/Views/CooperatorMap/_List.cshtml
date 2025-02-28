@@ -1,0 +1,44 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorMapViewModel
+
+        <table id="data_table_cooperator_map" class="table table-striped" style="width:100%;">
+            <thead>
+                <tr>
+                   
+                    <th>Group Tag</th>
+                    <th>Group Name</th>
+                    <th>Active?</th>
+                    <th>Note</th>
+                    <th>Member Since</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollection)
+                {
+                    <tr>
+                        
+                        <td>
+                            @result.GroupTag
+                        </td>
+                        <td>
+                            @result.CooperatorGroupName
+                        </td>
+                        <td>
+                            @result.IsActive
+                        </td>
+                        <td>
+                            @result.Note
+                        </td>
+                        <td>
+                            @result.CreatedDate.ToShortDateString()
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    
+<script type="text/javascript">
+    InitDataTableDefault("data_table_cooperator_map");
+</script>
+
+

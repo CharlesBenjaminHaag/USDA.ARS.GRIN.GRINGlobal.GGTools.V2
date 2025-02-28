@@ -1,0 +1,46 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyViewModel
+<div id="section-search-results" class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-globe"></i> Geography (@Model.DataCollection.Count)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="data-table-geography" class="table table-striped" style=" width:100%;">
+            <thead>
+                <tr>
+                    <th width="5%">ID</th>
+                    <th>Continent</th>
+                    <th>Subcontinent</th>
+                    <th>Country</th>
+                    <th>Admin 1</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollection)
+                {
+                    <tr>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>@result.Continent</td>
+                        <td>@result.SubContinent</td>
+                        <td>@result.CountryDescription</td>
+                        <td>@result.Admin1</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Geography", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

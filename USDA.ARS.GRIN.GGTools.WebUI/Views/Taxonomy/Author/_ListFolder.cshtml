@@ -1,0 +1,37 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.AuthorViewModel
+@Html.HiddenFor(x => x.TableName)
+<table id="data_table_sys_folder" class="table table-striped ggtools">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Item</th>
+            <th>Short Name</th>
+            <th>Full Name</th>
+            <th>Note</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+        <tr>
+            <td>@result.ID</td>
+            <td>@result.SysFolderItemMapID</td>
+            <td>@result.ShortName</td>
+            <td>@Html.Raw(result.FullName)</td>
+            <td>@Html.Raw(result.Note)</td>
+            <td style="text-align:right;">
+                <a href="@Url.Action("Edit", "Author", new { entityId = result.ID, sysFolderId = Model.SearchEntity.FolderID })" class="btn btn-default btn-sm pull-right row-edit">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableFolderFormat("data_table_sys_folder");
+    });
+</script>

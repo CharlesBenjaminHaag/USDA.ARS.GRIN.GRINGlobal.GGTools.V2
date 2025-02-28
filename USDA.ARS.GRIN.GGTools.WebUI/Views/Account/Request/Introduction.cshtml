@@ -1,0 +1,53 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdminLTE3Login.cshtml";
+}
+<div class="login-box" style="width:600px;">
+    <div class="card card-outline ">
+        <div class="card-header text-center" style="font-size: 2.0rem;">
+            Curator Tool Account Request
+        </div>
+        <div class="card-body">
+            <h5>Welcome to account request self-service!</h5>
+            <p>Please note the following:</p>
+            <ul>
+                <li>
+                    <strong>You no longer need to create a curator account separately.</strong>
+                    This process will automatically create a curator account,
+                    in pending status, based on the information that you will provide.
+                    This account will be activated once an administrator has reviewed
+                    and approved it.
+                </li>
+                <li>
+                    <strong>
+                        You will also no longer need to create a Public Website web
+                        account.
+                    </strong> This process will also create a linked web account,
+                    allowing the new curator to
+                    have access to Web Tools.
+                </li>
+            </ul>
+            <p>
+                Once the request has been approved, and the new account activated, the owner
+                will receive an email containing their account credentials.
+            </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="@Url.Action("Index","Login")"
+                       class="btn btn-default btn-block btn-flat">
+                        Return to Login Page
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="@Url.Action("Details", "Account", new { @seq=1 })" class="btn btn-default btn-flat btn-block">Continue >></a>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">Version @AppInfo.GetVersion()</div>
+    </div>
+</div>
+
+
+
+
+

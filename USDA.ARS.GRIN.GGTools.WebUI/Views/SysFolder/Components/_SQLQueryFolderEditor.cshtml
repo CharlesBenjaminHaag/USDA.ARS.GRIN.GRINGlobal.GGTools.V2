@@ -1,0 +1,128 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderViewModel
+<div id="section-folder-confirmation"></div>
+
+@using (Html.BeginForm("Search", "SysDynamicQuery", FormMethod.Post, new { id = "frmSysDynamicQuery" }))
+{
+    @Html.HiddenFor(x => x.Entity.ID)
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.EventInfo)
+    @Html.HiddenFor(x => x.EventNote)
+    @Html.HiddenFor(x => x.TableName)
+    <div class="tab-pane active" id="section-search-criteria">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>
+                        SQL Statement
+                        &nbsp;<i class="fas fa-info-circle" style="color:#17a2b8;"></i>
+                    </label>
+                    <div id="section-panel-help" class="alert alert-info alert-dismissible" style="display: none;">
+                        <button type="button" class="close" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-info"></i> SQL Query Guidelines</h5>
+                        <ul>
+                            <li>
+                                Queries cannot contain INSERT, UPDATE, or DELETE clauses.
+                            </li>
+                            <li>
+                                For the purposes of creating a folder, the query engine will attempt determine the record data type based on the first table named in the FROM clause.
+                            </li>
+                        </ul>
+                    </div>
+                    @Html.TextAreaFor(x => x.SysFolderPropertiesEntity.Properties, new { @class = "form-control", @rows = "5" })
+                </div>
+            </div>
+        </div>
+        <div>
+            <button id="btnReset" type="button" class="btn btn-default">Reset</button>
+            <div class="btn-group float-right">
+                <button id="btnRunSysDynamicQuery" type="button" class="btn btn-default">Run Query</button>
+                <button id="btnSaveSysDynamicQuery" type="button" class="btn btn-default">Save and Run Query</button>
+            </div>
+        </div>
+    </div>
+}
+<hr />
+<div id="section-dynamic-query-search-results">
+
+</div>
+@*@Html.Partial("~/Views/SysDynamicQuery/_SearchResultsList.cshtml")*@
+
+<script type="text/javascript">
+    $(".fa-info-circle").on('click', function (event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        /*alert("CLICK");*/
+        if ($("#section-panel-help").is(":visible")) {
+            //
+        } else {
+            $("#section-panel-help").show();
+        }
+    });
+
+    $(".close").on('click', function (event) {
+        $("#section-panel-help").hide();
+    });
+
+    $("#btnSaveSysDynamicQuery").on('click', function (event) {
+        SaveSysDynamicQuery();
+    });
+
+    $("#btnRunSysDynamicQuery").on('click', function (event) {
+        RunSysDynamicQuery();
+    });
+
+    function RunSysDynamicQuery() {
+        var link = '@Url.Action("_Search", "SysDynamicQuery")';
+        var sqlStatement = $('#frmSysDynamicQuery #SysFolderPropertiesEntity_Properties').val();
+        var formData = new FormData();
+
+        formData.append("Entity.SqlStatement", sqlStatement);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-dynamic-query-search-results").html(response);
+                        },
+            error: function () {
+                            alert("Error");
+                        }
+                    });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    function SaveSysDynamicQuery() {
+    var link = '@Url.Action("EditProperties", "SysFolder")';
+    var id = $('#frmSysDynamicQuery #Entity_ID').val();;
+    var sqlStatement = $('#frmSysDynamicQuery #SysFolderPropertiesEntity_Properties').val();
+    var formData = new FormData();
+
+    formData.append("Entity.ID", id);
+    formData.append("Entity.Properties", sqlStatement);
+
+    $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            $("#tab-content-items").html(response);
+            RunSysDynamicQuery();
+        },
+        error: function () {
+                        alert("Error");
+                    }
+                });
+        $("#modal-folder-edit").modal("hide");
+}
+
+</script>
+
+

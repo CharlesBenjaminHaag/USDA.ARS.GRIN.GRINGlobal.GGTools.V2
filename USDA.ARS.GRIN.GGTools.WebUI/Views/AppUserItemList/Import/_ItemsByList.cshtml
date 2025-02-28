@@ -1,0 +1,40 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemListViewModel
+<table id="data-table-app-user-item-list-items" class="table table-striped search-results" style=" width:100%;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Sort Order</th>
+            <th>Item Title</th>
+            <th>ID Type</th>
+            <th>ID Number</th>
+            <th>Created</th>
+            <th>Last Modified</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    @result.SortOrder
+                </td>
+                <td>@result.ItemTitle</td>
+                <td>@result.IDType</td>
+                <td>@result.IDNumber</td>
+                <td>
+                    @result.CreatedDate.ToShortDateString()
+                </td>
+                <td>
+                    @if (result.ModifiedDate > DateTime.MinValue)
+                    {
+                        @result.ModifiedDate.ToShortDateString()
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

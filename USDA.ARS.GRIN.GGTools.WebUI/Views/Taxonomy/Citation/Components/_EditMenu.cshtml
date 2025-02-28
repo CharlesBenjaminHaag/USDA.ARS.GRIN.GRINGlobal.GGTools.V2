@@ -1,0 +1,15 @@
+﻿@{
+    var entityIdParameter = Request.QueryString["entityId"];
+}
+
+<ul class="navbar-nav">
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="@Url.Action("Index", "Home")" class="nav-link">Home</a>
+    </li>
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="@Url.Action("Add", ViewBag.EventAction)" class="nav-link">New</a>
+    </li>
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="@Url.Action("Clone", "Citation", new { entityID = entityIdParameter })" class="nav-link">Clone</a>
+    </li>
+</ul>

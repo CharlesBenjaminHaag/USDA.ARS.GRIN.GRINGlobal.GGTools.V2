@@ -1,0 +1,61 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CodeValueViewModel
+@using (Html.BeginForm("Edit", "CodeValue", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.Entity.ID)
+    @Html.HiddenFor(x => x.Entity.CodeValueID)
+    @Html.HiddenFor(x => x.Entity.CodeValueLangID)
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group form-horizontal">
+            <label>Group</label>
+            @Html.TextBoxFor(x => x.Entity.GroupName, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group form-horizontal">
+            <label>Code Value ID</label>
+            @Html.TextBoxFor(x => x.Entity.CodeValueID, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group form-horizontal">
+            <label>Code Value Lang. ID</label>
+            @Html.TextBoxFor(x => x.Entity.CodeValueLangID, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+    </div>
+</div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group form-horizontal">
+                <label>Language</label>
+                @Html.DropDownListFor(x => x.Entity.SysLangID, Model.SysLangs, "Select value", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Code</label>
+                @Html.TextBoxFor(x => x.Entity.Code, new { @class = "form-control", maxlength = "20" })
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="form-group">
+                <label>Title</label>
+                @Html.TextBoxFor(x => x.Entity.CodeTitle, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Description</label>
+                @Html.TextBoxFor(x => x.Entity.CodeDescription, new { @class = "form-control" })
+            </div>
+        </div>
+        Last modified by @Model.Entity.ModifiedByCooperatorName on @Model.Entity.ModifiedDate.ToShortDateString() at @Model.Entity.ModifiedDate.ToShortTimeString()
+    </div>
+}
+

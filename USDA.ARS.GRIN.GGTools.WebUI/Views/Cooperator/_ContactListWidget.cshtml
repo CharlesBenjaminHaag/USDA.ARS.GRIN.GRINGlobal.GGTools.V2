@@ -1,0 +1,94 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">My Team</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            @foreach (var result in Model.DataCollection)
+            {
+                <div class="col-md-4">
+                    <div class="card bg-light d-flex flex-fill">
+                        <div class="card-header text-muted border-bottom-0">
+                            @if (String.IsNullOrEmpty(result.JobTitle))
+                            {
+                                <span>(None)</span>
+                            }
+                            else
+                            {
+                                @result.JobTitle
+                            }
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="lead"><b>@result.FullName</b></h2>
+                                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: @result.AddressLine1 @result.AddressLine2 @result.City @result.StateName @result.PostalIndex</li>
+                                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> Email: @result.EmailAddress</li>
+                                        <li class="small">
+                                            @*<span class="fa-li">
+                                            <i class="fas fa-lg fa-info-circle"></i>
+                                        </span> Status:*@
+                                            <br />
+                                            @if (result.StatusCode == "ACTIVE")
+                                            {
+                                                <span class="badge bg-success bg-sm">@result.StatusCode</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning bg-sm">@result.StatusCode</span>
+                                            }
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-5 text-center">
+                                    <img src="@result.Note" alt="user-avatar" class="img-circle img-fluid">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="text-right">
+                                @*<a href="#" class="btn btn-sm bg-teal">
+                                <i class="fas fa-comments"></i>
+                            </a>*@
+                                <a href="@Url.Action("Edit","Cooperator", new { @entityId = result.ID })" class="btn btn-sm btn-default">
+                                    <i class="fas fa-user"></i> View Detail
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    InitWidgetDataTable("data-table-cooperators");
+    function InitWidgetDataTable(tableName) {
+        $(document).ready(function () {
+            tableName = "#" + tableName;
+            table = $(tableName).DataTable({
+                paging: false,
+                responsive: true,
+                select: {
+                    style: 'single'
+                },
+                searching: false,
+                columnDefs: [
+                    { targets: [0], visible: false }
+                ]
+            });
+        });
+    }
+</script>
+

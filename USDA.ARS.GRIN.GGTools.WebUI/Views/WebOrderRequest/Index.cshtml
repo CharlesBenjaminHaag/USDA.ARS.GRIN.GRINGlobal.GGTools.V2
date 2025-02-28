@@ -1,0 +1,170 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+@{
+    ViewBag.Title = "Web Order Search";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("Search", "WebOrderRequest", FormMethod.Post, new { id = "frmSearch" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.ItemIDList)
+    @Html.Partial("~/Views/WebOrderRequest/_Detail.cshtml")
+}
+
+<div class="card card-default card-tabs">
+    <div id="section-search-results" class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+            <li class="nav-item" id="filter-web-order-requests">
+                <a class="nav-link active" data-ggtools-action="1D" data-toggle="pill" href="#section-web-order-request-list" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Web Order Requests</a>
+            </li>
+            <li class="nav-item" id="filter-web-order-request-items">
+                <a class="nav-link" data-ggtools-action="3D" data-toggle="pill" href="#section-web-order-request-item-list" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Items</a>
+            </li>
+            <li class="nav-item" id="filter-web-order-request-actions">
+                <a class="nav-link" data-ggtools-action="7D" data-toggle="pill" href="#section-web-order-request-action-list" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Actions</a>
+            </li>
+        </ul>
+    </div>
+
+    <!--NEW-->
+    <div class="card-body">
+        <div class="tab-content" id="custom-tabs-one-tabContent">
+            <div class="tab-pane fade show active" id="section-web-order-request-list" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                @Html.Partial("~/Views/WebOrderRequest/Explorer/_List.cshtml")
+            </div>
+            <div class="tab-pane fade" id="section-web-order-request-item-list" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+            </div>
+            <div class="tab-pane fade" id="section-web-order-request-action-list" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+     
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/Modals/_SaveSearch.cshtml")
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-web-order-requests");
+    });
+
+    function InitWebOrderRequestDataTable(tableName) {
+        tableName = "#" + tableName;
+        $(document).ready(function () {
+            table = $(tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: false,
+                "pageLength": 25,
+                responsive: true,
+                buttons: [
+                    'csv',
+                    'excel',
+                    'pdf'
+                ],
+                search: true,
+                select: {
+                    style: 'single'
+                },
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                //columnDefs: [
+                //    { targets: [0], visible: false }
+                //]
+
+            });
+
+            // If the table contains at least one row, select that row by default, and load the WOR data
+            // related to it.
+            //if (table.rows().count() > 0) {
+            //    // Select the first visible row
+            //    var firstVisibleRow = table.rows({ search: 'applied' }).indexes()[0];
+            //    if (firstVisibleRow !== undefined) {
+            //        table.row(firstVisibleRow).select();
+            //        LoadWebOrderRequest(table.row(':eq(0)', { page: 'current' }).data()[0]);
+            //    }
+            //}
+
+            // Call select method when user clicks a given row.
+            //$('table.ggtools').on('click', 'tr', function () {
+            //    var data = table.row(this).data();
+            //    LoadWebOrderRequest(data[0]);
+            //});
+        });
+    }
+
+    $('#section-search-results ul.nav li').on('click', function () {
+        var selectedListId = $(this).attr('id');
+        var webOrderRequestIdList = $("#ItemIDList").val();
+
+        if (selectedListId == "filter-web-order-request-items") {
+            GetWebOrderRequestItems(webOrderRequestIdList);
+        }
+        else {
+            if (selectedListId == "filter-web-order-request-actions") {
+                GetWebOrderRequestActions(webOrderRequestIdList);
+            }
+        }
+    });
+
+    function GetWebOrderRequestItems(webOrderRequestIdList) {
+        var link = '@Url.Action("SearchWebOrderRequestItems", "WebOrderRequest")';
+
+        var formData = new FormData();
+
+        formData.append("webOrderRequestIdList", webOrderRequestIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-web-order-request-item-list").html(response);
+                InitDataTable("data-table-web-order-request-items");
+                //if (response.success) {
+                   
+                //} else {
+                //    HandleError(response.message);
+                //}
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                HandleError(errorMessage);
+            }
+        });
+    }
+
+    function GetWebOrderRequestActions(webOrderRequestIdList) {
+        var link = '@Url.Action("SearchWebOrderRequestActions", "WebOrderRequest")';
+
+        var formData = new FormData();
+
+        formData.append("webOrderRequestIdList", webOrderRequestIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-web-order-request-action-list").html(response);
+                InitDataTable("data-table-web-order-request-actions");
+                //if (response.success) {
+                //    //LoadWebOrderRequestDetail(webOrderRequestId);
+                //} else {
+                //    HandleError(response.message);
+                //}
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                HandleError(errorMessage);
+            }
+        });
+    }
+
+    function HandleError(message) {
+        alert("DEBUG ERROR " + message);
+    }
+</script>

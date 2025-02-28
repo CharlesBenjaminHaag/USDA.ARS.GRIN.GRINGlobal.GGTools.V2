@@ -1,0 +1,34 @@
+@{
+                int j = 0;
+                string tabContentCssClass = String.Empty;
+            }
+
+            @foreach (var result in Model.DataCollection)
+            {
+                if (j == 0)
+                {
+                    tabContentCssClass = "tab-pane fade show active";
+                }
+                else
+                {
+                    tabContentCssClass = "tab-pane fade show";
+                }
+                <div class="@tabContentCssClass" id="custom-tabs-two-home-@result.ID" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+
+                    @*<h4>@result.FolderName</h4>
+                        <h4>@result.FolderType</h4>
+                        <h4>@result.FolderTypeDescription</h4>
+                        <h4>@result.CreatedByCooperatorName</h4>
+                        <h4>@result.Category</h4>*@
+
+                    @if (result.FolderTypeDescription == "NONE")
+                    {
+                        @Html.Partial("~/Views/Error/_InternalServerError.cshtml")
+                    }
+                    else
+                    {
+                        { Html.RenderAction("_ListFolderItems", result.FolderTypeDescription.Replace(" ", ""), new { @folderId = result.ID, displayFormat = "" }); }
+                    }
+                </div>
+                j++;
+            }

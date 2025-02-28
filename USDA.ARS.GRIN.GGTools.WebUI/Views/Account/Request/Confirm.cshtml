@@ -1,0 +1,84 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdminLTE3Login.cshtml";
+}
+<div class="login-box" style="width:600px;">
+    <div class="card card-outline ">
+        <div class="card-header text-center" style="font-size: 2.0rem;">
+            Curator Tool Account Request
+        </div>
+        <div class="card-body">
+            <h5>Please confirm the information you've entered.</h5>
+
+            <div class="card bg-light d-flex flex-fill">
+                <div class="card-header text-muted border-bottom-0">
+                    @Model.Entity.JobTitle
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-7">
+                            <h2 class="lead"><b>@Model.Entity.FirstName @Model.Entity.LastName</b></h2>
+                            <p class="text-muted text-sm"><b>Email: </b> @Model.Entity.EmailAddress </p>
+                            <ul class="ml-4 mb-0 fa-ul text-muted">
+                                <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: @Model.Entity.AddressLine1 @Model.Entity.AddressLine2, @Model.Entity.City @Model.Entity.StateName @Model.Entity.PostalIndex</li>
+                                <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: @Model.Entity.PrimaryPhone</li>
+                            </ul>
+                        </div>
+                        <div class="col-5 text-center">
+                            <img src="~/dist/img/user-default.png" alt="user-avatar" class="img-circle img-fluid">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-default btn-block btn-flat" type="button"><< Back</button>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="@Url.Action("Final","Account")" class="btn btn-default btn-block btn-flat">Continue >></a>
+                        </div>
+                    </div>
+                    @*<div class="text-right">
+            <a href="#" class="btn btn-sm bg-red">
+                <i class="fas fa-eraser"></i> I need to make changes.
+            </a>
+            <a href="#" class="btn btn-sm btn-primary">
+                <i class="fas fa-check"></i> Yes, this is correct.
+            </a>
+        </div>*@
+                </div>
+            </div>
+
+            @*<div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-success btn-flat float-right">Continue >></button>
+                </div>
+            </div>*@
+        </div>
+            <div class="card-footer">Version @AppInfo.GetVersion()</div>
+        </div>
+</div>
+<script type="text/javascript">
+    $('#Entity_SiteID').on('change', function () {
+        LoadSite(this.value);
+    });
+
+    function LoadSite(siteId) {
+        link = '@Url.Action("_Get", "Site")';
+        var formData = new FormData();
+
+        formData.append("entityId", siteId);
+
+        $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+        $("#section-site-address").html(response);
+        }
+        });
+    }
+</script>

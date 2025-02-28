@@ -1,0 +1,29 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdminLTE3Login.cshtml";
+}
+
+<div class="login-box" style="width:425px;">
+    <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+            <a href="" class="h1"><b>Curator Tool</b></a>
+            <h4>Self-Service Password Reset</h4>
+            <h6>Database: <strong>@AppInfo.GetDatabase()</strong></h6>
+        </div>
+        <div class="card-body">
+            <p>Your password-reset link has been sent to:</p>
+            <p><strong>@Model.Entity.EmailAddress</strong></p>
+            <p>
+                If this email address is incorrect, or if you are unable to locate the email, 
+                please inform the GRIN-Global Help Desk at <a href="mailto:@AppInfo.GetSupportEmail()">@AppInfo.GetSupportEmail()</a>.</p>
+            <div>
+                
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="@Url.Action("RequestPasswordReset","Login")" id="btnCancel" class="btn btn-default btn-block btn-flat">
+                Return to Reset Request Page
+            </a>
+        </div>
+    </div>
+</div>

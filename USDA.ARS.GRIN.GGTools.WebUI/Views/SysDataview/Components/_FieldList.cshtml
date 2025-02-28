@@ -1,0 +1,82 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDataViewViewModel
+@using System.Data
+
+<table id="data_table_sys_dataview_field">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Read Only</th>
+            <th>Primary Key</th>
+            <th>Sort Order</th>
+            <th>FK DV Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var field in Model.DataCollectionFields)
+        { 
+            <tr>
+                <td>@field.ID</td>
+                <td>@field.FieldName</td>
+                <td>@field.FieldTitle</td>
+                <td>@field.IsReadOnly</td>
+                <td>@field.IsPrimaryKey</td>
+                <td>@field.SortOrder</td>
+                <td>@field.ForeignKeyDataViewName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#data_table_sys_dataview_field').DataTable({
+            dom: 'Bfrtip',
+            responsive: true,
+            select: true,
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, ':visible']
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 5]
+                    }
+                },
+                'colvis',
+                'selectAll',
+                'selectNone',
+                {
+                    text: 'Add to Folder',
+                    action: function (e, dt, node, config) {
+                        OpenAppUserItemFolderModal();
+                    }
+                }
+            ]
+
+        });
+
+
+        $('#data_table_taxonomy_author tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+
+    });
+</script>

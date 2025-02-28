@@ -1,0 +1,60 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.LiteratureViewModel
+<div id="section-search-results" class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Literature (@Model.DataCollection.Count)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="data_table_literature" class="table table-striped">
+            <thead>
+                <tr>
+                    <th width="5%">ID</th>
+                    <th>Standard Abbreviation</th>
+                    <th>Abbreviation</th>
+                    <th>Reference Title</th>
+                    <th>Author</th>
+                    <th>Publication Year</th>
+                    <th>Last Modified</th>
+                    <th>Modified By</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollection)
+                {
+                    <tr>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>@Html.Raw(result.StandardAbbreviation)</td>
+                        <td>@result.Abbreviation</td>
+                        <td>@Html.Raw(result.ReferenceTitle)</td>
+                        <td>@result.EditorAuthorName</td>
+                        <td>@result.PublicationYear</td>
+                        <td>
+                            @if (result.ModifiedDate > DateTime.MinValue)
+                            {
+                                @result.ModifiedDate.ToShortDateString()
+                            }
+                        </td>
+                        <td>
+                            @result.ModifiedByCooperatorName
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Literature", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

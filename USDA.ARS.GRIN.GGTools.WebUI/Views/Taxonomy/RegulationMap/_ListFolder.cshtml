@@ -1,0 +1,78 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.RegulationMapViewModel
+<table id="data_table_taxonomy_regulation_map" class="table table-striped ggtools-table" style=" width:100%;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Item</th>
+            <th>Key</th>
+            <th>ID</th>
+            <th>Family</th>
+            <th>Genus</th>
+            <th>Species</th>
+            <th>Regulation</th>
+            <th>Exempt</th>
+            <th>Note</th>
+            <th>Last Modified</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.DataCollection != null)
+        {
+            if (Model.DataCollection.Count() > 0)
+            {
+                foreach (var result in Model.DataCollection)
+                {
+        <tr>
+            <td>@result.ID</td>
+            <td>@result.SysFolderItemMapID</td>
+            <td>@result.EntityKey</td>
+            <td>
+                <a href="@Url.Action("Edit", "RegulationMap", new { @entityId = result.ID })">[@result.ID]</a>
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "FamilyMap", new { entityId = result.FamilyID })">
+                    @result.FamilyName
+                </a>
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Genus", new { entityId = result.GenusID })">
+                    @result.GenusName
+                </a>
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Species", new { entityId = result.SpeciesID })">
+                    @result.SpeciesName
+                </a>
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Regulation", new { entityId = result.RegulationID })">
+                    @result.AssembledName
+                </a>
+            </td>
+            <td>
+                @Html.Raw(Model.FormatBoolean(result.IsExempt))
+            </td>
+            <td>@Html.Raw(result.Note)</td>
+            <td>
+                @if (result.ModifiedDate != DateTime.MinValue)
+                {
+                    @result.ModifiedDate.ToShortDateString()
+                }
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "RegulationMap", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </td>
+        </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableFolderFormat("data_table_taxonomy_regulation_map");
+    });
+</script>

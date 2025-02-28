@@ -1,0 +1,51 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+        <table id="data-table-cooperator-map" class="table table-striped" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>App Name</th>
+                    <th>Form Name</th>
+                    <th>Resource Name</th>
+                    <th>Resource Key</th>
+                    <th>Resource Value</th>
+                    <th>Created</th>
+                    <th>Last Modified</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollectionAppUserGUISettings)
+                {
+                <tr>
+                    <td>
+                        @result.app_user_gui_setting_id
+                    </td>
+                    <td>
+                        @result.app_name
+                    </td>
+                    <td>
+                        @result.form_name
+                    </td>
+                    <td>
+                        @result.resource_name
+                    </td>
+                    <td>
+                        @result.resource_key
+                    </td>
+                    <td>
+                        @result.resource_value
+                    </td>
+                    <td>
+                        @result.created_date.ToShortDateString()
+                    </td>
+                    <td>
+                        @result.modified_date.ToShortDateString()
+                    </td>
+
+                </tr>
+                }
+            </tbody>
+        </table>
+    
+        <script type="text/javascript">
+            InitDataTable("data-table-cooperator-map");
+        </script>

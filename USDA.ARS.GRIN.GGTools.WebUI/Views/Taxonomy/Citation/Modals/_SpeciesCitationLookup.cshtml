@@ -1,0 +1,171 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+
+<div id="modal-species-citation-lookup" class="modal fade" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Select Species Citation</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if ((Model.ParentTableName == "taxonomy_cwr_map") || (Model.ParentTableName == "taxonomy_cwr_trait"))
+                { 
+                <div id="section-panel-help" class="alert alert-info alert-dismissible">
+                    <button type="button" class="close" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-info"></i> Please Note</h5>
+                    <ul>
+                        <li>
+                            The species citation list will only list CWR citations related to the parent species.
+                        </li>
+                    </ul>
+                </div>
+                }
+
+                <!--@Html.TextBoxFor(x=>x.EntityIDList, new { @class= "form-control" })-->
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="tabs-species-citation" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="ect" data-toggle="pill" href="#tab-content-species-citation-select" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Select Citation</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-species-citation-add" data-toggle="pill" href="#tab-content-species-citation-add" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Add New Citation</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="tab-content-species-citation-select" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                @Html.Partial("~/Views/Taxonomy/Citation/Modals/_SpeciesCitationSelectList.cshtml")
+                            </div>
+                            <div class="tab-pane fade" id="tab-content-species-citation-add" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                                @{Html.RenderAction("_Edit", "Citation", new { @entityId = 0, @familyId = 0, @genusId = 0, @speciesId = Model.Entity.SpeciesID });}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+@{Html.RenderAction("RenderLookupModal", "Literature"); }
+
+<script type="text/javascript">
+    $(document).on("click", "[id='btnSaveCitation']", function () {
+        SaveCitation();
+    });
+
+    function SaveCitation() {
+
+        var link = $("#frmEditCitation").attr("action");
+        var formData = new FormData();
+
+        formData.append("Entity.SpeciesID", $("#frmEdit #Entity_SpeciesID").val());
+        formData.append("Entity.ID", $("#frmEditCitation #hfCitationLookup_CitationID").val());
+        formData.append("Entity.LiteratureID", $("#frmEditCitation #Entity_LiteratureID").val());
+        // TODO Additional fields
+
+              $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#tab-content-species-citation-add").html(response);
+
+                    // REFACTOR
+                    var newCitationId = $("#frmEditCitation #Entity_CitationID").val();
+                    var tableName = $("#TableName").val();
+                    var entityId = $("#Entity_ID").val();
+                    SaveSelectedCitation(tableName, entityId, newCitationId);
+                  },
+                error: function () {
+                    alert("Error");
+                }
+            });
+    
+    }
+
+    $(document).on("click", "[id='btnSaveSelectedCitation']", function () {
+        GetSelectedCitation("N", "data_table_lookup_citations");
+    });
+
+    function GetSelectedCitation(editOption, dataTableName) {
+        var tableName = $("#TableName").val();
+        var entityId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs(dataTableName);
+
+        if (selectedItemIdList.length == 0) {
+            alert("ERROR: NO CITATION SELECTED");
+        }
+        else {
+            SaveSelectedCitation(tableName, entityId, selectedItemIdList);
+        }
+    }
+
+    function SaveSelectedCitation(tableName, entityId, citationId) {
+        var link = '@Url.Action("AddSpeciesCitation","Citation")';
+        var familyId = 0;
+        var genusId = 0;
+        var speciesId = 0;
+        var formData = new FormData();
+
+        //DEBUG
+        //alert("DEBUG TABLE IS " + tableName + " ID IS " + entityId + " CIT ID IS " + citationId);
+
+        //TODO
+        //Get event action and value
+        //If value indicates "Search," get a list of selected values based on action:
+        //EX.
+        //Action is CommonName   Get sel values from data_table_taxonomy_common_name
+        // ETC.
+
+        formData.append("tableName", tableName);
+        formData.append("entityId", entityId);
+        formData.append("citationId", citationId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                RenderCitationWidget(data.citationId);
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    function RenderCitationWidget(citationId) {
+        var link = '@Url.Action("RenderWidget","Citation")';
+        var formData = new FormData();
+
+        formData.append("entityId", citationId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-citation-widget").html(response);
+                $("#Entity_CitationID").val(citationId);
+            }
+        });
+    }
+
+</script>
+

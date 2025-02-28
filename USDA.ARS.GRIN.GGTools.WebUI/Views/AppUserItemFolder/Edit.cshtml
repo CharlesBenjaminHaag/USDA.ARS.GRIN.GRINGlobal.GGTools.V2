@@ -1,0 +1,296 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.HiddenFor(x => x.EventAction)
+@Html.HiddenFor(x => x.EventValue)
+
+<div class="card">
+    <div id="section-folder-options" class="card-header p-2">
+        <ul class="nav nav-pills">
+            <li id="tab-folder-detail" class="nav-item"><a class="nav-link active" href="#detail" data-toggle="tab">Items</a></li>
+            <li id="tab-folder-sharing" class="nav-item"><a class="nav-link" href="#sharing" data-toggle="tab">Details</a></li>
+            <li id="tab-folder-sharing" class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">Sharing</a></li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="detail">
+                 
+                    @if (Model.Entity.FolderType == "DYNAMIC")
+                    {
+                        @*<div id="section-tab-overlay" class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>*@
+                        { Html.RenderAction("_ListDynamicFolderItems", Model.Entity.DataTypeDescription, new { @folderId = Model.Entity.ID }); }
+                    }
+                    else
+                    {
+                        if (Model.Entity.FolderType == "STATIC")
+                        {
+                            <div id="section-search-results">
+                                @{ Html.RenderAction("_ListByFolder", "AppUserItemList", new { @appUserItemFolderId = Model.Entity.ID }); }
+                            </div>
+                        }
+                        else
+                        {
+                            <h3>@Model.Entity.FolderType</h3>
+                        }
+                    }
+                 
+            </div>
+            <div class="tab-pane" id="sharing">
+                @Html.Partial("~/Views/Taxonomy/Shared/_RevisionHistory.cshtml")
+                @using (Html.BeginForm("EditDetails", "AppUserItemFolder", FormMethod.Post, new { id = "frmEdit" }))
+                {
+                    @Html.HiddenFor(x => x.PageTitle)
+                    @Html.HiddenFor(x => x.TableName)
+                    @Html.HiddenFor(x => x.TableCode)
+                    @Html.HiddenFor(x => x.Entity.ID)
+                    @Html.HiddenFor(x => x.Entity.RelatedItemCount)
+                    @Html.HiddenFor(x => x.Entity.FolderType)
+                    @Html.HiddenFor(x => x.Entity.DataType)
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Name</label>
+                                @Html.TextBoxFor(x => x.Entity.FolderName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Category</label>
+                                @Html.DropDownListFor(x => x.Entity.Category, Model.Categories, "Select value", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Add Category</label>
+                                @Html.TextBoxFor(x => x.Entity.NewCategory, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Description</label>
+                                @Html.TextBoxFor(x => x.Entity.Description, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group clearfix">
+                                <div class="icheck-primary d-inline">
+                                    @Html.CheckBoxFor(x => x.Entity.IsFavoriteOption, new { id = "cbxIsFavorite", @type = "checkbox", @class = "custom-control-input" })
+                                    <label for="cbxIsFavorite">
+                                        Add this folder to my Favorites list.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="margin">
+                                <a href="@Url.Action("Refresh")" class="btn btn-default">Reset</a>
+                                @*@if (Model.Entity.ID > 0)
+                                    {
+                                        <button id="btnDelete" type="button" class="btn btn-danger">
+                                            Delete
+                                        </button>
+                                    }*@
+                                <button type="submit" class="btn btn-default float-right">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane" id="tab_3">
+                <div id="section_folder_cooperator_widget">
+                    @{Html.RenderAction("RenderWidget", "AppUserItemFolderCooperatorMap", new { @appUserItemFolderId = Model.Entity.ID });}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        @if (Model.Entity.ID > 0)
+        {
+            <button id="btnDelete" type="button" class="btn btn-danger">
+                Delete
+            </button>
+        }
+        <button id="btnAddCooperator" class="btn btn-default float-right" data-toggle="modal" data-target="#modal-folder-edit-cooperators">
+            <i class="fas fa-users"></i>
+            Edit Sharing Options
+        </button>
+    </div>
+</div>
+
+<!-- BEGIN FOLDER ITEM DEL CONFIRM -->
+<div class="modal fade" id="modal-folder-item-delete-confirm">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm Deletion</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This will permanently delete the selected items from this folder. Are you sure?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button id="btnDeleteSelectedItems" type="button" class="btn btn-outline-light" data-dismiss="modal">Delete Selected Records</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END FOLDER ITEM DEL CONFIRM -->
+
+@Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+@{Html.RenderAction("RenderEditModal", "AppUserItemFolderCooperatorMap", new { @appUserItemFolderId = Model.Entity.ID });}
+@{Html.RenderAction("RenderFolderItemDeleteModal", "AppUserItemFolder", new { @entityId = Model.Entity.ID });}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var isReadOnly = $("#IsReadOnly").val();
+        if (isReadOnly == "Y") {
+            SetReadOnly();
+        }
+    }
+
+    /*
+    * ***********************************************************
+    * Folder item logic
+    * ***********************************************************
+    */
+    function Load() {
+        var eventAction = $("#EventAction").val();
+        var eventValue = $("#EventValue").val();
+        var tableName = $("#EventNote").val();
+        LoadFolderItems(tableName, eventAction, eventValue);
+    }
+
+    function LoadFolderItems(tableName, eventAction, eventValue) {
+        var id = $("#Entity_ID").val();
+        var link = '@Url.Action("EVENT_VALUE", "EVENT_ACTION")';
+
+        link = link.replace("EVENT_VALUE", eventValue);
+        link = link.replace("EVENT_ACTION", eventAction);
+       
+        $("#EventAction").val(eventAction);
+        $("#EventValue").val(eventValue);
+        $("#EventNote").val(tableName);
+
+        var formData = new FormData();
+
+        formData.append("appUserItemFolderId", id);
+     
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-sys-tables-content").html(response);
+                $("#section-tab-overlay").hide();
+            },
+            error: function () {
+                alert("Error calling " + link);
+                $("#section-tab-overlay").hide();
+            }
+        });
+    }
+
+    /*
+    * ***********************************************************
+    * Deletion logic
+    * ***********************************************************
+    */
+    $(document).on("click", "[id='btnDeleteSelectedItems']", function () {
+        BatchDeleteFolderItemsFinal();
+    });
+
+    function BatchDeleteFolderItems() {
+        var selectedFolderItems = GetSelectedAppUserItemListIDs("data_table_app_user_item_list");
+        $("#section-item-count").html(selectedFolderItems.length);
+        $("#modal-folder-item-delete-confirm").modal("show");
+    }
+
+    function BatchDeleteFolderItemsFinal() {
+        var link = '@Url.Action("DeleteItems","AppUserItemFolder")';
+        var refreshLink = '@Url.Action("Index","Taxonomy")';
+        var folderId = $("#Entity_ID").val();
+        var tableName = $("#EventNote").val();
+        var dataTableId = $('#section-search-results').find('table:first').attr('id');
+        var selectedFolderItems = GetSelectedAppUserItemListIDs(dataTableId);
+        var formData = new FormData();
+
+        $("#ItemIDList").val(selectedFolderItems);
+
+        formData.append("FolderID", folderId);
+        formData.append("ItemIDList", selectedFolderItems);
+
+        $("#section-item-count").html(selectedFolderItems.length);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                Load();
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    /*
+    * ***********************************************************
+    * Sharing logic
+    * ***********************************************************
+    */
+    $('#section-folder-options ul.nav li').on('click', function () {
+        var id = $(this).attr('id');
+        if (id == "tab-folder-sharing") {
+            var folderId = $("#Entity_ID").val();
+            //LoadAvailableCollaborators(folderId);
+            //LoadCurrentCollaborators(folderId);
+        }
+    });
+
+    function RenderFolderCooperatorWidget() {
+        var link = '@Url.Action("RenderWidget", "AppUserItemFolderCooperatorMap")';
+        var folderId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        formData.append("appUserItemFolderId", folderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section_folder_cooperator_widget").html(response);
+            },
+            error: function () {
+                alert("Error loading folder-sharing widget");
+            }
+        });
+    }
+</script>
+

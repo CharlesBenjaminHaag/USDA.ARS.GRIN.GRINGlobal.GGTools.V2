@@ -1,0 +1,268 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<!-- Checkbox selector styles -->
+<style>
+    .button-checkbox-level1 {
+        /*display: flex;*/
+        align-items: center;
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        cursor: pointer;
+        margin-bottom: 10px;
+        transition: background-color 0.3s;
+    }
+
+        .button-checkbox-level1:hover {
+            background-color: #e9e9e9;
+        }
+
+        .button-checkbox-level1 input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .button-checkbox-level1 label {
+            margin: 0;
+            vertical-align: middle;
+        }
+
+    .scroll-container-level1 {
+        /*height: 250px;*/
+        overflow-y: auto; /* Enable vertical scrollbar */
+        margin: 5px;
+        padding: 10px;
+    }
+
+    .button-checkbox-level2 {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        cursor: pointer;
+        margin-bottom: 10px;
+        transition: background-color 0.3s;
+    }
+
+        .button-checkbox-level2:hover {
+            background-color: #e9e9e9;
+        }
+
+        .button-checkbox-level2 input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .button-checkbox-level2 label {
+            margin: 0;
+            vertical-align: middle;
+        }
+
+    .scroll-container-level2 {
+        height: 250px;
+        overflow-y: auto; /* Enable vertical scrollbar */
+        margin: 5px;
+        padding: 10px;
+    }
+</style>
+
+<input type="hidden" id="hfContinents" class="form-control" />
+<input type="hidden" id="hfSubContinents" class="form-control" />
+<input type="hidden" id="hfCountries" class="form-control" />
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.Partial("~/Views/Taxonomy/Geography/Explorer/_ContinentFilter.cshtml")
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.Partial("~/Views/Taxonomy/Geography/Explorer/_SubContinentFilter.cshtml")
+        @Html.Partial("~/Views/Taxonomy/Geography/Explorer/_CountryFilter.cshtml")
+    </div>
+    <div class="col-md-6">
+        <div id="geography-overlay" class="overlay-wrapper">
+            <div class="overlay">
+                <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                <div class="text-bold pt-2">Loading...</div>
+            </div>
+        </div>
+        <div id="section-geography-list">
+
+        </div>
+    </div>
+    <div class="col-md-3">
+        @{ Html.RenderAction("Component_Edit", "GeographyMap"); }
+    </div>
+</div>
+<div class="row">
+    <div id="section-geography-maps" class="col-md-12">
+
+    </div>
+</div>
+
+@{Html.RenderAction("RenderLookupModal", "Species"); }
+
+<script type="text/javascript">
+    $("#geography-overlay").hide();
+
+    // Function to update checkboxes in list B based on the checkbox in list A
+    function updateSubContinentList(checkboxA) {
+        // Get the label text of the checkbox in list A
+        const labelText = checkboxA.nextElementSibling.textContent.trim();
+
+        // Get all checkboxes in list B
+        const listBCheckboxes = document.querySelectorAll('.subcontinent input[type="checkbox"]');
+
+        // Loop through each checkbox in list B
+        listBCheckboxes.forEach(checkboxB => {
+            // Get the label of the checkbox in list B
+            const labelB = checkboxB.nextElementSibling.textContent.trim();
+
+            // Check if the label of list B's checkbox contains the label of list A's checkbox
+            if (labelB.includes(labelText)) {
+                // Set the checkbox in list B to match the state of checkbox A (checked or unchecked)
+                checkboxB.checked = checkboxA.checked;
+            }
+        });
+
+        $("#section-geography-subcontinent input:checked").each(function () {
+
+        });
+    }
+
+    // When the user selects or de-selects a continent, select/de-select all corresponding sub-continents,
+    // and filter the main geo list.
+    document.querySelectorAll('.continent input[type="checkbox"]').forEach(checkboxA => {
+        checkboxA.addEventListener('change', function () {
+            updateSubContinentList(this);
+        });
+    });
+
+    function LoadGeographyList() {
+        var link = '@Url.Action("ExplorerList","Geography")';
+        var continentList = $("#hfContinents").val();
+        var subContinentList = $("#hfSubContinents").val();
+        var countryList = $("#hfCountries").val();
+
+        var formData = new FormData();
+
+        formData.append("SearchEntity.ContinentIDList", continentList);
+        formData.append("SearchEntity.SubContinentIDList", subContinentList);
+        formData.append("SearchEntity.CountryCodeList", countryList);
+
+        $("#geography-overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-geography-list").html(response);
+                InitDataTable("data-table-geography");
+                $("#geography-overlay").hide();
+            }
+        });
+    }
+
+    $(".continent-selector").change(function () {
+        var valueArrayContinents = [];
+        var valueArraySubContinents = [];
+        var isContinent = $(this).data("ggtools-is-continent");
+        var geographyText = $(this).data("ggtools-geography-text");
+
+        if (isContinent == "Y") {
+            // Get all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+            checkboxes.forEach(checkbox => {
+                // Get the text of the label associated with the checkbox
+                const label = checkbox.nextElementSibling.textContent.trim();
+
+                // Check the checkbox if its label contains the text of the initially checked checkbox's label
+                if (label.includes(geographyText)) {
+                    checkbox.checked = true;
+                }
+            });
+        }
+
+        $("#section-geography-subcontinent input:checked").each(function () {
+            var geographyId2 = $(this).data("ggtools-geography-id");
+            valueArraySubContinents.push(geographyId2);
+        });
+        $("#hfSubContinents").val(valueArraySubContinents);
+        LoadGeographyList();
+    });
+
+    $(".subcontinent-selector").change(function () {
+        var valueArraySubContinents = [];
+        $("#section-geography-subcontinent input:checked").each(function () {
+            var geographyId2 = $(this).data("ggtools-geography-id");
+            valueArraySubContinents.push(geographyId2);
+        });
+        $("#hfSubContinents").val(valueArraySubContinents);
+        LoadGeographyList();
+    });
+
+    $(".country-selector").change(function () {
+        var valueArrayCountries = [];
+        $("#section-geography-country input:checked").each(function () {
+            var countryCode = $(this).data("ggtools-country-code");
+            valueArrayCountries.push(countryCode);
+        });
+        $("#hfCountries").val(valueArrayCountries);
+        LoadGeographyList();
+    });
+
+    $("#btnGenerateGeographyMaps").on('click', function (event) {
+        GenerateGeographyMaps();
+    });
+
+    function GenerateGeographyMaps() {
+        var link = '@Url.Action("Add", "GeographyMap")';
+        var speciesId = $("#Entity_SpeciesID").val();
+        var geographyIdList = GetSelectedEntityIDs("data-table-geography");
+        var status = $("#ddlGeographyStatusCode").val();
+        var formData = new FormData();
+
+        // Ensure that all params are present.
+        //if ((selectedSpeciesIDList.length == 0) ||
+        //    (selectedGeographyIDList.length == 0)) {
+        //    (selectedStatusCode.length == 0)
+        //    $("#section-validation-errors").show();
+        //    return;
+        //}
+        //else {
+        //    $("#section-validation-errors").hide();
+        //}
+
+        formData.append("StatusCode", status);
+        formData.append("SpeciesIDList", speciesId);
+        formData.append("GeographyIDList", geographyIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-geography-maps").html(response);
+                InitDataTableSingleSelect("data-table-geography-maps");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+ }
+
+</script>

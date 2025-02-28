@@ -1,0 +1,7 @@
+﻿@if (Model.Entity.ID > 0)
+{
+    <div class="callout callout-info">
+        @Html.Raw(Model.Entity.RevisionHistoryText)
+    </div>
+}
+

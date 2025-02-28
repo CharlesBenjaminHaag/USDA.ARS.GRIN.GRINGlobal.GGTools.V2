@@ -1,0 +1,77 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+<div id="modal-citation-edit" class="modal fade" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Citation Edit [@Model.Entity.ID]</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+                    @Html.HiddenFor(x => x.Entity.ID, new { @id = "hfEditCitationID" })
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Literature</label>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(x => x.Entity.Abbreviation, new { @class = "form-control", @readonly = "readonly", @style = "background-color:#ecf0f5;" })
+                                    @Html.HiddenFor(x => x.Entity.LiteratureID)
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default btn-flat" data-toggle="modal" data-target="#modal-literature-lookup">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Citation Title</label>
+                                @Html.TextBoxFor(x => x.Entity.CitationTitle, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Author</label>
+                                @Html.TextBoxFor(x => x.Entity.AuthorName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Cit. Year</label>
+                                @Html.TextBoxFor(x => x.Entity.CitationYear, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Vol. and Page</label>
+                                @Html.TextBoxFor(x => x.Entity.Reference, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>DOI Reference</label>
+                                @Html.TextBoxFor(x => x.Entity.DOIReference, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Note</label>
+                            @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtCitationNote", @class = "form-control" })
+                        </div>
+                    </div>
+               
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id="btnCitationEditSave" type="button" class="btn btn-info float-right" data-dismiss="modal">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>

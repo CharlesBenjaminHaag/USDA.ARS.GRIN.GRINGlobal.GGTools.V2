@@ -1,0 +1,38 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Sys User</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <button id="btnEditSysUserSync" type="button" data-ggtools-action="sync" data-ggtools-value="cooperator" class="btn btn-default btn-block float-right">Copy >></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>User Name</label><br />
+                    @Html.TextBoxFor(x => x.Entity.SysUserName, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Password</label>
+                    @Html.TextBoxFor(x => x.Entity.SysUserPassword, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Expires</label>
+                    @Html.TextBoxFor(x => x.Entity.SysUserPasswordExpirationDate, new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

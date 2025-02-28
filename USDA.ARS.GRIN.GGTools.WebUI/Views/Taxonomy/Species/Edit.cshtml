@@ -1,0 +1,466 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<div id="section-folder-confirmation"></div>
+@using (Html.BeginForm("Edit", "Species", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.Entity.ID)
+    @Html.HiddenFor(x => x.Entity.ParentID)
+    @Html.HiddenFor(x => x.Entity.ParentName)
+    @Html.HiddenFor(x => x.Entity.Name)
+    @Html.HiddenFor(x => x.Entity.Rank)
+    @Html.HiddenFor(x => x.Entity.IsAccepted)
+    @Html.HiddenFor(x => x.Entity.IsAcceptedName)
+    @Html.HiddenFor(x => x.Entity.CreatedByCooperatorID)
+    @Html.HiddenFor(x => x.Entity.CreatedByCooperatorName)
+    @Html.HiddenFor(x => x.Entity.ModifiedByCooperatorID)
+    @Html.HiddenFor(x => x.Entity.ModifiedByCooperatorName)
+    @Html.HiddenFor(x => x.Entity.InfraspecificType)
+    @Html.HiddenFor(x => x.Entity.IsVarietalHybrid)
+    @Html.HiddenFor(x => x.Entity.IsSubVarietalHybrid)
+    @Html.HiddenFor(x => x.Entity.IsSubspecificHybrid)
+    @Html.HiddenFor(x => x.Entity.IsFormaHybrid)
+    @Html.HiddenFor(x => x.Entity.VerifiedByCooperatorID)
+    @Html.HiddenFor(x => x.Entity.VerifiedByCooperatorName)
+    @Html.HiddenFor(x => x.Entity.NameVerifiedDate)
+    @Html.HiddenFor(x => x.Entity.AccessionCount)
+    @Html.HiddenFor(x => x.Entity.AssembledName)
+
+    { Html.RenderAction("Component_Widget", "SysFolder"); }
+    { Html.RenderAction("Component_Widget", "Species", new { @speciesId = Model.Entity.ParentID }); }
+
+    <input type="hidden" id="hfModalEventValue" />
+    <div id="section-verification">
+        @Html.Partial("~/Views/Taxonomy/Species/_RevisionHistory.cshtml")
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-primary card-tabs">
+                @if (Model.Entity.ID > 0)
+                {
+                    <div id="section-infraspecific-select" class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+                            <li class="pt-2 px-3"><h3 id="section-title" class="card-title">Species</h3></li>
+                            <li id="section-subspecies"  class="nav-item">
+                                <a id="tab-subspecies"
+                                   class="nav-link infraspecific-link"
+                                   data-ggtools-rank="subspecies"
+                                   href="#"
+                                   role="tab"
+                                   aria-controls="custom-tabs-two-profile"
+                                   aria-selected="false">
+                                    <i class="fas fa-plus"></i>&nbsp;Subspecies
+                                </a>
+                            </li>
+                            <li id="section-variety" class="nav-item">
+                                <a id="tab-variety"
+                                   class="nav-link infraspecific-link"
+                                   data-ggtools-rank="variety"
+                                   href="#"
+                                   role="tab"
+                                   aria-controls="custom-tabs-two-profile"
+                                   aria-selected="false">
+                                    <i class="fas fa-plus"></i>&nbsp;
+                                    Variety
+                                </a>
+                            </li>
+                            <li id="section-subvariety" class="nav-item">
+                                <a id="tab-subvariety"
+                                   class="nav-link infraspecific-link"
+                                   data-ggtools-rank="subvariety"
+                                   href="#"
+                                   role="tab"
+                                   aria-controls="custom-tabs-two-messages"
+                                   aria-selected="false">
+                                    <i class="fas fa-plus"></i>&nbsp;
+                                    Subvariety
+                                </a>
+                            </li>
+                            <li id="section-form" class="nav-item">
+                                <a id="tab-form"
+                                   class="nav-link infraspecific-link"
+                                   data-ggtools-rank="forma"
+                                   href="#"
+                                   role="tab"
+                                   aria-controls="custom-tabs-two-messages"
+                                   aria-selected="false">
+                                    <i class="fas fa-plus"></i>&nbsp;
+                                    Form
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                <div class="card-body">
+                    <div class="tab-content">
+                        @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                        @Html.Partial("~/Views/Taxonomy/Species/Components/_AcceptedNameEditor.cshtml")
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.Partial("~/Views/Taxonomy/Species/Components/_GenusEditor.cshtml")
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Species Name</label>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Entity.SpeciesName, new { @class = "form-control" })
+                                        @if (Model.Entity.Rank.ToUpper() == "SPECIES")
+                                        {
+                                            <span class="input-group-append">
+                                                <a id="btnSetAcceptedOn" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-down"></i> Not Accepted</a>
+                                                <a id="btnSetAcceptedOff" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-up"></i> Accepted</a>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            @Html.Partial("~/Views/Taxonomy/Species/Components/_InfraSpecificEditor.cshtml")
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Protologue</label>
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(x => x.Entity.Protologue, new { @class = "form-control" })
+                                        <span class="input-group-append">
+                                            <button id="btnOpenProtologueLookupModal" type="button" class="btn btn-default">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Protologue Virtual Path</label>
+                                    @Html.TextBoxFor(x => x.Entity.ProtologueVirtualPath, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label>Hybrid Parentage</label>
+                                    @Html.TextBoxFor(x => x.Entity.HybridParentage, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            @Html.Partial("~/Views/Taxonomy/Species/Components/_HybridSelector.cshtml")
+                        </div>
+                        <div class="row">
+                            <!-- BEGIN NOTE FIELD -->
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>
+                                        Note
+                                        &nbsp;<a href="" data-toggle="modal" data-target="#modal-note-lookup"><i class="fa fa-search"></i></a>
+                                    </label>
+                                    <div class="input-group">
+                                        @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control", @style = "width:100%;" })
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <!-- WEB VISIBLE -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <br />
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" value="Web Visible" readonly="readonly" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="background-color:white;">
+                                                @Html.CheckBoxFor(x => x.Entity.IsWebVisibleOption)
+                                                &nbsp;
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="@Url.Action("Refresh")" class="btn btn-default">Reset</a>
+                    @if (Model.Entity.ID > 0)
+                    {
+                        <button id="btnDelete" type="button" class="btn btn-danger">
+                            Delete
+                        </button>
+                    }
+                    <button id="btnSave" type="submit" class="btn btn-default float-right">Save</button>
+
+                    @if ((Model.Entity.ID > 0) && (Model.Entity.AccessionCount > 0))
+                    {
+                        <a href="@Url.Action("Index","Accession", new { @speciesId = Model.Entity.ID })" class="btn btn-default float-right" target="_blank">
+                            <i class="fas fa-tree"></i>
+                            View Related Accessions
+                        </a>
+                    }
+
+                    @if ((Model.Entity.ID > 0) && (Model.Entity.IsWebVisible == "Y"))
+                    {
+                        <a href="https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomydetail?id=@Model.Entity.ID" class="btn btn-default float-right" target="_blank">
+                            <i class="fas fa-globe"></i>
+                            View on Public Website
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+     
+}
+
+@if (Model.Entity.ID > 0)
+{
+    @Html.Partial("~/Views/Taxonomy/Species/Components/_RelatedDataViewer.cshtml")
+    {Html.RenderAction("RenderEditSynonymOptionsModal", "Species"); }
+    {Html.RenderAction("RenderInfraspecificOptionsModal", "Species"); }
+}
+
+@{Html.RenderAction("RenderLookupModal", "Genus"); }
+@{Html.RenderAction("RenderLookupModal", "Species"); }
+@{Html.RenderAction("RenderLookupModal", "Author"); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+@Html.Partial("~/Views/Taxonomy/Species/Modals/_LookupProtologue.cshtml")
+@Html.Partial("~/Views/Shared/Modals/_NoteLookup.cshtml")
+@Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+
+@if (Model.Entity.ID > 0)
+{
+    { Html.RenderAction("RenderLookupModal", "Geography", new { @isLookupFormat = "N" }); }
+    { Html.RenderAction("RenderLookupModal", "Citation", new { @tableName = Model.TableName, @isMultiSelect = "Y" }); }
+}
+
+<div class="modal fade" id="modal-validation-errors" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Danger Modal</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul id="errorList"></ul>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-light">Save changes</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    document.getElementById('frmEdit').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting
+
+        // Initialize an empty array to hold error messages
+        let errors = [];
+
+        // Get form field values
+        let speciesName = document.getElementById('Entity_SpeciesName').value.trim();
+        let isAcceptedName = document.getElementById('Entity_IsAcceptedName').value.trim();
+        let synonymCode = document.getElementById('Entity_SynonymCode').value.trim();
+
+        // Validate fields and add error messages if necessary
+        if (isEmptyOrNull(speciesName)) {
+            errors.push("The species epithet is required.");
+        }
+
+        if (isAcceptedName == "N" && isEmptyOrNull(synonymCode)) {
+            errors.push("Because you are setting this name as not accepted, you must specify a synonym code.");
+        }
+
+        // If there are errors, show the modal with error messages
+        if (errors.length > 0) {
+            console.log(errors);
+            showModal(errors);
+        }
+        else {
+            $("#frmEdit").submit();
+        }
+    });
+
+    function showModal(errors) {
+        let modal = document.getElementById('modal-validation-errors');
+        let errorList = document.getElementById('errorList');
+
+        // Clear any previous error messages
+        errorList.innerHTML = '';
+
+        // Add each error message to the list
+        errors.forEach(function (error) {
+            let li = document.createElement('li');
+            li.textContent = error;
+            errorList.appendChild(li);
+        });
+
+        // Show the modal
+        $("#modal-validation-errors").modal("show");
+
+    }
+
+    $(document).ready(function () {
+        Init();
+    });
+
+    function isEmptyOrNull(str) {
+        return !str || str.trim() === "";
+    }
+
+    function Init() {
+        // Ensure that the overlays in each modal are hidden by default
+        $(".overlay").hide();
+
+        SetControlVisibility();
+
+        $('#txtNote').summernote({
+            /*$('#txtNote').summernote({*/
+            height: 100,                 // set editor height
+            minHeight: null,             // set minimum height of editor
+            maxHeight: null,             // set maximum height of editor
+            'width': '100%',
+            focus: true                  // set focus to editable area after initializing summernote
+        });
+
+        // Load default-visible tab of dependent data.
+        var defaultId = $('ul#list-dependent-data li:first').attr("id");
+        var action = $('ul#list-dependent-data li:first').data("ggtools-action");
+        var value = $('ul#list-dependent-data li:first').data("ggtools-value");
+        LoadDependentData(defaultId, action, value);
+
+        // Disable relevant child-record controls based on accepted status.
+        var IsAcceptedName = $("#Entity_IsAcceptedName").val();
+        if (IsAcceptedName == "N") {
+            $("#btnAddCommonName").addClass("disabled");
+            $("#btnAddEconomicUse").addClass("disabled");
+        }
+    }
+
+    $(".synonym-link").on('click', function (event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        var parentSpeciesId = $("#Entity_ID").val();
+        var synonymName = $(this).attr("id").replace("btnAddSynonym", "");
+        var synonymTypeCode = $(this).data("ggtools-synonym-code");
+
+        $("#frmEditSynonymOptions #SelectedSynonymCode").val(synonymTypeCode);
+        $("#frmEditSynonymOptions #SelectedSynonymName").val(synonymName);
+        $("#frmEditSynonymOptions #ParentSpeciesID").val(parentSpeciesId);
+
+        // Refactor onto server.
+        switch (synonymName.toLowerCase()) {
+            case "basionym":
+                $("#Entity_IsCopySpeciesRequired").val(true);
+                $("#cbxIsCopySpeciesRequired").attr("checked", true);
+            break;
+            case "heterotypic":
+                break;
+            case "homotypic":
+                $("#Entity_IsCopySpeciesRequired").val(true);
+                $("#cbxIsCopySpeciesRequired").attr("checked", true);
+                break;
+        }
+        $("#modal-edit-syononym-options").modal("show");
+    });
+
+    $(".infraspecific-link").on('click', function (event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        var parentSpeciesId = $("#Entity_ID").val();
+        var rank = $(this).data("ggtools-rank");
+     
+        $("#frmEditInfraspecificOptions #ParentSpeciesID").val(parentSpeciesId);
+        $("#frmEditInfraspecificOptions #SelectedRank").val(rank);
+        $("#modal-edit-infraspecific-options").modal("show");
+    });
+
+    $("#btnGenerateSynonym").on('click', function (event) {
+        $("#frmEditSynonymOptions").submit();
+    });
+
+    $(document).on("click", "[id*='btnSetVerified']", function () {
+        var link = '@Url.Action("SetVerificationStatus","Species")';
+        var value = $(this).data("ggtools-value");
+        SetVerifiedStatus(value);
+    });
+
+    $(document).on("click", "[id*='btnAddAutonym']", function () {
+        var link = '@Url.Action("AddAutonym","Species")';
+        var entityId = $("#Entity_ID").val();
+        link = link + "?entityId=" + entityId;
+        window.location.href = link;
+    });
+
+    $(document).on("click", "[id*='btnAddInfraspecificRank']", function () {
+        $("#frmEditInfraspecificOptions").submit();
+        @*var link = '@Url.Action("Add","Species")';
+        var rank = $("#EventValue").val();
+        var entityId = $("#Entity_ID").val();
+
+        link = link + "?entityId=" + entityId + "&rank=" + rank;
+
+        console.log("DEBUG " + link);
+
+        if ($("#IsCopyGenusRequired").prop("checked") == true) {
+            link += "&copyGenus=true";
+        }
+
+        if ($("#IsCopyProtologueRequired").prop("checked") == true) {
+            link += "&copyProtologue=true";
+        }
+
+        if ($("#IsCopyAuthorityRequired").prop("checked") == true) {
+            link += "&copyAuthority=true";
+        }
+
+        if ($("#IsCopyNoteRequired").prop("checked") == true) {
+            link += "&copyNote=true";
+        }
+        window.location.href = link;*@
+    });
+
+    function SetRankSelectorTab() {
+        var rank = $("#Entity_Rank").val();
+        var tabId = "#tab-" + rank.toLowerCase();
+        $(tabId).addClass("active");
+    }
+
+    function SetVerifiedStatus(statusCode) {
+        var link = '@Url.Action("SetVerificationStatus","Species")';
+        var entityId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        formData.append("speciesId", entityId);
+        formData.append("statusCode", statusCode);
+
+        $("#EventAction").val("VERIFY");
+        $("#EventValue").val(statusCode);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-verification").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+</script>

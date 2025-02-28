@@ -1,0 +1,96 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SynonymMapViewModel
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+
+@using (Html.BeginForm("Edit", "SpeciesSynonymMap", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.Entity.ID)
+
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Summary</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Taxon A Name</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Entity.SpeciesAName, new { @class = "form-control" })
+                            @Html.HiddenFor(x => x.Entity.SpeciesAID)
+                            <span class="input-group-btn">
+                                <button type="button" data-ggtools-action="SpeciesA" data-toggle="modal" data-target="#modal-species-a-lookup" class="btn btn-default btn-flat btn-lookup">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group form-horizontal">
+                        <label>Synonym Code</label>
+                        @Html.DropDownListFor(x => x.SearchEntity.SynonymCode, Model.SynonymCodes, "All Codes", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Taxon B Name</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Entity.SpeciesBName, new { @class = "form-control" })
+                            @Html.HiddenFor(x => x.Entity.SpeciesBID)
+                            <span class="input-group-btn">
+                                <button type="button" data-ggtools-action="SpeciesB" data-toggle="modal" data-target="#modal-species-b-lookup" class="btn btn-default btn-flat btn-lookup">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Note</label>
+                        @Html.TextBoxFor(x => x.Entity.Note, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="@Url.Action("Refresh")" class="btn btn-default">Cancel</a>
+            @if (Model.Entity.ID > 0)
+            {
+                <button id="btnDelete" type="button" class="btn btn-danger">
+                    Delete
+                </button>
+            }
+            <button type="submit" class="btn btn-default float-right">Save</button>
+        </div>
+    </div>
+}
+
+
+@Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+
+<script type="text/javascript">
+    $('.btn-lookup').on('click', function () {
+        var action = $(this).data("ggtools-action");
+        $("#EventAction").val(action);
+        $("#modal-species-lookup").modal("show");
+        // TODO
+        // Open species modal
+        // Species save event will set fields with tag matching action
+
+    });
+</script>

@@ -1,0 +1,122 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+@{ 
+    string cardTitle = "";
+    string cardCssClass = "";
+    string cardCardBodyCssStyle = "";
+    string cardButtonCssClass = "";
+    string cardClosedCssClass = "card card-primary shadow-sm collapsed-card";
+    string cardClosedCardBodyCssStyle = "display: none;";
+    string cardClosedButtonCssClass = "fas fa-plus";
+    string cardOpenCssClass = "card card-primary shadow-sm";
+    string cardOpenCardBodyCssStyle = "display: block;";
+    string cardOpenButtonCssClass = "fas fa-minus";
+}
+
+@using (Html.BeginForm("EditCooperator", "CooperatorWizard", FormMethod.Post, new { id = "frmEditCooperator" }))
+{
+    if (Model.Entity.ID == 0)
+    {
+        cardTitle = "Add Cooperator";
+        cardCssClass = cardOpenCssClass;
+        cardCardBodyCssStyle = cardOpenCardBodyCssStyle;
+        cardButtonCssClass = cardOpenButtonCssClass;
+    }
+    else
+    {
+        cardTitle = "Cooperator";
+        cardCssClass = cardClosedCssClass;
+        cardCardBodyCssStyle = cardClosedCardBodyCssStyle;
+        cardButtonCssClass = cardClosedButtonCssClass;
+    }
+
+    <div class="@cardCssClass">
+        <div class="card-header">
+            <h3 class="card-title">@cardTitle</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="@cardButtonCssClass"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body" style="@cardCardBodyCssStyle">
+
+            @Html.HiddenFor(x => x.PageTitle)
+            @Html.HiddenFor(x => x.EventAction)
+            @Html.HiddenFor(x => x.EventValue)
+            @Html.HiddenFor(x => x.TableName)
+            @Html.HiddenFor(x => x.TableCode)
+            @Html.HiddenFor(x => x.Entity.ID)
+            @Html.HiddenFor(x => x.Entity.StatusCode)
+            @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Salutation</label>
+                        @Html.DropDownListFor(x => x.Entity.Salutation, Model.Salutations, "Select value", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>
+                            First Name
+                            <code>*</code>
+                        </label>
+                        @Html.TextBoxFor(x => x.Entity.FirstName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>
+                            Last Name
+                            <code>*</code>
+                        </label>
+                        @Html.TextBoxFor(x => x.Entity.LastName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Job Title</label>
+                        @Html.TextBoxFor(x => x.Entity.JobTitle, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Organization</label>
+                        @Html.TextBoxFor(x => x.Entity.Organization, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Abbrev</label>
+                        @Html.TextBoxFor(x => x.Entity.OrganizationAbbrev, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>
+                            Email
+                            <code>*</code>
+                        </label>
+                        @Html.TextBoxFor(x => x.Entity.EmailAddress, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        @Html.TextBoxFor(x => x.Entity.PrimaryPhone, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label>Category</label>
+                    @Html.DropDownListFor(x => x.Entity.CategoryCode, Model.Categories, "Select value", new { @class = "form-control" })
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-default float-right" type="submit">Save Cooperator</button>
+        </div>
+    </div>
+}

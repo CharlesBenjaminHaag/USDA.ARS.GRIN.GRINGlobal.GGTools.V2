@@ -1,0 +1,67 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AccessionInventoryAttachmentValidationViewModel
+<div class="box box-widget widget-user-2">
+    <div class="box-body">
+        <ul class="nav nav-stacked">
+            <li><a href="#">Total records read<span class="pull-right badge bg-aqua">@Model.TotalRecordsValidated</span></a></li>
+            <li><a href="#">Total virtual paths validated <span class="pull-right badge bg-aqua">@Model.VirtualPathsValidated</span></a></li>
+            <li><a href="#">Total virtual path errors <span class="pull-right badge bg-red">@Model.VirtualPathsNotValidated</span></a></li>
+            <li><a href="#">Total thumbnail virtual paths validated <span class="pull-right badge bg-aqua">@Model.ThumbnailVirtualPathsValidated</span></a></li>
+            <li><a href="#">Total thumbnail virtual path errors <span class="pull-right badge bg-red">@Model.ThumbnailVirtualPathsNotValidated</span></a></li>
+        </ul>
+    </div>
+    <div class="box-footer no-padding">
+        @if (Model.VirtualPathsNotValidated + Model.ThumbnailVirtualPathsNotValidated > 0)
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="button" id="btnGetValidationResults" class="btn btn-default pull-right">Show Error List</button>
+                </div>
+            </div>        
+        }
+    </div>
+</div>
+<div id="section-validate-detail">
+
+</div>
+
+
+<!--<div id="section-virtual-path-totals" class="col-md-6 col-sm-6 col-xs-12">
+    <div class="info-box bg-red">
+        <span class="info-box-icon"><i class="fa fa-warning"></i></span>
+        <div class="info-box-content">
+            <span class="info-box-nrr">
+                <a class="dashboard-link" style="color:white;" href="/ggtools-orders/WebOrder/Search?status=NRR_FLAG">
+                    Virtual Path Errors
+                </a>
+            </span>
+            <span id="section-virtual-path-errors" class="info-box-number"></span>
+            <div id="section-virtual-path-progress" class="progress">
+
+            </div>
+            <span id="section-virtual-path-progress-description" class="progress-description">
+
+            </span>
+        </div>-->
+<!-- /.info-box-content -->
+<!--</div>
+</div>
+<div id="section-thumbnail-virtual-path-totals" class="col-md-6 col-sm-6 col-xs-12">
+    <div class="info-box bg-red">
+        <span class="info-box-icon"><i class="fa fa-warning"></i></span>
+        <div class="info-box-content">
+            <span class="info-box-nrr">
+                <a class="dashboard-link" style="color:white;" href="/ggtools-orders/WebOrder/Search?status=NRR_FLAG">
+                    Thumbnail Virtual Path Errors
+                </a>
+            </span>
+            <span id="section-thumbnail-virtual-path-errors" class="info-box-number"></span>
+            <div id="section-thumbnail-virtual-path-progress" class="progress">
+
+            </div>
+            <span id="section-thumbnail-virtual-path-progress-description" class="progress-description">
+
+            </span>
+        </div>-->
+<!-- /.info-box-content -->
+<!--</div>
+</div>-->

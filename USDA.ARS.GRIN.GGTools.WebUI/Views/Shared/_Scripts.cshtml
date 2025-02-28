@@ -1,0 +1,58 @@
+﻿<script src="~/plugins/jquery/jquery.min.js"></script>
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/dist/js/adminlte.js"></script>
+<script type="text/javascript" src="~/Content/dist/js/DataTables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/Content/dist/js/DataTables/dataTables.select.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/Content/dist/js/DataTables/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="~/Content/dist/js/DataTables/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha512-mhbv5DqBMgrWL+32MmsDOt/OAvqr/cHimk6B8y/bx/xS88MVkYGPiVv2ixKVrkywF2qHplNRUvFsAHUdxZ3Krg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="~/dist/js/jquery.dirty.js"></script> 
+@*<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.dirtyforms/2.0.0/jquery.dirtyforms.min.js"></script>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#txtNote').summernote({
+            /*$('#txtNote').summernote({*/
+            height: 100,                 // set editor height
+            minHeight: null,             // set minimum height of editor
+            maxHeight: null,             // set maximum height of editor
+            'width': '100%',
+            focus: true                  // set focus to editable area after initializing summernote
+        });
+
+        /* When any lookup modal is loaded, ensure that the first visible text input field
+         * within the lookup/search form has cursor focus. */
+        $(document).on('shown.bs.modal', function (e) {
+            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+            $(".overlay").hide();
+            $(".ggtools-lookup-form :input[type='text']:visible:enabled:first").focus();
+            $("#frmLookup :input[type='text']:visible:enabled:first").focus();
+            $(".modal-body :input[type='text']:visible:enabled:first").focus();
+        });
+
+        /* Set first edit field active in any edit form. */
+        $("#section-search-criteria :input[type='text']:visible:enabled:first").focus();
+        $("#frmMain :input[type='text']:visible:enabled:first").focus();
+        $("#frmEdit :input[type='text']:visible:enabled:first").focus();
+        $("#frmLookup :input[type='text']:visible:enabled:first").focus();
+
+        /* When user begins typing, hide error message block. */
+        $(document).on('keypress', function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            $("#section-input-error").hide();
+        });
+
+        function ToTitleCase(str) {
+            return str.replace(
+                /\w\S*/g,
+                function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                }
+            );
+        }
+    });
+</script>

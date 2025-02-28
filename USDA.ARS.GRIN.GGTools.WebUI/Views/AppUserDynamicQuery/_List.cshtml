@@ -1,0 +1,48 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserDynamicQueryViewModel
+<div id="section-search-results" class="data-list">
+    <table id="data-table-app_user_dynamic_query" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th width="5%">ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Created</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model.DataCollection)
+            {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    @result.Title
+                </td>
+                <td>
+                    @result.Description
+                </td>
+                <td>
+                    @result.CreatedDate.ToShortDateString()
+                </td>
+                <td style="text-align:right;">
+                    <a href="@Url.Action("RunSavedSearch", "GeographyMap", new { id = result.ID })" class="btn btn-default btn-sm">
+                       Run
+                    </a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-app_user_dynamic_query");
+    });
+</script>
+

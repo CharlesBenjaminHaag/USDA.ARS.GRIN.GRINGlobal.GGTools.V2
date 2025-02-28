@@ -1,0 +1,21 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+<ul id="list-taxa-@Model.Entity.GenusID" class="nav nav-pills flex-column species-selector">
+    <li id="-9" data-ggtools-value="@Model.Entity.GenusID" class="nav-item" style="padding:.8rem;">
+        <button type="button" class="btn btn-default btn-block">Add Species</button>
+    </li>
+    @if (Model.DataCollection.Count > 0)
+    {
+        foreach (var result in Model.DataCollection)
+        {
+            <li id="@result.ID" data-ggtools-value="@result.GenusID" class="nav-item active">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-leaf"></i> @Html.Raw(result.FullName)
+                    @if (result.IsAccepted)
+                    {
+                        <span class="badge bg-success float-right">Yes</span>
+                    }
+                </a>
+            </li>
+        }
+    }
+</ul>

@@ -1,0 +1,75 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.OrderRequestViewModel
+<div class="scrollable-table-section">
+    <table id="table_order_request_items" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>
+                    Accession
+                </th>
+                <th>Inventory</th>
+                <th>Site</th>
+                <th>Quantity Shipped</th>
+                <th>Unit</th>
+                <th>Distribution Form</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var orderRequestItem in Model.DataCollectionItems)
+            {
+
+                <tr>
+                    <td>@orderRequestItem.ID</td>
+                    <td>@orderRequestItem.Name</td>
+                    <td>@orderRequestItem.AccessionName</td>
+                    <td>
+                        @orderRequestItem.InventoryName
+                    </td>
+                    <td>@orderRequestItem.SiteLongName</td>
+                    <td>@orderRequestItem.QuantityShipped</td>
+                    <td>
+                        @orderRequestItem.QuantityShippedUnitCode
+                    </td>
+                    <td>
+                        @orderRequestItem.DistributionFormCode
+                    </td>
+                    <td>
+                        @*<a href="@Url.Action("Edit", "OrderRequest", new { entityId = orderRequest.ID })" class="btn btn-default btn-sm pull-right">
+                            <i class="fa fa-eye"></i>
+                        </a>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@*@foreach (var webOrderRequest in Model.DataCollection)
+            {
+
+                var cssClass = "";
+                switch (webOrderRequest.StatusCode)
+                {
+                    case "NRR_FLAG":
+                        cssClass = "bg-danger";
+                        break;
+                    case "ACCEPTED":
+                        cssClass = "bg-success";
+                        break;
+                    default:
+                        cssClass = "bg-info";
+                        break;
+                }
+    <div class="info-box">
+        <span class="info-box-icon @cssClass"><i class="far fa-address-book"></i></span>
+        <div class="info-box-content">
+            <span class="info-box-text">@webOrderRequest.WebCooperatorFullName</span>
+            <span class="info-box-number">
+                @webOrderRequest.WebCooperatorOrganization
+                <button class="btn btn-default btn-sm float-right">>></button>
+            </span>
+        </div>
+    </div>
+}*@
+

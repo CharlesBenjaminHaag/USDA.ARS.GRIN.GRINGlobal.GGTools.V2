@@ -1,0 +1,71 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModelBase
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Create Students</h3>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Edit", "Cooperator", FormMethod.Post, new { id = "frmEditCooperator" }))
+                {
+                    @Html.HiddenFor(x => x.EventAction)
+                    @Html.HiddenFor(x => x.EventValue)
+                    @Html.HiddenFor(x => x.TableName)
+                    @Html.HiddenFor(x => x.TableCode)
+                    @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Batch Size</label>
+                                <input type="text" class="form-control" value="10" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                @Html.TextBoxFor(x => x.Entity.FirstName, new { @class = "form-control", @value="Training" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                @Html.TextBoxFor(x => x.Entity.LastName, new { @class = "form-control", @value = "Student" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Job Title</label>
+                                @Html.TextBoxFor(x => x.Entity.JobTitle, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <label>Organization</label>
+                                @Html.TextBoxFor(x => x.Entity.Organization, new { @class = "form-control" })
+                            </div>
+                        </div>
+                      
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Site</label>
+                                @Html.DropDownListFor(x => x.Entity.SiteID, Model.Sites, "Select site", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+            
+
+                }
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary btn-flat btn-block">Generate Users</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9"></div>
+</div>

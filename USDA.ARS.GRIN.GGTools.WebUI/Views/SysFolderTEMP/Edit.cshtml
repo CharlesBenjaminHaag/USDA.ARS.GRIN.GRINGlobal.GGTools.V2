@@ -1,0 +1,351 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysFolderViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.HiddenFor(x => x.Entity.ID)
+@Html.HiddenFor(x => x.EventAction)
+@Html.HiddenFor(x => x.EventValue)
+@Html.HiddenFor(x => x.ItemIDList)
+@Html.HiddenFor(x => x.TableCode)
+@Html.HiddenFor(x => x.TableName)
+@Html.HiddenFor(x => x.TableTitle)
+
+<div id="section-error" class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h5><i class="icon fas fa-ban"></i> Error</h5>
+    <span id="section-error-message"></span>
+</div>
+
+<div id="section-details">
+    @Html.Partial("~/Views/SysFolder/_Edit.cshtml")
+</div>
+<div class="card">
+    <div id="section-folder-options" class="card-header p-2">
+        <ul class="nav nav-pills">
+            <li id="tab-folder-detail" class="nav-item">
+                <a class="nav-link active" href="#tab-content-items" data-toggle="tab">
+                    <i class="fas fa-table"></i> Items
+                </a>
+            </li>
+            @*<li id="tab-folder-sharing" class="nav-item">
+                    <a class="nav-link" href="#tab-content-details" data-toggle="tab">
+                        <i class="fas fa-book"></i> Details
+                    </a>
+                </li>*@
+            <li id="tab-folder-sharing" class="nav-item">
+                <a class="nav-link" href="#tab-content-sharing" data-toggle="tab">
+                    <i class="fas fa-users"></i> Sharing
+                </a>
+            </li>
+            @*<li id="tab-folder-sharing" class="nav-item">
+                    <a class="nav-link" href="#tab-content-tags" data-toggle="tab">
+                        <i class="fas fa-tag"></i> Tags
+                    </a>
+                </li>*@
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-content-items">
+                @switch (Model.Entity.TypeCode)
+                {
+                    case "STC":
+                        <span>@Html.Partial("~/Views/SysFolderItemMap/_List.cshtml")</span>
+                        break;
+                    case "DYN":
+                        { Html.RenderAction("_ListDynamicFolderItems", "SysFolder", new { @sysFolderId = Model.Entity.ID }); }
+                        break;
+                    case "SQL":
+                        { Html.RenderAction("Component_SQLQueryFolderEditor", "SysFolder", new { @sysFolderId = Model.Entity.ID }); }
+                       
+                        break;
+                }
+            </div>
+            @*<div class="tab-pane" id="tab-content-details">
+                    <div id="section-sys_folder-details">
+
+                    </div>
+                </div>*@
+            <div class="tab-pane" id="tab-content-sharing">
+                @{ Html.RenderAction("Component_Widget", "SysFolderCooperatorMap", new { @sysFolderId = Model.Entity.ID }); }
+            </div>
+            @*<div class="tab-pane" id="tab-content-tags">
+                    @{ Html.RenderAction("Component_Editor", "SysTag", new { @tableName = "sys_folder", @idNumber = Model.Entity.ID }); }
+                </div>*@
+        </div>
+    </div>
+
+    <div class="card-footer">
+        @if (Model.Entity.ID > 0)
+        {
+            <button id="btnDelete" type="button" class="btn btn-danger">
+                Delete
+            </button>
+        }
+
+        @*<button id="btnAddCooperator" class="btn btn-default float-right margin-left-5" data-toggle="modal" data-target="#modal-folder-edit-cooperators">
+                <i class="fas fa-users"></i>
+                Edit Sharing Options
+            </button>*@
+
+    </div>
+</div>
+
+<!-- BEGIN FOLDER ITEM DEL CONFIRM -->
+<div class="modal fade" id="modal-folder-item-delete-confirm">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm Deletion</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This will permanently delete the selected items from this folder. Are you sure?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <button id="btnDeleteSelectedItems" type="button" class="btn btn-outline-light" data-dismiss="modal">Delete Selected Records</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END FOLDER ITEM DEL CONFIRM -->
+
+@{Html.RenderAction("RenderEditModal", "SysFolderCooperatorMap", new { sysFolderId = Model.Entity.ID }); }
+@Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+                    Init();
+                });
+
+    function Init() {
+        var isReadOnly = $("#IsReadOnly").val();
+        if (isReadOnly == "Y") {
+            SetReadOnly();
+        }
+        $("#section-error").hide();
+                }
+
+    $(document).on("click", "[id='btnSaveNewFolder']", function () {
+                    SaveEdits();
+                });
+
+    function SaveEdits() {
+        var link = '@Url.Action("Edit", "SysFolder")';
+        var tableName = $("#TableName").val();
+        var entityId = $("#Entity_ID").val();
+        var title = $("#Entity_Title").val();
+        var description = $("#Entity_Description").val();
+
+        var formData = new FormData();
+
+        formData.append("Entity.TableName", $("#TableName").val());
+        formData.append("Entity.id", entityId);
+        formData.append("Entity.Title", title);
+        formData.append("Entity.Description", description);
+        formData.append("Entity.TypeCode", "STC");
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-sys-folder-details").html(response);
+                        },
+            error: function () {
+                            alert("Error");
+                        }
+                    });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    /*
+    * ***********************************************************
+    * Folder item logic
+    * ***********************************************************
+    */
+    function Load() {
+        var eventAction = $("#EventAction").val();
+        var eventValue = $("#EventValue").val();
+        var tableName = $("#EventNote").val();
+        /*LoadFolderItems(tableName, eventAction, eventValue);*/
+        location.reload();
+    }
+
+    function Component_Widget() {
+        var link = '@Url.Action("Component_Widget", "SysFolderCooperatorMap", new { @sysFolderId = "SYS_FOLDER_ID"})';
+        var sysFolderId = $("#Entity_ID").val();
+        link = link.replace("SYS_FOLDER_ID", sysFolderId);
+        var formData = new FormData();
+
+        formData.append("SysFolderID", sysFolderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content-sharing").html(response);
+            },
+            error: function () {
+                alert("Error loading mapped");
+            }
+        });
+    }
+
+    @*function LoadFolderItems(tableName, eventAction, eventValue) {
+        var id = $("#Entity_ID").val();
+        var link = '@Url.Action("EVENT_VALUE", "EVENT_ACTION")';
+
+        link = link.replace("EVENT_VALUE", eventValue);
+        link = link.replace("EVENT_ACTION", eventAction);
+
+        $("#EventAction").val(eventAction);
+        $("#EventValue").val(eventValue);
+        $("#EventNote").val(tableName);
+
+        var formData = new FormData();
+
+        formData.append("appUserItemFolderId", id);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-sys-tables-content").html(response);
+                $("#section-tab-overlay").hide();
+            },
+            error: function () {
+                alert("Error calling " + link);
+                $("#section-tab-overlay").hide();
+            }
+        });
+    }*@
+
+    /*
+    * ***********************************************************
+    * Deletion logic
+    * ***********************************************************
+    */
+    $(document).on("click", "[id='btnDeleteSelectedItems']", function () {
+        BatchDeleteFolderItemsFinal();
+    });
+
+    function BatchDeleteFolderItems() {
+        var folderItemTableId = GetFolderItemTable();
+        var selectedFolderItems = GetSelectedAppUserItemListIDs(folderItemTableId);
+        $("#ItemIDList").val(selectedFolderItems);
+        $("#section-item-count").html(selectedFolderItems.length);
+        $("#modal-folder-item-delete-confirm").modal("show");
+    }
+
+    function BatchDeleteFolderItemsFinal() {
+        var link = '@Url.Action("DeleteItems","SysFolder")';
+        var refreshLink = '@Url.Action("Index","Taxonomy")';
+        var folderId = $("#Entity_ID").val();
+        var tableName = $("#EventNote").val();
+        var formData = new FormData();
+
+        formData.append("FolderID", folderId);
+        formData.append("ItemIDList", $("#ItemIDList").val());
+
+        /*$("#section-item-count").html(selectedFolderItems.length);*/
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                Load();
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    /*
+    * ***********************************************************
+    * Sharing logic
+    * ***********************************************************
+    */
+    $('#section-folder-options ul.nav li').on('click', function () {
+        var id = $(this).attr('id');
+        if (id == "tab-folder-sharing") {
+            var folderId = $("#Entity_ID").val();
+            //LoadAvailableCollaborators(folderId);
+            //LoadCurrentCollaborators(folderId);
+        }
+    });
+
+    function RenderFolderCooperatorWidget() {
+        var link = '@Url.Action("RenderWidget", "AppUserItemFolderCooperatorMap")';
+        var folderId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        formData.append("appUserItemFolderId", folderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section_folder_cooperator_widget").html(response);
+            },
+            error: function () {
+                alert("Error loading folder-sharing widget");
+            }
+        });
+    }
+
+    function GetSysTagsByTable() {
+        var link = '@Url.Action("RenderWidget", "SysTag")';
+        var folderId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        formData.append("appUserItemFolderId", folderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section_folder_cooperator_widget").html(response);
+            },
+            error: function () {
+                alert("Error loading folder-sharing widget");
+            }
+        });
+    }
+
+    function GetFolderItemTable() {
+        var tableId = $('div#tab-content-items').find('table:first').attr('id');
+        //DEBUG
+        console.log("TABLE ID IS " + tableId);
+        return tableId;
+    }
+</script>
+

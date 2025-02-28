@@ -1,0 +1,54 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GenusViewModel
+
+        <div id="section-search-results">
+            <table id="data-table-genus-synonyms" class="table table-striped ggtools-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th width="5%">ID</th>
+                        <th>Name</th>
+                        <th>Family</th>
+                        <th>Qualifying Code</th>
+                        <th>Hybrid Code</th>
+                        <th style="text-align:center;">Accepted?</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollectionSynonyms)
+                    {
+                        <tr>
+                            <td>
+                                @result.ID
+                            </td>
+                            <td>
+                                @result.ID
+                            </td>
+                            <td><a href="@Url.Action("Edit","Genus", new { @entityId = result.ID })">@Html.Raw(result.Name)</a></td>
+                            <td>
+                                @Html.Raw(result.FamilyAssembledName)
+                            </td>
+                            <td>
+                                @result.QualifyingCode
+                            </td>
+                            <td>
+                                @result.HybridCode
+                            </td>
+                            <td style="text-align:center;">@Html.Raw(Model.FormatBoolean(result.IsAcceptedName))</td>
+                            <td style="text-align:right;">
+                                <a href="@Url.Action("Edit", "Genus", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                @*@if (Model.Action == "Folder")
+                                    {
+                                        <button id="btnDeleteFolderItem_@cropForCWR.ReferenceID" class="btn btn-danger btn-sm pull-right row-edit margin-r-5">
+                                            <i class="fa fa-trash"></i> Remove From Folder
+                                        </button>
+                                    }*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+

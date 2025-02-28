@@ -1,0 +1,50 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<div class="modal fade" id="modal-email-requestor">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Contact Requestor</h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Add Note (Internal User Only)</label>
+                                <textarea id="txtEmailRequestorNote" class="form-control note-format" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>To</label>
+                        <input id="txtEmailRequestorTo" class="form-control" type="text" placeholder="To" value="@Model.Entity.WebCooperatorEmail">
+                    </div>
+                    <div class="form-group">
+                        <label>From</label>
+                        <input id="txtEmailRequestorFrom" class="form-control" type="text" placeholder="To" value="@Model.DataCollectionEmailTemplates.Where(x =>x.CategoryCode=="RQI").First().EmailFrom">
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input id="txtEmailRequestorSubject" class="form-control" type="text" placeholder="Subject" value="Request For Additional Information [Web Order #@Model.Entity.ID]">
+                        @*<input class="form-control" placeholder="Subject" value="@Model.InformationRequestEmailTemplate.Subject.Replace("[ID_HERE]", Model.ID.ToString())">*@
+                    </div>
+                    <div class="form-group">
+                        <label>Body</label>
+                        <textarea id="txtEmailRequestorBody" class="form-control" rows="10">
+                            @Model.DataCollectionEmailTemplates.Where(x =>x.CategoryCode=="RQI").First().Body
+                        </textarea>
+                    </div>
+                </div>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSubmitEmailRequestor" class="btn btn-primary" data-dismiss="modal">Send Email</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

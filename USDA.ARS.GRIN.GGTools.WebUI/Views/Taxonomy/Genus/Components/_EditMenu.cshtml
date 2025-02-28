@@ -1,0 +1,42 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.MenuViewModel
+<ul class="navbar-nav">
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="@Url.Action("Index", "Home")" class="nav-link">Home</a>
+    </li>
+
+    <li class="nav-item d-none d-sm-inline-block">
+
+    </li>
+
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="@Url.Action("Add", Model.EventAction)" class="nav-link">New</a>
+    </li>
+
+    <!-- BEGIN EDIT PAGE MENU -->
+    <ul class="navbar-nav">
+        @if (Model.EntityID > 0)
+        {
+            <!-- INFRAGENERIC -->
+            <li class="nav-item dropdown">
+                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Add Infraspecific Taxon</a>
+                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                    <li><a href="@Url.Action("Add", "Genus", new { @rank = "subgenus", @genusId = Model.EntityID })" class="dropdown-item">Subgenus</a></li>
+                    <li><a href="@Url.Action("Add", "Genus", new { @rank = "section", @genusId = Model.EntityID })" class="dropdown-item">Section</a></li>
+                    <li><a href="@Url.Action("Add", "Genus", new { @rank = "subsection", @genusId = Model.EntityID })" class="dropdown-item">Subsection</a></li>
+                    <li><a href="@Url.Action("Add", "Genus", new { @rank = "series", @genusId = Model.EntityID })" class="dropdown-item">Series</a></li>
+                    <li><a href="@Url.Action("Add", "Genus", new { @rank = "subseries", @genusId = Model.EntityID })" class="dropdown-item">Subseries</a></li>
+                </ul>
+            </li>
+            <!-- RELATED DATA -->
+            <li class="nav-item dropdown">
+                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Add Dependent Data</a>
+                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                    <li><a href="@Url.Action("Add", "Citation", new { @eventAction = "Genus", @eventValue = "AddDependentData", @genusId = Model.EntityID })" class="dropdown-item">Citation </a></li>
+                    <li><a href="@Url.Action("Add", "Species", new { @eventAction = "Genus", @eventValue = "AddDependentData", @genusId = Model.EntityID })" class="dropdown-item">Species</a></li>
+                    <li><a href="@Url.Action("Add", "CommonName", new { @genusId = Model.EntityID })" class="dropdown-item">Common Name</a></li>
+                    <li><a href="@Url.Action("Add", "RegulationMap", new { @genusId = Model.EntityID })" class="dropdown-item">Regulation</a></li>
+                </ul>
+            </li>
+        }
+    </ul>
+</ul>

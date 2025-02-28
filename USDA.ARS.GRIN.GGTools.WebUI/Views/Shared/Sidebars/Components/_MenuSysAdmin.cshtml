@@ -1,0 +1,28 @@
+﻿@if (AppInfo.GetAuthenticatedUser().IsInRole("ADMINS"))
+{
+    <li class="nav-header">SYSADMIN</li>
+    <li class="nav-item">
+        <a href="@Url.Action("Index", "EmailTemplate")" class="nav-link">
+            <i class="nav-icon fas fa-envelope"></i>
+            <p>Email Templates</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="@Url.Action("Explorer", "SysGroup")" class="nav-link">
+            <i class="nav-icon fas fa-users-cog"></i>
+            <p>Sys Groups</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="@Url.Action("Index", "CodeValue")" class="nav-link">
+            <i class="nav-icon fas fa-table"></i>
+            <p>Code Values</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="@Url.Action("Index", "Error")" class="nav-link">
+            <i class="nav-icon fas fa-bug"></i>
+            <p>Error Logs</p>
+        </a>
+    </li>
+}

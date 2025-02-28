@@ -1,0 +1,499 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style>
+    .invoice-info {
+        margin-top: 25px;
+    }
+
+    .section-modal-reject-email-fields {
+        margin-top:15px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card bg-light d-flex flex-fill">
+            <div class="card-header text-muted border-bottom-0">
+                <a href="">@Model.Entity.WebCooperatorOrganization</a>
+            </div>
+            <div class="card-body pt-0">
+                <div class="row">
+                    <div class="col-7">
+                        <h2 class="lead"><b>@Model.Entity.WebCooperatorFullName</b></h2>
+                        <p class="text-muted text-sm"><b>Created: </b> @Model.Entity.WebCooperatorCreatedDate.ToShortDateString() at @Model.Entity.WebCooperatorCreatedDate.ToShortTimeString() </p>
+                        <ul class="ml-4 mb-0 fa-ul text-muted">
+                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address:@Model.Entity.WebCooperatorAddress1, @Model.Entity.WebCooperatorAddressCity, @Model.Entity.WebCooperatorAddressState   @Model.Entity.WebCooperatorAddressPostalIndex</li>
+                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> Email: @Model.Entity.WebCooperatorEmail</li>
+                        </ul>
+                    </div>
+                    <div class="col-5 text-center">
+                        <img src="~/dist/img/user1-128x128.jpg" alt="user-avatar" class="img-circle img-fluid">
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="text-right">
+                    <a href="#" class="btn btn-sm bg-gray">
+                        <i class="fas fa-flag"></i> Flag
+                    </a>
+                    @*<a href="#" class="btn btn-sm bg-teal">
+                    <i class="fas fa-comments"></i>
+                    </a>*@
+                    <a href="#" class="btn btn-sm btn-primary">
+                        <i class="fas fa-user"></i> View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Why Was This Request Flagged?</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.DataCollectionActions.Where(x => x.ActionCode.Contains("NRR_FLAG")).Count() > 0)
+                {
+                    foreach (var action in Model.DataCollectionActions.Where(x => x.ActionCode.Contains("NRR_FLAG")))
+                    {
+                        <div class="external-event bg-red" style="position: relative;">
+                            @action.ActionTitle
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        @if ((Model.Entity.IsLocked) && (Model.AuthenticatedUserWebUserID != Model.Entity.OwnedByWebUserID))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="callout callout-info" style="vertical-align:middle;">
+                        <strong>@Model.Entity.OwnedByWebCooperatorName</strong> began reviewing this web order request on <strong>@Model.Entity.OwnedByDate.ToShortDateString()</strong> at <strong>@Model.Entity.OwnedByDate.ToShortTimeString()</strong>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="card">
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Detail</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Timeline</a></li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="activity">
+                        @using (Html.BeginForm("Edit", "WebOrder", FormMethod.Post, new { id = "frmEdit" }))
+                        {
+                            @Html.HiddenFor(x => x.EventAction)
+                            @Html.HiddenFor(x => x.EventValue)
+                            @Html.HiddenFor(x => x.EventNote)
+                            @Html.HiddenFor(x => x.TableName)
+                            @Html.HiddenFor(x => x.TableCode)
+                            @Html.HiddenFor(x => x.Entity.ID)
+                            @Html.HiddenFor(x => x.PageTitle)
+                            @Html.HiddenFor(x => x.SendInternalNotification)
+                            @Html.HiddenFor(x => x.SendRequestorNotification)
+                            @Html.HiddenFor(x => x.ActionEmailFrom)
+                            @Html.HiddenFor(x => x.ActionEmailTo)
+                            @Html.HiddenFor(x => x.ActionEmailBCC)
+                            @Html.HiddenFor(x => x.ActionEmailSubject)
+                            @Html.HiddenFor(x => x.ActionEmailBody)
+                            @Html.HiddenFor(x => x.Entity.EmailAddressList)
+                            @Html.HiddenFor(x => x.Entity.WebCooperatorID)
+                            @Html.HiddenFor(x => x.Entity.IsPreviouslyNRRReviewed)
+
+                            <!--
+                                1) If not already locked, and 
+                                   1.1) previously reviewed, show "re-open"
+                                   1.2) not previously reviewed, show "begin review"
+                            -->
+                        <div class="margin" style="margin-bottom:25px;">
+                            @if ((!Model.Entity.IsLocked) && (Model.Entity.IsPreviouslyNRRReviewed == "Y"))
+                            {
+                                <div class="btn-group">
+                                    <button id="btnLockAndReopen" type="button" class="btn btn-default margin-r-5" data-toggle="modal" data-target="#modal-reopen">
+                                        <i class="fa fa-eye margin-r-5"></i>&nbsp;<span class="button-label">Re-Open This Web Request</span>
+                                    </button>
+                                </div>
+                            }
+
+                            @if ((!Model.Entity.IsLocked) && (Model.Entity.IsPreviouslyNRRReviewed == "N"))
+                            {
+                                <div class="btn-group">
+                                    <button type="button" id="btnSubmitBeginReview" class="btn btn-default">
+                                        <i class="fa fa-lock"></i>
+                                        Lock and Begin Review
+                                    </button>
+                                </div>
+                            }
+
+                            @if ((Model.Entity.IsLocked) && (Model.Entity.OwnedByWebUserID == Model.AuthenticatedUserWebUserID))
+                            {
+                                <div class="btn-group float-right">
+                                    <button type="submit" id="btnSubmitEndReview" class="btn btn-warning  btn-sm margin-r-5"><i class="fa fa-unlock"></i> End Review and Unlock</button>
+                                    <button id="btnOpenApproveModal" type="button" class="btn btn-danger  btn-sm margin-r-5" data-toggle="modal" data-target="#modal-reject"><i class="fa fa-thumbs-down"></i><span class="button-label"> Reject</span></button>
+                                    <button id="btnOpenRejectModal" type="button" class="btn btn-success  btn-sm" data-toggle="modal" data-target="#modal-approve"><i class="fa fa-thumbs-up"></i><span class="button-label"> Approve</span></button>
+                                </div>
+                            }
+
+                            @*<div class="btn-group">
+            <button type="button" id="btnOpenAddNoteModal" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-note">
+                <i class="fa fa-edit margin-r-5"></i>
+                Add Note
+            </button>
+        </div>
+
+        <div class="btn-group">
+            <button id="btnOpenEmailRequestorsModal" type="button" class="btn btn-default btn-sm margin-r-5" data-toggle="modal" data-target="#modal-email-requestor">
+                <i class="fa fa-envelope margin-r-5"></i><span class="button-label">Email Requestor</span>
+            </button>
+        </div>
+        <div class="btn-group">
+            <button id="btnOpenEmailCuratorsModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-email-curators">
+                <i class="fa fa-envelope margin-r-5"></i><span class="button-label">Email Curators</span>
+            </button>
+        </div>
+        <div class="btn-group float-right">
+            <button type="submit" id="btnSubmitEndReview" class="btn btn-warning  btn-sm margin-r-5"><i class="fa fa-unlock"></i> End Review and Unlock</button>
+            <button id="btnOpenApproveModal" type="button" class="btn btn-danger  btn-sm margin-r-5" data-toggle="modal" data-target="#modal-reject"><i class="fa fa-thumbs-down"></i><span class="button-label"> Reject</span></button>
+            <button id="btnOpenRejectModal" type="button" class="btn btn-success  btn-sm" data-toggle="modal" data-target="#modal-approve"><i class="fa fa-thumbs-up"></i><span class="button-label"> Approve</span></button>
+        </div>*@
+
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <div class="input-group">
+                                        @Model.Entity.StatusCode
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Submitted</label>
+                                    <div class="input-group">
+                                        @Model.Entity.OrderDate.ToShortDateString() at @Model.Entity.OrderDate.ToShortTimeString()
+                                    </div>
+                                    </div>
+                                </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Intended Use</label>
+                                    <div class="input-group">
+                                        @Model.Entity.IntendedUseCode
+                                    </div>
+                                    </div>
+                                </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label>Intended Use Note</label>
+                                    <p class="text-muted well well-sm no-shadow">
+                                        @Model.Entity.IntendedUseNote
+                                    </p>
+                                    </div>
+                                </div>
+                            </div>
+                            if (!String.IsNullOrEmpty(Model.Entity.SpecialInstruction))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Special Instruction</label>
+                                        <p class="text-muted well well-sm no-shadow">
+                                            @Model.Entity.SpecialInstruction
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+                            if (!String.IsNullOrEmpty(Model.Entity.Note))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Note</label>
+                                        <p class="text-muted well well-sm no-shadow">
+                                            @Model.Entity.Note
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="data-table-web-order-request-items" class="table table-striped ggtools">
+                                        <thead>
+                                            <tr>
+                                                <th>Seq.</th>
+                                                <th>Status</th>
+                                                <th>Accession</th>
+                                                <th>Species</th>
+                                                <th>Site Long Name</th>
+                                                <th>Site Short Name</th>
+                                                <th>Shipped</th>
+                                                <th>Unit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var webOrderRequestItem in Model.DataCollectionItems)
+                                            {
+                                                <tr>
+                                                    <td>@webOrderRequestItem.SequenceNumber</td>
+                                                    <td>@webOrderRequestItem.StatusCode</td>
+                                                    <td>
+                                                        <a href="https://npgsweb.ars-grin.gov/gringlobal/accessiondetail.aspx?id=@webOrderRequestItem.AccessionID">@webOrderRequestItem.AccessionText</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomydetail?id=@webOrderRequestItem.SpeciesID">@webOrderRequestItem.SpeciesName</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="https://npgsweb.ars-grin.gov/gringlobal/site?id=@webOrderRequestItem.SiteID">
+                                                            @webOrderRequestItem.SiteLongName
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        @webOrderRequestItem.SiteShortName
+                                                    </td>
+                                                    <td>@webOrderRequestItem.QuantityShipped</td>
+                                                    <td>@webOrderRequestItem.UnitOfQuantity</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="tab-pane" id="timeline">
+                        <div class="timeline timeline-inverse">
+                            @foreach (var actionGroup in Model.DataCollectionActionGroups)
+                            {
+                                <div class="time-label">
+                                    <span class="bg-info">
+                                        @actionGroup.DateGroup.ToShortDateString()
+                                    </span>
+                                </div>
+
+                                foreach (var webOrderRequestAction in actionGroup.WebOrderRequestActions)
+                                {
+                                    <div>
+                                        <i class="@Model.GetCSSClass(webOrderRequestAction.ActionCode)"></i>
+                                        <div class="timeline-item">
+                                            <span class="time"><i class="far fa-clock"></i> @webOrderRequestAction.CreatedDate.ToShortTimeString()</span>
+                                            <h3 class="timeline-header"><a href="#">@webOrderRequestAction.ActionTitle</a> by @webOrderRequestAction.CreatedByCooperatorName</h3>
+                                            @if (!String.IsNullOrEmpty(webOrderRequestAction.Note))
+                                            {
+                                                <div class="timeline-body">
+                                                    @if (webOrderRequestAction.CreatedByCooperatorID != 1)
+                                                    {
+                                                        @webOrderRequestAction.Note
+                                                    }
+                                                </div>
+                                            }
+                                            </div>
+                                    </div>
+                                }
+                            }
+                            <div>
+                                <i class="far fa-clock bg-gray"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/WebOrder/Modals/_Approve.cshtml")
+@Html.Partial("~/Views/WebOrder/Modals/_Deny.cshtml")
+@Html.Partial("~/Views/WebOrder/Modals/_Note.cshtml")
+@Html.Partial("~/Views/WebOrder/Modals/_EmailRequestor.cshtml")
+@Html.Partial("~/Views/WebOrder/Modals/_EmailCurators.cshtml")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-web-order-request-items");
+        //InitializeCKEditor("txtEmailRejectBody");
+        //InitializeCKEditor("txtEmailRequestorBody");
+    });
+    
+    /*
+    * ===========================================================================================
+    * REVIEW
+    * ===========================================================================================
+    */
+    $("#btnSubmitBeginReview").click(function () {
+        var id = $(this).attr('id');
+        var isPreviouslyNRRReviewed = $("#Entity_IsPreviouslyNRRReviewed").val();
+        $("#EventAction").val("UPDATE");
+        $("#EventValue").val("NRR_REVIEW");
+        $("#frmEdit").submit();
+    });
+
+    $("#btnSubmitEndReview").click(function () {
+        var id = $(this).attr('id');
+        $("#EventAction").val("UPDATE");
+        $("#EventValue").val("NRR_REVIEW_END");
+    });
+
+    $("#btnSubmitReOpen").click(function () {
+        var id = $(this).attr('id');
+        $("#EventAction").val("UPDATE");
+        $("#EventValue").val("NRR_REOPEN");
+        $("#frmEdit").submit();
+    });
+
+    /*
+    * ===========================================================================================
+    * APPROVE MODAL
+    * ===========================================================================================
+    */
+    $("#btnSubmitApprove").click(function () {
+        var eventNote = $("#txtApprovalNote").val();
+        $("#EventAction").val("UPDATE");
+        $("#EventValue").val("NRR_APPROVE");
+        $("#EventNote").val(eventNote);
+        $("#frmEdit").submit();
+    });
+
+    /*
+    * ===========================================================================================
+    * EMAIL REQUESTOR MODAL
+    * ===========================================================================================
+    */
+    $("#btnSubmitEmailRequestor").click(function () {
+        var eventNote = $("#txtEmailRequestorNote").val();
+        var emailRequestorTo = $("#txtEmailRequestorTo").val();
+        var emailRequestorFrom = $("#txtEmailRequestorFrom").val();
+        var emailRequestorSubject = $("#txtEmailRequestorSubject").val();
+        var emailRequestorBody = $("#txtEmailRequestorBody").val();
+        var emailRequestorBCC = $("#txtEmailRequestorBCC").val();
+
+        $("#EventAction").val("UPDATE");
+        $("#EventValue").val("NRR_INFO");
+        $("#EventNote").val(eventNote);
+        $("#ActionEmailTo").val(emailRequestorTo);
+        $("#ActionEmailFrom").val(emailRequestorFrom);
+        $("#ActionEmailBCC").val(emailRequestorBCC);
+        $("#ActionEmailSubject").val(emailRequestorSubject);
+        $("#ActionEmailBody").val(emailRequestorBody);
+
+        $("#frmEdit").submit();
+    });
+
+    /*
+    * ===========================================================================================
+    * EMAIL CURATORS MODAL
+    * ===========================================================================================
+    */
+    $("#btnSubmitEmailCurators").click(function () {
+        var eventNote = $("#txtEmailCuratorsNote").val();
+        var emailCuratorsTo = $("#txtEmailCuratorsTo").val();
+        var emailCuratorsFrom = $("#txtEmailCuratorsFrom").val();
+        var emailCuratorsSubject = $("#txtEmailCuratorsSubject").val();
+        var emailCuratorsBody = $("#txtEmailCuratorsBody").val();
+        var emailCuratorsBCC = $("#txtEmailCuratorsBCC").val();
+
+        $("#EventAction").val("UPDATE");
+        $("#EventValue").val("NRR_CUR");
+        $("#EventNote").val(eventNote);
+        $("#ActionEmailTo").val(emailCuratorsTo);
+        $("#ActionEmailFrom").val(emailCuratorsFrom);
+        $("#ActionEmailBCC").val(emailCuratorsBCC);
+        $("#ActionEmailSubject").val(emailCuratorsSubject);
+        $("#ActionEmailBody").val(emailCuratorsBody);
+
+        $("#frmEdit").submit();
+    });
+
+    /*
+    * ===========================================================================================
+    * COOPERATOR STATUS
+    * ===========================================================================================
+    */
+    $("#btnSubmitCooperatorFlagged").click(function () {
+        $("#EventAction").val("UPDATE");
+        $("#EventValue").val($(this).data("ggtools-action"));
+        $("#EventNote").val("");
+        $("#frmEdit").submit();
+        //DEBUG
+       /* alert("DEBUG " + $("#EventValue").val());*/
+
+    });
+
+    $("#btnSubmitCooperatorVetted").click(function () {
+        $("#EventAction").val("UPDATE");
+        $("#EventValue").val($(this).data("ggtools-action"));
+        $("#EventNote").val("");
+        $("#frmEdit").submit();
+        //DEBUG
+        /*alert("DEBUG " + $("#EventValue").val());*/
+    });
+
+    function UpdateCooperatorStatus(eventValue) {
+
+    }
+
+    /*
+    * ===========================================================================================
+    * NOTE MODAL
+    * ===========================================================================================
+    */
+    @*$(document).on("click", "[id='btnSubmitNote']", function () {
+        var link = '@Url.Action("AddNote","WebOrder")';
+        var entityId = $("#Entity_ID").val();
+        var actionNote = $("#txtNote").val();
+        var formData = new FormData();
+
+        formData.append("EntityID", entityId);
+        formData.append("ActionNote", actionNote);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#frmEdit").submit();
+            },
+            error: function () {
+                alert("Error sending email.");
+            }
+        });
+    });*@
+
+    /*
+    * ===================================================================================================
+    * CKEditor
+    * ===================================================================================================
+    */
+    function InitializeCKEditor(textAreaField) {
+        const editor = CKEDITOR.replace(textAreaField, {
+            width: '100%',
+            height: 100
+        }
+        );
+
+        editor.addCommand("searchNotes", {
+            exec(edt) {
+                OpenNoteLookupModal();
+            }
+        });
+
+        editor.ui.addButton('SuperButton', {
+            label: "Search taxon record notes.",
+            command: 'searchNotes',
+            toolbar: 'insert',
+            height: 80,
+            width: 100,
+            icon: 'https://cdn-icons.flaticon.com/png/128/3031/premium/3031293.png?token=exp=1643047176~hmac=8e60d1aebf934f53fda6eb320d1ffedc'
+        });
+    }
+        </script>

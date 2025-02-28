@@ -1,0 +1,287 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+<div class="row">
+    <div id="section-cooperator-list" class="col-md-3">
+
+        <div class="card card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-filter"></i>Filters</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="card-body" style="display: none;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group form-horizontal">
+                            <label>Site</label>
+                            @Html.DropDownListFor(x => x.SearchEntity.SiteID, Model.Sites, "All sites", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group form-horizontal">
+                            <label>Status</label>
+                            @Html.DropDownListFor(x => x.SearchEntity.StatusCode, Model.Statuses, "All statuses", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-default btn-sm float-right">Apply Filter(s)</button>
+            </div>
+        </div>
+
+        @{Html.RenderAction("_List", "Cooperator", new { siteId = 10, formatCode = "SLST" });}
+    </div>
+    <div class="col-md-9">
+        <div class="card card-primary card-tabs">
+            <div id="section-cooperator-tabs" class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+                    <li class="pt-2 px-3"><h3 id="placeholder-cooperator-name" class="card-title">Endress, Kurt [12345]</h3></li>
+                    <li id="tab-cooperator" class="nav-item">
+                        <a class="nav-link active" id="custom-tabs-two-home-tab" data-toggle="pill" href="#tab-content-cooperator" role="tab" aria-controls="custom-tabs-two-home" aria-selected="true">Cooperator</a>
+                    </li>
+                    <li id="tab-sys-user" class="nav-item">
+                        <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#tab-content-sys-user" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false">Sys User</a>
+                    </li>
+                    <li id="tab-web-cooperator" class="nav-item">
+                        <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#tab-content-web-cooperator" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false">Web Cooperator</a>
+                    </li>
+                    @*<li id="section-web-order-request-tabs-order-request-history" class="nav-item">
+                        <a class="nav-link" id="custom-tabs-two-messages-tab" data-toggle="pill" href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages" aria-selected="false">Order Request History</a>
+                    </li>*@
+                </ul>
+            </div>
+            <div class="card-body web-order-request">
+                <div class="tab-content">
+
+                    <div class="tab-pane fade show active" id="tab-content-cooperator" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.
+                    </div>
+                    <div class="tab-pane fade" id="tab-content-sys-user" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+                        <h3>DEBUG SYS USR</h3>
+                    </div>
+                    <div class="tab-pane fade" id="tab-content-web-cooperator" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+                        <h3>DEBUG WC</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableCooperator("data_table_cooperator");
+    });
+
+    function Init() {
+
+    }
+
+    $('#section-cooperator-tabs ul.nav li').on('click', function () {
+        var selectedWebOrderRequestTab = $(this).attr('id');
+        var cooperatorId = GetSelectedEntityIDs("data_table_cooperator");
+
+        //DEBUG
+        /*alert("SEL COOP " + cooperatorId);*/
+
+        switch (selectedWebOrderRequestTab) {
+            case "tab-cooperator":
+                RenderCooperatorWidget(cooperatorId);
+            case "tab-sys-user":
+                RenderSysUserWidget(cooperatorId);
+            case "tab-web-cooperator":
+                RenderWebCooperatorWidget(cooperatorId);
+        }
+    });
+
+    $(document).on("click", "[id*='btnSaveCooperator']", function () {
+        SaveCooperator();
+    });
+
+    function SaveCooperator() {
+        var link = $("#frmEditCooperator").attr("action");
+        var formData = new FormData();
+
+        formData.append("Entity.ID", $("#frmEditCooperator #Entity_ID").val());
+        formData.append("Entity.StatusCode", $("#frmEditCooperator #Entity_StatusCode").val());
+        formData.append("Entity.Salutation", $("#frmEditCooperator #Entity_Salutation").val());
+        formData.append("Entity.FirstName", $("#frmEditCooperator #Entity_FirstName").val());
+        formData.append("Entity.LastName", $("#frmEditCooperator #Entity_LastName").val());
+        formData.append("Entity.JobTitle", $("#frmEditCooperator #Entity_JobTitle").val());
+        formData.append("Entity.Organization", $("#frmEditCooperator #Entity_Organization").val());
+        formData.append("Entity.OrganizationAbbrev", $("#frmEditCooperator #Entity_OrganizationAbbrev").val());
+        formData.append("Entity.EmailAddress", $("#frmEditCooperator #Entity_EmailAddress").val());
+        formData.append("Entity.PrimaryPhone", $("#frmEditCooperator #Entity_PrimaryPhone").val());
+        formData.append("Entity.CategoryCode", $("#frmEditCooperator #Entity_CategoryCode").val());
+        formData.append("Entity.SiteID", $("#frmEditCooperator #Entity_SiteID").val());
+        formData.append("Entity.AddressLine1", $("#frmEditCooperator #Entity_AddressLine1").val());
+        formData.append("Entity.AddressLine2", $("#frmEditCooperator #Entity_AddressLine2").val());
+        formData.append("Entity.AddressLine3", $("#frmEditCooperator #Entity_AddressLine3").val());
+        formData.append("Entity.City", $("#frmEditCooperator #Entity_City").val());
+        formData.append("Entity.GeographyID", $("#frmEditCooperator #Entity_GeographyID").val());
+        formData.append("Entity.PostalIndex", $("#frmEditCooperator #Entity_PostalIndex").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content-cooperator").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+
+    $(document).on("click", "[id*='btnCopyWebCooperator']", function () {
+        CopyWebCooperator();
+    });
+
+     function CopyWebCooperator() {
+        var link = '@Url.Action("Copy","WebCooperator")';
+        var formData = new FormData();
+
+        formData.append("Entity.ID", $("#frmEditWebCooperator #Entity_ID").val());
+        formData.append("CooperatorID", $("#frmEditWebCooperator #CooperatorID").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content-web-cooperator").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    function RenderCooperatorWidget(cooperatorId) {
+        var link = '@Url.Action("_Get","Cooperator")';
+        var formData = new FormData();
+        formData.append("entityId", cooperatorId);
+
+         $("#placeholder-cooperator-name").html(cooperatorId);
+
+       $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content-cooperator").html(response);
+            }
+        });
+    }
+
+    function RenderSysUserWidget(cooperatorId) {
+        var link = '@Url.Action("_Get","SysUser")';
+        var formData = new FormData();
+        formData.append("cooperatorId", cooperatorId);
+
+         $("#placeholder-cooperator-name").html(cooperatorId);
+
+       $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content-sys-user").html(response);
+            }
+        });
+    }
+
+    function RenderWebCooperatorWidget(cooperatorId) {
+        var link = '@Url.Action("_Get","WebCooperator")';
+        var formData = new FormData();
+
+        formData.append("entityId", 0);
+        formData.append("cooperatorId", cooperatorId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content-web-cooperator").html(response);
+            }
+        });
+    }
+
+    function InitDataTableCooperator(tableName) {
+        $(document).ready(function () {
+            var table = $("#" + tableName).DataTable({
+                paging: false,
+                "pageLength": 10,
+                stateSave: true,
+                responsive: true,
+                select: {
+                    style: 'single'
+                },
+                responsive: true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                columnDefs: [
+                    { targets: [0], visible: false }
+                ]
+
+                //columnDefs: [
+                //    {
+                //        target: 0,
+                //        visible: false,
+                //        searchable: false,
+                //    },
+                //    {
+                //        target: 1,
+                //        visible: false,
+                //    },
+                //]
+
+            });
+
+            table.row(':eq(0)', { page: 'current' }).select();
+            var firstRowData = table.row(':eq(0)', { page: 'current' }).data();
+
+            RenderCooperatorWidget(firstRowData[0]);
+            RenderSysUserWidget(firstRowData[0]);
+            RenderWebCooperatorWidget(firstRowData[0]);
+
+            $('#data_table_cooperator tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+
+                RenderCooperatorWidget(data[0]);
+                RenderSysUserWidget(data[0]);
+                RenderWebCooperatorWidget(data[0]);
+            });
+            //table.on('search.dt', function () {
+            //    alert("DEBUG FILTER " + table.search());
+            //});
+        });
+    }
+
+    function GetSelectedCooperator() {
+
+    }
+</script>
+

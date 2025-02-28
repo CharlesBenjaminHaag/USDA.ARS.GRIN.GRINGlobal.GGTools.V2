@@ -1,0 +1,53 @@
+﻿
+<div class="row">
+    @if (Model.DataCollectionMappedCooperators.Count > 0)
+    {
+        foreach (var result in Model.DataCollectionMappedCooperators)
+        {
+            <div class="col-md-4">
+                <div class="card bg-light d-flex flex-fill">
+                    <div class="card-header text-muted border-bottom-0">
+                        
+                        @result.JobTitle
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-7">
+                                <h2 class="lead"><b>@result.FullName</b></h2>
+                                <p class="text-muted text-sm"><b>Email: </b><br />@result.EmailAddress </p>
+                                <ul class="ml-4 mb-0 fa-ul text-muted">
+                                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Site:<br /> @result.SiteName (@result.SiteShortName) </li>
+                                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: @result.PrimaryPhone</li>
+                                </ul>
+                            </div>
+                            <div class="col-5 text-center">
+                                <img src="~/dist/img/user-default.png" alt="user-avatar" class="img-circle img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="text-right">
+                            <a href="#" class="btn btn-sm bg-teal">
+                                <i class="fas fa-lock"></i>
+                            </a>
+                            <a href="@Url.Action("Edit", "Cooperator", new { @entityId = result.ID })" class="btn btn-sm btn-primary">
+                                <i class="fas fa-user"></i> Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-md-12">
+            <div class="alert alert-info alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-info"></i> No Sharing Specified</h5>
+                You are not currently sharing this folder. To do so, click <strong>Edit Sharing Settings</strong>
+                and select one or more of the names listed in the <strong>Available</strong> column.
+            </div>
+        </div>
+    }
+</div>

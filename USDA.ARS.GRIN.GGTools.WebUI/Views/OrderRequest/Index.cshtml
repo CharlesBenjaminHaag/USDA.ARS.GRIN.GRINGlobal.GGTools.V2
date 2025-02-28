@@ -1,0 +1,14 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.OrderRequestViewModel
+@{
+    ViewBag.Title = "Web Order Search";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("Search", "OrderRequest", FormMethod.Post, new { id = "frmSearch" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.ItemIDList)
+    @Html.Partial("~/Views/OrderRequest/_Detail.cshtml")
+}
+

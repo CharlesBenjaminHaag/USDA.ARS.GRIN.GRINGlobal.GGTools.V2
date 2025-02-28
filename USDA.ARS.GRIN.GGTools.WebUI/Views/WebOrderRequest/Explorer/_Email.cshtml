@@ -1,0 +1,47 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+@using (Html.BeginForm("SendEmail", "WebOrder", FormMethod.Post, new { id = "frmEditEmail" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.Entity.ID)
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>From</label>
+                @Html.TextBoxFor(x => x.ActionEmailFrom, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>To</label>
+                @Html.TextBoxFor(x => x.ActionEmailTo, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>BCC</label>
+                @Html.TextBoxFor(x => x.ActionEmailBCC, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Subject</label>
+                @Html.TextBoxFor(x => x.ActionEmailSubject, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Body</label>
+                @Html.TextAreaFor(x => x.ActionEmailBody, new { @class = "form-control", @rows = "25" })
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,77 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemListViewModel
+@Html.HiddenFor(x => x.DataCollectionSysTables.Count)
+
+<div class="card card-primary card-tabs">
+    <div class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs" id="tab-sys-tables" role="tablist">
+
+            @{
+                int i = 0;
+                string navLinkCssClass = String.Empty;
+            }
+
+            @foreach (var result in Model.DataCollectionSysTables)
+            {
+                if (i == 0)
+                {
+                    navLinkCssClass = "nav-link active";
+                }
+                else
+                {
+                    navLinkCssClass = "nav-link";
+                }
+
+                <li id="@result.TableName"
+                    class="nav-item"
+                    data-ggtools-event-action="@result.SysTableTitle.Replace(" ","")"
+                    data-ggtools-event-value="_ListFolderItems">
+                    <a class="@navLinkCssClass"
+                       id="link-@result.TableName"
+                       data-toggle="pill"
+                       href=""
+                       role="tab"
+                       aria-controls=""
+                       aria-selected="true"
+                       data-ggtools-event-action="@result.SysTableTitle.Replace(" ","")"
+                       data-ggtools-event-value="_ListFolderItems">@result.SysTableTitle</a>
+                </li>
+                i++;
+            }
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="tab-sys-tables-content">
+            @if (Model.DataCollectionSysTables.Count == 0)
+            { 
+                <h3>NO ITEMS FOUND</h3>
+            }
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var defaultTab = $("#tab-sys-tables li:first").attr('id');
+        var eventAction = $("#tab-sys-tables li:first").data("ggtools-event-action");
+        var eventValue = $("#tab-sys-tables li:first").data("ggtools-event-value");
+        var folderItemGroupCount = $("#DataCollectionSysTables_Count").val();
+
+        if (folderItemGroupCount > 0) {
+            LoadFolderItems(defaultTab, eventAction, eventValue);
+            InitDataTableFolderFormat("data_table_app_user_item_list");
+        }
+    });
+
+    $('#tab-sys-tables li a').click(function (event) {
+        event.preventDefault(); // stop default event to stop reloading of page
+        var tableName = $(this).attr("id");
+        var eventAction = $(this).data("ggtools-event-action");
+        var eventValue = $(this).data("ggtools-event-value");
+
+        $("#EventAction").val(eventAction);
+        $("#EventValue").val(eventValue);
+
+        LoadFolderItems(tableName, eventAction, eventValue);
+    });
+
+</script>

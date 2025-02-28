@@ -1,0 +1,68 @@
+﻿@model USDA.ARS.GRIN.GGTools.GOBS.ViewModelLayer.GOBSViewModel
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-table"></i> @Model.TableTitle</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>ID</label>
+                      
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Name</label>
+                     
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Type</label>
+                    <div class="input-group">
+                        <span id="placeholder-accepted-name" style="background-color: #ecf0f5; border: 1px solid #ced4da; width: 100%; position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; min-width: 0; margin-bottom: 0; padding: 0.375rem 0.75rem; height: calc(2.25rem + 2px);">@Html.Raw(Model.Entity.TypeName) </span>
+                         
+                        <span class="input-group-btn">
+                            <a href="" class="btn btn-default btn-flat">
+                                <i class="fa fa-link"></i>
+                            </a>
+                        </span>
+                        <span class="input-group-btn">
+                            <button id="btnOpenTypeLookupModal" type="button" class="btn btn-default btn-flat" data-ggtools-action="SpeciesID" data-ggtools-value="SpeciesName" data-toggle="modal" data-target="#modal-species-lookup">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Method</label>
+                    <div class="input-group">
+                        <span id="placeholder-accepted-name" style="background-color: #ecf0f5; border: 1px solid #ced4da; width: 100%; position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; min-width: 0; margin-bottom: 0; padding: 0.375rem 0.75rem; height: calc(2.25rem + 2px);">@Html.Raw(Model.Entity.MethodName) </span>
+                         
+                        <span class="input-group-btn">
+                            <a href="" class="btn btn-default btn-flat">
+                                <i class="fa fa-link"></i>
+                            </a>
+                        </span>
+                        <span class="input-group-btn">
+                            <button id="btnOpenMethodLookupModal" type="button" class="btn btn-default btn-flat" data-ggtools-action="SpeciesID" data-ggtools-value="SpeciesName" data-toggle="modal" data-target="#modal-species-lookup">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-default btn-flat float-right">Save</button>
+    </div>
+</div>

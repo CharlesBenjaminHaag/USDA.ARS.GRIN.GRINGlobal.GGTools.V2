@@ -1,0 +1,37 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        @{ Html.RenderAction("_Edit", "SysUser", new { entityID = Model.Entity.SysUserID, environment = "PROD" }); }
+        @{ Html.RenderAction("_Edit", "Cooperator", new { entityID = Model.Entity.ID, environment = "PROD" }); }
+        @{ Html.RenderAction("_Edit", "WebUser", new { entityID = Model.Entity.WebUserID, environment = "PROD" }); }
+        @{ Html.RenderAction("_Edit", "WebCooperator", new { entityID = Model.Entity.WebCooperatorID, environment = "PROD" }); }
+    </div>
+    <div class="col-md-6">
+        @{ Html.RenderAction("_Edit", "SysUser", new { entityID = Model.Entity.SysUserID, environment = "TRNG" }); }
+        @{ Html.RenderAction("_Edit", "Cooperator", new { entityID = Model.Entity.ID, environment = "TRNG" }); }
+        @{ Html.RenderAction("_Edit", "WebUser", new { entityID = Model.Entity.WebUserID, environment = "TRNG" }); }
+        @{ Html.RenderAction("_Edit", "WebCooperator", new { entityID = Model.Entity.WebCooperatorID, environment = "TRNG" }); }
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+
+    }
+
+    $(document).on("click", "[id*='btnSave']", function () {
+        var value = $(this).data("ggtools-value");
+        //DEBUG
+        //TODO
+        
+    });
+
+</script>

@@ -1,0 +1,87 @@
+﻿<div class="modal fade" id="modal-note-lookup" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="search-progress-overlay-note-lookup" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Note Lookup
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form id="frmLookup" class="ggtools-lookup-form">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Note Text</label>
+                                <input type="text" id="txtLookupNote" class="form-control" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button id="btnLookupNote" class="btn btn-default float-right">Search</button>
+                        </div>
+                    </div>
+                </form>
+                <div id="section-lookup-note-search-results">
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+/*
+    * ===================================================================================================
+    * NOTE LOOKUP MODAL
+    * ===================================================================================================
+    */
+    $("#btnLookupNote").click(function () {
+        SearchNotes();
+    });
+
+    function SearchNotes() {
+        var link = '@Url.Action("Lookup", "Note")';
+        var tableName = $("#TableName").val();
+        var note = $("#txtLookupNote").val();
+
+        var formData = new FormData();
+        formData.append("TableName", tableName);
+        formData.append("Note", note);
+
+        $("#search-progress-overlay-note-lookup").show();
+
+        $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            $("#section-lookup-note-search-results").html(response);
+            $("#search-progress-overlay-note-lookup").hide();
+        },
+        error: function () {
+            alert("Error");
+            $("#search-progress-overlay-note-lookup").hide();
+        }
+        });
+        }
+
+    $(document).on("click", ".note-selector", function () {
+        $('#modal-note-lookup').modal('hide');
+        var selectedNote = GetSelectedEntityText("data-table-note-lookup");
+        $('#txtNote').summernote('code', selectedNote);
+    });
+</script>
+
+
+

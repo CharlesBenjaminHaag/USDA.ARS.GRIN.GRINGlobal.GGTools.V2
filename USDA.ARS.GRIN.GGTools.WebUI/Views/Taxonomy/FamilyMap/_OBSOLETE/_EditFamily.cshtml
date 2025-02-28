@@ -1,0 +1,126 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.FamilyMapViewModel
+<div class="card card-success">
+    <div class="card-header">
+        <div class="btn-group">
+            <a id="btnSetAcceptedOn" class="btn btn-default btn-sm" href="#" role="button"><i class="fas fa-thumbs-down"></i> Not Accepted</a>
+            <a id="btnSetAcceptedOff" class="btn btn-default btn-sm" href="#" role="button"><i class="fas fa-thumbs-up"></i> Accepted</a>
+        </div>
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="@Url.Action("Add","Genus", new { @familyId = Model.Entity.FamilyID, rank="genus" })">Add Genus</a>
+        </div>
+        <div class="btn-group">
+            <a class="btn btn-default btn-sm" href="@Url.Action("AddSubfamily","Family", new { @familyMapId = Model.Entity.ID  })">Add Subfamily</a>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu" role="menu" style="">
+                <a class="dropdown-item btn-sm" href="@Url.Action("AddTribe", "Family", new { @familyMapId = Model.Entity.ID  })">Add Tribe</a>
+                <a class="dropdown-item btn-sm" href="@Url.Action("AddSubtribe", "Family", new { @familyMapId = Model.Entity.ID  })">Add Subtribe</a>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-citation-lookup">
+                <i class="fa fa-book"></i>
+            </button>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#modal-note-lookup">
+                <i class="fa fa-search margin-r-5"></i>
+                Notes
+            </button>
+        </div>
+        <a href="https://npgsdev.ars-grin.gov/gringlobal/taxon/taxonomyfamily?id=@Model.Entity.ID" target="_blank" class="btn btn-default btn-sm float-right">
+            <i class="fa fa-globe"></i>
+            View Public Website
+        </a>
+    </div>
+    <div class="card-body">
+        @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+        <div class="row accepted">
+            <div id="section-accepted-name" class="col-md-3 accepted">
+                <div class="form-group">
+                    <label>Accepted Name</label>
+                    @*@Html.DropDownListFor(x => x.Entity.AcceptedID, Model.FamilyMaps, "Select accepted name", new { id = "ddlSelectAcceptedFamily", @class = "form-control" })*@
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Family Name</label>
+                    @Html.TextBoxFor(x => x.Entity.FamilyName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Order</label>
+                    @Html.DropDownListFor(x => x.Entity.OrderID, Model.Orders, "Select order", new { id = "ddlSelectOrder", @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Type Genus</label>
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Entity.TypeGenusName, new { @class = "form-control" })
+                        @Html.HiddenFor(x => x.Entity.TypeGenusID)
+
+                        @if (Model.Entity.TypeGenusID > 0)
+                        {
+                            <span class="input-group-btn">
+                                <a href="@Url.Action("Edit", "Genus", new { @entityId = Model.Entity.TypeGenusID })" class="btn btn-default btn-flat">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                            </span>
+                        }
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-flat" data-toggle="modal" data-target="#modal-genus-lookup">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Alternate Name</label>
+                    @Html.TextBoxFor(x => x.Entity.AlternateName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Authority</label>
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.Entity.Authority, new { @class = "form-control" })
+                        <span class="input-group-btn">
+                            <button type="button" data-toggle="modal" data-target="#modal-author-lookup" class="btn btn-default btn-flat">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Type</label>
+                    @Html.DropDownListFor(x => x.Entity.FamilyTypeCode, Model.FamilyTypes, "Select type", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label>Note</label>
+                @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="@Url.Action("Refresh")" class="btn btn-default">Cancel</a>
+        @if (Model.Entity.ID > 0)
+        {
+            <button id="btnDelete" type="button" class="btn btn-danger">
+                Delete
+            </button>
+        }
+        <button type="submit" class="btn btn-default float-right">Save</button>
+    </div>
+</div>

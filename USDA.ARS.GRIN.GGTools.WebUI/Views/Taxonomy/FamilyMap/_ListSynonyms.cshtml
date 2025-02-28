@@ -1,0 +1,102 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.FamilyMapViewModel
+<div class="card card-success">
+    <div class="card-header">
+        <h3 class="card-title">Synonyms (@Model.DataCollectionSynonyms.Count)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results">
+            <table id="data-table-family-synonyms" class="table table-striped ggtools-table" style=" width:100%;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th width="5%">ID</th>
+                        <th>Order Name</th>
+                        <th>Family Name</th>
+                        <th>Subfamily Name</th>
+                        <th>Tribe Name</th>
+                        <th>Subtribe Name</th>
+                        <th style="text-align:center;">Accepted</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollectionSynonyms)
+                    {
+                        <tr>
+                            <td>
+                                @result.ID
+                            </td>
+                            <td>
+                                @result.ID
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Classification", new { @entityId = result.OrderID })">
+                                    @result.OrderName
+                                </a>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit", "FamilyMap", new { @entityId = result.OrderID })">
+                                    @result.FamilyName
+                                </a>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("EditSubfamily", "Family", new { @entityId = result.SubfamilyID })">
+                                    @result.SubfamilyName
+                                </a>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("EditTribe", "Family", new { @entityId = result.TribeID })">
+                                    @result.TribeName
+                                </a>
+                            </td>
+                            <td>
+                                <a href="@Url.Action("EditSubtribe", "Family", new { @entityId = result.SubtribeID })">
+                                    @result.SubtribeName
+                                </a>
+                            </td>
+                            <td style="text-align:center;">
+                                @Html.Raw(Model.FormatBoolean(result.IsAcceptedName))
+                            </td>
+                            <td style="text-align:right;">
+                                @switch (result.Rank)
+                                {
+                                    case "SUBFAMILY":
+                                        <a href="@Url.Action("EditSubfamily", "Family", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        break;
+                                    case "TRIBE":
+                                        <a href="@Url.Action("EditTribe", "Family", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        break;
+                                    case "SUBTRIBE":
+                                        <a href="@Url.Action("EditSubtribe", "Family", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        break;
+                                    default:
+                                        <a href="@Url.Action("Edit", "FamilyMap", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                    }
+                        
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-family-synonyms");
+    });
+</script>

@@ -1,0 +1,79 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+
+<style>
+    img.table-avatar {
+        border-radius: 50%;
+        display: inline;
+        width: 2.5rem;
+    }
+</style>
+
+<table id="data-table-dashboard-web-order-requests" class="table no-margin">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Requestor</th>
+            <th>Organization</th>
+            <th>Status</th>
+            <th>Date</th>
+            
+            <th>Review Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var webOrderRequest in Model.DataCollection)
+        {
+        <tr>
+            <td>
+                @webOrderRequest.ID
+            </td>
+            <td>
+                @webOrderRequest.ID
+            </td>
+            <td>
+                <a href="">@webOrderRequest.WebCooperatorFullName</a>
+            </td>
+            <td>
+                @webOrderRequest.WebCooperatorOrganization
+            </td>
+            <td><span class="badge @webOrderRequest.CSSClass">@webOrderRequest.StatusCode</span></td>
+            <td>@webOrderRequest.CreatedDate.ToShortDateString() at @webOrderRequest.CreatedDate.ToShortTimeString()</td>
+
+            <td>
+                @if (webOrderRequest.IsLocked)
+                {
+                    <div class="user-block">
+                        <img class="img-circle" src="~/dist/img/user1-128x128.jpg" alt="User Image">
+                        <span class="username"><a href="#">Locked by @webOrderRequest.OwnedByWebCooperatorName</a></span>
+                        <span class="description">@webOrderRequest.OwnedByDate.ToShortDateString() at @webOrderRequest.OwnedByDate.ToShortTimeString()</span>
+                    </div>
+                }
+            </td>
+            <td>
+                @if (webOrderRequest.IsLocked)
+                {
+                    if (webOrderRequest.OwnedByWebUserID == Model.AuthenticatedUserWebUserID)
+                    {
+                        <a href="@Url.Action("View", "WebOrder", new { entityId = webOrderRequest.ID })" class="btn btn-warning btn-sm pull-right">Continue Review</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("View", "WebOrder", new { entityId = webOrderRequest.ID })" class="btn btn-default btn-sm pull-right" style="color:black;">View</a>
+                    }
+                }
+                else
+                {
+                    <a href="@Url.Action("View", "WebOrder", new { entityId = webOrderRequest.ID })" class="btn btn-default btn-sm pull-right" style="color:black;">View</a>
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-dashboard-web-order-requests");
+    });
+</script>

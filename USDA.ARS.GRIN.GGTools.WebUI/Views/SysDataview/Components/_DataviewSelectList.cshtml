@@ -1,0 +1,23 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDataViewViewModel
+@using System.Data
+
+<table id="data_table_sys_dataview_field">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dataview in Model.DataCollection)
+        { 
+            <tr>
+                <td>@dataview.ID</td>
+                <td>@dataview.DataViewName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+  
+</script>

@@ -1,0 +1,54 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.ErrorLogViewModel
+<table id="data-table-sys-app-error" class="table table-striped ggtools-table" style="width:100%;">
+    <thead>
+        <tr>
+            <th width="5%">ID</th>
+            <th>Source</th>
+            <td>Application</td>
+            <th>Code</th>
+            <th>Error Message</th>
+            <th>ErrorDetail</th>
+            <th>ErrorDetail2</th>
+            <th>ErrorDetail3</th>
+            <th>ErrorDetail4</th>
+            <th>Date</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollectionErrorLogs)
+        {
+        <tr>
+            <td>
+                @result.ID
+            </td>
+            <td>@result.Source</td>
+            <td>@result.Application</td>
+            <td>@result.Code</td>
+            <td>@result.ErrorMessage</td>
+            <td>@result.ErrorDetail</td>
+            <td>@result.ErrorDetail2</td>
+            <td>@result.ErrorDetail3</td>
+            <td>@result.ErrorDetail4</td>
+            <td>
+                @result.CreateDate.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")
+            </td>
+            <td>
+                @result.ErrorMessage
+            </td>
+            <td>
+                @result.ErrorLevel
+            </td>
+            <td>
+                @result.StackTrace
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+
+

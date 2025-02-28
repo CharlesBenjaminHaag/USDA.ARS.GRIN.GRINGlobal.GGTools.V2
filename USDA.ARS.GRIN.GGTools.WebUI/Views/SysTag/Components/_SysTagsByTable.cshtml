@@ -1,0 +1,46 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysTagViewModel
+<div class="row">
+    <div class="col-md-12">
+        <div id="external-events" class="row">
+           
+            @foreach(var sysTag in Model.DataCollection)
+            {
+
+                string cssStyleText = "position: relative; color:white; background-color:" + sysTag.TagFormatString + ";";
+                
+                    <div class="col-md-6">
+                        <div class="external-event" style="@cssStyleText">@sysTag.TagText  <a id="btnDeleteTag" data-ggtools-id="@sysTag.ID" href="" class="float-right" style="color:white;">[Delete]</a></div>
+                    </div>
+                
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).on("click", "[id='btnDeleteTag']", function () {
+        event.preventDefault();
+        var id = $(this).data('ggtools-id');
+        DeleteSysTag(id);
+    });
+
+    function DeleteSysTag(id) {
+        var link = '@Url.Action("Delete", "SysTag")';
+        var formData = new FormData();
+        formData.append("sysTagId", id);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                alert("SUCCESS");
+            },
+            error: function () {
+                alert("Error calling " + link);
+            }
+        });
+    }
+</script>

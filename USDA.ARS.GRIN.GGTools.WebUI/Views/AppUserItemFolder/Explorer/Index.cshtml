@@ -1,0 +1,134 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav text-sm">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                    <img src="~/dist/img/GGlogo_BW.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- BEGIN EDIT PAGE MENU -->
+                    <ul class="navbar-nav">
+                        <!-- TODO What do we need here? -->
+                    </ul>
+                    <!-- END EDIT PAGE MENU-->
+                </div>
+                <!-- BEGIN RIGHT-ALIGNED NAV MENU -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    @Html.Partial("~/Views/Shared/_NavbarRight.cshtml")
+                </ul>
+                <!-- END RIGHT-ALIGNED NAV MENU -->
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                Folder Explorer
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+                    <div id="section-search-criteria" class="row">
+                        <div class="col-md-4">
+                            @foreach (var result in Model.DataCollection)
+                            {
+                                <div class="card card-primary collapsed-card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">@result.FolderName</h3>
+                                        <div class="card-tools">
+                                            <button type="button" id="btn-folder-@result.ID" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                    <div id="section-folder-items-@result.ID" class="card-body">
+                                        ITEMS FOR FOLDER @result.ID
+                                    </div>
+
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card card-primary collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i class="fas fa-book"></i> FOLDER ITEM DETAIL HERE</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div id="section-citation-batch-edit" class="col-md-12">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <span class="input-group-append">
+                                        <button id="btnGenerateCitations" type="button" class="btn btn-default btn-flat btn-block">Generate Citations From Selected Literature <i class="fas fa-fast-forward"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).on("click", "[id*='btn-folder-']", function () {
+        var folderId = $(this).attr("id");
+        LoadAppUserItemLists(folderId);
+    });
+
+    function LoadAppUserItemLists(appUserItemFolderId) {
+        var link = '@Url.Action("_List","AppUserItemList", new { appUserItemFolderId = "FOLDER_ID" })';
+        var sectionName = "section-folder-items-" + appUserItemFolderId.replace("btn-folder-", "");
+        var formData = new FormData();
+
+        link = link.replace("FOLDER_ID", appUserItemFolderId.replace("btn-folder-",""));
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#" + sectionName).html(response);
+            }
+        });
+    }
+</script>
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")

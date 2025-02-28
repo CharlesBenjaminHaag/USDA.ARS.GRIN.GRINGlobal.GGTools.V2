@@ -1,0 +1,25 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+
+
+        <table id="data-table-web-order-request-actions" class="table table-striped" style="width:100%;">
+            <thead>
+                <tr>
+                    <th width="5%">ID</th>
+                    <th>Action</th>
+                    <th>Date</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var webOrderRequest in Model.DataCollectionActions)
+                {
+                    <tr>
+                        <td>@webOrderRequest.ID</td>
+                        <td>@webOrderRequest.ActionTitle</td>
+                        <td>@webOrderRequest.CreatedDate.ToString("yyyy-MM-dd")</td>
+                        <td>@webOrderRequest.Note</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    

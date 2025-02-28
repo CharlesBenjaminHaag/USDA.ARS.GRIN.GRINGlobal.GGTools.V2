@@ -1,0 +1,517 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+<style>
+    .invoice {
+        border: none;
+    }
+
+    .project-state-accepted {
+        background-color: #00a65a;
+        padding: 5px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .project-state-canceled {
+        background-color: #f39c12;
+        padding: 5px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .project-state-submitted {
+        background-color: #605ca8;
+        padding: 5px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .project-state-nrr_flag {
+        background-color: #dd4b39;
+        padding: 5px;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <input type="hidden" id="hfSelectedTimeFrame" />
+        <input type="hidden" id="hfSelectedWebOrderRequestTab" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div id="section-web-order-list" class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li id="1D" class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Today</a></li>
+                    <li id="7D" class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">7 Days</a></li>
+                    <li id="90D" class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">90 Days</a></li>
+                </ul>
+            </div>
+            <div class="card-body web-order-request">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="activity" style="padding:0px;">
+
+                    </div>
+                    <div class="tab-pane" id="timeline">
+
+                    </div>
+                    <div class="tab-pane" id="settings">
+
+
+
+                    </div>
+                    <div id="section-web-order-search-results"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card card-primary card-tabs">
+            <div id="section-web-order-request-tabs" class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+                    <li class="pt-2 px-3"><h3 class="card-title">Web Order Request</h3></li>
+                    <li id="section-web-order-request-tabs-detail" class="nav-item">
+                        <a class="nav-link active" id="custom-tabs-two-home-tab" data-toggle="pill" href="#tab-content-web-order-request-detail" role="tab" aria-controls="custom-tabs-two-home" aria-selected="true">Detail</a>
+                    </li>
+                    <li id="section-web-order-request-tabs-timeline" class="nav-item">
+                        <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#tab-content-web-order-request-timeline" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false">Action Timeline</a>
+                    </li>
+                    <li id="section-web-order-request-tabs-order-request-history" class="nav-item">
+                        <a class="nav-link" id="custom-tabs-two-messages-tab" data-toggle="pill" href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages" aria-selected="false">Order Request History</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body web-order-request">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-content-web-order-request-detail" style="padding:0px;">
+                        <div id="section-web-order-request-detail">
+
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab-content-web-order-request-timeline">
+
+                    </div>
+                    <div class="tab-pane" id="settings">
+
+                        <div class="direct-chat-messages">
+
+                            <div class="direct-chat-msg">
+                                <div class="direct-chat-infos clearfix">
+                                    <span class="direct-chat-name float-left">Marty Reisinger</span>
+                                    <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
+                                </div>
+
+                                <img class="direct-chat-img" src="~/Content/dist/img/Kinard.Gary_TO_CROP.jpg" alt="Message User Image">
+
+                                <div class="direct-chat-text">
+                                    This person has tried this before.
+                                </div>
+
+                            </div>
+                            <div class="direct-chat-msg">
+                                <div class="direct-chat-infos clearfix">
+                                    <span class="direct-chat-name float-left">Gary Kinard</span>
+                                    <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
+                                </div>
+
+                                <img class="direct-chat-img" src="~/Content/dist/img/Reisinger.Marty.jpg" alt="Message User Image">
+
+                                <div class="direct-chat-text">
+                                    Agreed.
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+
+                        <div class="direct-chat-contacts">
+                            <ul class="contacts-list">
+                                <li>
+                                    <a href="#">
+                                        <img class="contacts-list-img" src="../dist/img/user1-128x128.jpg" alt="User Avatar">
+                                        <div class="contacts-list-info">
+                                            <span class="contacts-list-name">
+                                                Count Dracula
+                                                <small class="contacts-list-date float-right">2/28/2015</small>
+                                            </span>
+                                            <span class="contacts-list-msg">How have you been? I was...</span>
+                                        </div>
+
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                        <div class="card-footer">
+                            <form action="#" method="post">
+                                <div class="input-group">
+                                    <input type="text" name="message" placeholder="Enter note..." class="form-control">
+                                    <span class="input-group-append">
+                                        <button type="submit" class="btn btn-default">Send</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div id="progress_overlay" class="overlay">
+                <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="section-modal-email"></div>
+@Html.Partial("~/Views/WebOrder/Modals/_Note.cshtml")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        LoadWebOrderRequestList("1D");
+    });
+
+    function Init() {
+
+    }
+
+    // ********************************************************************************
+    // EVENT HANDLERS
+    // ********************************************************************************
+    $('#section-web-order-list ul.nav li').on('click', function () {
+        var selectedTimeFrame = $(this).attr('id');
+        LoadWebOrderRequestList(selectedTimeFrame);
+    });
+
+    $('#section-web-order-request-tabs ul.nav li').on('click', function () {
+        var selectedWebOrderRequestTab = $(this).attr('id');
+        var entityID = GetEntityID();
+
+        $("#hfSelectedWebOrderRequestTab").val(selectedWebOrderRequestTab);
+
+        switch (selectedWebOrderRequestTab) {
+            case "section-web-order-request-tabs-detail":
+                LoadWebOrderRequestDetail(entityID);
+                break;
+            case "section-web-order-request-tabs-timeline":
+                LoadWebOrderRequestTimeLine(entityID);
+                break;
+            case "section-web-order-request-tabs-order-request-history":
+                LoadWebOrderRequestOrderRequestHistory(entityID);
+                break;
+        }
+    });
+
+    $(document).on("click", "[id='btnOpenApproveModal']", function () {
+        event.preventDefault();
+        LoadEmailModal("NRR_APPROVE");
+    });
+
+    $(document).on("click", "[id='btnOpenRejectModal']", function () {
+        event.preventDefault();
+        LoadEmailModal("NRR_REJECT");
+    });
+
+    $(document).on("click", "[id='btnOpenCuratorModal']", function () {
+        event.preventDefault();
+        LoadEmailModal("NRR_CUR");
+    });
+
+    $(document).on("click", "[id='btnOpenRequestorModal']", function () {
+        event.preventDefault();
+        LoadEmailModal("NRR_REQ");
+    });
+
+    $(document).on("click", "[id='btnOpenNoteModal']", function () {
+        event.preventDefault();
+        LoadNoteModal();
+    });
+
+    $(document).on("click", "[id='btnSendEmail']", function () {
+        var id = GetEntityID();
+        var actionCode = $(this).data("ggtools-action");
+        SendEmail(actionCode);
+        LoadWebOrderRequestDetail(GetEntityID());
+        LoadWebOrderRequestList("1D");
+    });
+
+    $(document).on("click", "[id='btnReject']", function () {
+        var id = GetEntityID();
+        Reject(id);
+    });
+
+    // ********************************************************************************
+    // FUNCTIONS
+    // ********************************************************************************
+
+    function AddNote() {
+        var entityId = GetEntityID();
+        var note = $("#txtNote").val();
+        //TODO
+    }
+
+    function SendEmail(actionCode) {
+        var link = $("#frmEditEmail").attr("action");
+        var formData = new FormData();
+
+        formData.append("EventAction", $("#frmEditEmail #EventAction").val());
+        formData.append("EventValue", $("#frmEditEmail #EventValue").val());
+        formData.append("EventNote", $("#frmEditEmail #EventNote").val());
+        formData.append("Entity.ID", $("#frmEditEmail #Entity_ID").val());
+        formData.append("ActionEmailFrom", $("#frmEditEmail #ActionEmailFrom").val());
+        formData.append("ActionEmailTo", $("#frmEditEmail #ActionEmailTo").val());
+        formData.append("ActionEmailBCC", $("#frmEditEmail #ActionEmailBCC").val());
+        formData.append("ActionEmailSubject", $("#frmEditEmail #ActionEmailSubject").val());
+        formData.append("ActionEmailBody", $("#frmEditEmail #ActionEmailBody").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                alert("DEBUG Email Sent");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        
+    }
+
+    function HandleAction(actionCode, sendEmail) {
+        var link = "";
+        var note = $("#txtNote").val();
+
+        // If action originated in email modal, collect email attribs.
+        if (sendEmail) {
+            var emailFrom = $("#Entity_ActionEmailFrom").val();
+            var emailTo = $("#Entity_ActionEmailTo").val();
+            var emailBcc = $("#Entity_ActionEmailBcc").val();
+            var emailSubject = $("#Entity_ActionEmailSubject").val();
+            var emailBody = $("#Entity_ActionEmailBody").val();
+        }
+
+        switch (actionCode) {
+            case "NRR_APPROVE":
+                link = '@Url.Action("Approve", "WebOrder")';
+                break;
+            case "NRR_REJECT":
+                link = '@Url.Action("Reject", "WebOrder")';
+                break;
+            case "NRR_REQ":
+                link = '@Url.Action("SendInformationRequest", "WebOrder")';
+                break;
+            case "NRR_CUR":
+                link = '@Url.Action("SendCuratorNotification", "WebOrder")';
+                break;
+        }
+        //TODO MAKE AJAX CALL
+        
+        
+    }
+
+    function GetEntityID() {
+        var entityID = $("#Entity_ID").val();
+        if (entityID == 0) {
+            alert("ERROR: No entity ID");
+            return -1;
+        }
+        else {
+            return entityID;
+        }
+    }
+
+    function LoadWebOrderRequestList(timeFrame, selectedStatusList, selectedWebUserList)  {
+        var link = '@Url.Action("_Lookup", "WebOrder")';
+        var formData = new FormData();
+
+        $("#hfSelectedTimeFrame").val(timeFrame);
+
+        formData.append("TimeFrame", timeFrame);
+        //formData.append("SelectedStatusList", selectedStatusList);
+        //formData.append("SelectedWebUserList", selectedWebUserList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-web-order-search-results").html(response);
+                InitDataTableWebOrderRequests("table_web_order_requests");
+            }
+        });
+    }
+
+    function LoadWebOrderRequestDetail(webOrderRequestId) {
+        link = '@Url.Action("ExplorerDetail", "WebOrder")';
+        var formData = new FormData();
+
+        formData.append("entityId", webOrderRequestId);
+
+        $("#progress_overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-web-order-request-detail").html(response);
+            }
+        });
+        $("#progress_overlay").hide();
+    }
+
+    function LoadWebOrderRequestTimeLine(webOrderRequestId) {
+        link = '@Url.Action("ExplorerTimeline", "WebOrder")';
+        var formData = new FormData();
+
+        formData.append("entityId", webOrderRequestId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content-web-order-request-timeline").html(response);
+            }
+        });
+    }
+
+    function LoadWebOrderRequestOrderRequestHistory(id) {
+            //DEBUG
+        alert("ORDERS FOR WOR " + id);
+    }
+
+    function Approve(id) {
+        //TODO:
+        // Get approval email attributes if specified
+        // Submit approval
+        // Get result
+
+        LoadWebOrderRequestDetail(id);
+        LoadWebOrderRequestList("30D");
+    }
+
+    function LoadEmailModal(actionCode) {
+        link = '@Url.Action("RenderEmailModal", "WebOrder")';
+        var webOrderRequestId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        formData.append("entityId", webOrderRequestId);
+        formData.append("actionCode", actionCode);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-modal-email").html(response);
+                $("#modal-email").modal("show");
+            }
+        });
+    }
+
+    function LoadRejectModal() {
+        link = '@Url.Action("RenderRejectModal", "WebOrder")';
+        var webOrderRequestId = GetEntityID();
+        var formData = new FormData();
+
+        formData.append("entityId", webOrderRequestId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-modal-web-order-request-reject").html(response);
+                $("#modal-web-order-request-reject").modal("show");
+            }
+        });
+    }
+
+    function Reject(id) {
+       //TODO
+        LoadWebOrderRequestDetail(id);
+        LoadWebOrderRequestList("30D");
+    }
+
+    function LoadNoteModal() {
+
+    }
+
+    function AddNote() {
+
+    }
+
+    function InitDataTableWebOrderRequests(tableName) {
+        $(document).ready(function () {
+            var table = $("#" + tableName).DataTable({
+                /*dom: 'Blfrtip',*/
+                paging: false,
+                "pageLength": 10,
+                stateSave: true,
+                //initComplete: function () {
+                //    SetControlVisibility(tableName);
+                //},
+                responsive: true,
+                //buttons: [
+                //    'selectAll',
+                //    'selectNone',
+                //    'csv',
+                //    'excel',
+                //    'pdf'
+                //],
+                select: {
+                    style: 'single'
+                },
+                responsive: true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                columnDefs: [
+                    { targets: [0], visible: false }
+                ]
+            });
+
+            //Select first row by default; load related data.
+            table.row(':eq(0)', { page: 'current' }).select();
+            var firstRowData = table.row(':eq(0)', { page: 'current' }).data();
+            LoadWebOrderRequestDetail(firstRowData[0]);
+            LoadWebOrderRequestTimeLine(firstRowData[0]);
+
+            $('#table_web_order_requests tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                LoadWebOrderRequestDetail(data[0]);
+                LoadWebOrderRequestTimeLine(data[0]);
+            });
+
+            //table.on('search.dt', function () {
+            //    alert("DEBUG FILTER " + table.search());
+            //});
+        });
+    }
+</script>

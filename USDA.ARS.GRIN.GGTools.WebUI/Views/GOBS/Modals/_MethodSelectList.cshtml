@@ -1,0 +1,41 @@
+﻿<button id="btnSaveMethod1" type="button" class="btn btn-default float-right" data-dismiss="modal">Add Selected Method</button>
+<table id="data-table-author-lookup" class="table table-striped ggtools" style="width:100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Short Name</th>
+            <th>Full Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.DataCollection.Count() > 0)
+        {
+            foreach (var result in Model.DataCollection)
+            {
+                <tr>
+                    <td>
+                        @result.ID
+                    </td>
+                    <td>@result.ShortName</td>
+                    <td>@result.FullName</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">
+                    <div class="callout callout-info" style="vertical-align:middle; margin-top:5px;">
+                        Your search returned no matches.
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<button id="btnSaveMethod2" type="button" class="btn btn-default  float-right" data-dismiss="modal">Add Selected Method</button>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableLookupFormat("data-table-author-lookup");
+    });
+</script>

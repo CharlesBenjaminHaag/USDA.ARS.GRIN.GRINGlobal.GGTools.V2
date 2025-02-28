@@ -1,0 +1,22 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.MenuViewModel
+<ul class="navbar-nav">
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="@Url.Action("Index", "Home")" class="nav-link">Home</a>
+    </li>
+
+    @if (Model.EventValue == "Edit")
+    {
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="@Url.Action("Add", Model.EventAction)" class="nav-link">New</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Add Related Data</a>
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow" style="left: 0px; right: inherit;">
+                <li><a id="btnAddRelatedItemGenus" href="@Url.Action("Add", "Genus", new { familyId = Model.EntityID })" class="dropdown-item">Genus </a></li>
+                <li><a id="btnAddRelatedItemCommonName" href="@Url.Action("Add", "CommonName", new { familyId = Model.EntityID })" class="dropdown-item">Common Name </a></li>
+                <li><a id="btnAddRelatedItemCitation" href="@Url.Action("Add", "Citation", new { familyId = Model.EntityID })" class="dropdown-item">Citation </a></li>
+                <li><a id="btnAddRelatedItemRegulationMap" href="@Url.Action("Add", "RegulationMap", new { speciesId = Model.EntityID })" class="dropdown-item">Regulation </a></li>
+            </ul>
+        </li>
+    }
+</ul>

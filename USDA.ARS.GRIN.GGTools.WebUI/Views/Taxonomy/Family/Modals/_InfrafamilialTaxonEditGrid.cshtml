@@ -1,0 +1,24 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.InfrafamilyViewModel
+<h4 class="modal-title">Add Intrafamilial Ranks</h4>
+<table id="data-table-infrafamilial-grid" class="table table-responsive table-striped search-results" style=" width:100%;">
+    <thead>
+        <tr>
+            <th>Seq.</th>
+            <th>Rank</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i= 0; i < Model.DataCollection.Count(); i++)
+        {
+            var seq = i + 1;
+            <tr>
+                <td><span class="badge">@seq</span></td>
+                <td>@Model.DataCollection[i].FamilyRank</td>
+                <td>
+                    <input id="@seq" type="text" data-ggtools="@Model.DataCollection[i].FamilyRank" class="form-control" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

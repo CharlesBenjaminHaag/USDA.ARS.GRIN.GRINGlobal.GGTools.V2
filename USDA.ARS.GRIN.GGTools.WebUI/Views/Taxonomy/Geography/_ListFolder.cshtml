@@ -1,0 +1,53 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyViewModel
+<table id="data_table_geography" class="table table-striped" style=" width:100%;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Item</th>
+            <th>Key</th>
+            <th>Continent</th>
+            <th>Subcontinent</th>
+            <th>Country</th>
+            <th>Admin 1</th>
+            <th>Type</th>
+            <th>Admin 2</th>
+            <th>Type</th>
+            <th>Valid</th>
+            <th>Note</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+        <tr>
+            <td>@result.ID</td>
+            <td>@result.SysFolderItemMapID</td>
+            <td>@result.EntityKey</td>
+            <td>@result.Continent</td>
+            <td>@result.SubContinent</td>
+            <td>@result.CountryDescription</td>
+            <td>@result.Admin1</td>
+            <td>@result.Admin1TypeDescription</td>
+            <td>@result.Admin2</td>
+            <td>@result.Admin2TypeDescription</td>
+            <td>
+                @Html.Raw(Model.FormatBoolean(@result.IsValid))
+            </td>
+            <td>
+                @Html.Raw(result.Note)
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Geography", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableFolderFormat("data_table_geography");
+    });
+</script>

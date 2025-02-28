@@ -1,0 +1,45 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+@if (Model.Entity.ID > 0)
+{
+    <div class="callout callout-info">
+        @Html.Raw(Model.Entity.RevisionHistoryText)
+
+        @if (Model.Entity.ID > 0)
+        {
+            if (Model.Entity.IsVerified == "Y")
+            {
+                <span>, <strong>Verified</strong> by</span> @Model.Entity.VerifiedByCooperatorName <span>on</span> @Model.Entity.NameVerifiedDate.ToShortDateString()
+                <span style="margin-left:.5rem;">
+                    <button id="btnSetVerifiedUpdate"
+                            type="button"
+                            class="btn btn-default btn-sm"
+                            data-ggtools-action="verify"
+                            data-ggtools-value="Y">
+                        Re-Verify
+                    </button>
+                    <button id="btnSetVerifiedOff"
+                            type="button"
+                            class="btn btn-default btn-sm"
+                            data-ggtools-action="verify"
+                            data-ggtools-value="N">
+                        Un-Verify
+                    </button>
+                </span>
+            }
+            else
+            {
+                <span style="margin-left:.5rem;">
+                    <button id="btnSetVerifiedOn"
+                            type="button"
+                            class="btn btn-default btn-sm"
+                            style="margin-left:5px;"
+                            data-ggtools-action="verify"
+                            data-ggtools-value="Y">
+                        Verify
+                    </button>
+                </span>
+            }
+        }
+    </div>
+}
+

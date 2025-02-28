@@ -1,0 +1,75 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.EconomicUseViewModel
+<table id="data_table_taxonomy_use" class="table table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            <th width="5%">ID</th>
+            <th>Species Name</th>
+            <th>Economic Use</th>
+            <th>Plant Part</th>
+            <th>Citation</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit","Species", new { @entityId = result.SpeciesID })">
+                        @Html.Raw(result.SpeciesName)
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit","EconomicUsageType", new { @entityId = result.EconomicUsageTypeID })">
+                        @result.AssembledName
+                    </a>
+                </td>
+                <td>@result.PlantPartDescription</td>
+                <td>
+                    <a href="@Url.Action("Edit","Citation", new { @entityId = result.CitationID })">
+                        @Html.Raw(result.CitationText)
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "EconomicUse", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+
+    function EditBatch() {
+        var selectedIdList = GetSelectedEntityIDs("data_table_taxonomy_use");
+        var link = '@Url.Action("RenderBatchEditModal","EconomicUse", new { entityIdList = "SELECTED_ID_LIST" })';
+        link = link.replace("SELECTED_ID_LIST", selectedIdList);
+        var formData = new FormData();
+
+        if (selectedIdList.length == "0") {
+            $("#modal-validation-select-records").modal("show");
+            return;
+        }
+
+        formData.append("idList", selectedIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-batch-edit-modal").html(response);
+                $("#modal-economic-use-batch-edit").modal("show");
+            }
+        });
+    }
+</script>

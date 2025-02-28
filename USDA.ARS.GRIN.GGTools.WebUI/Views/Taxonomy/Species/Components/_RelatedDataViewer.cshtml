@@ -1,0 +1,80 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+<div class="card">
+    <div id="section-dependent-data" class="card-header p-2">
+        <ul id="list-dependent-data" class="nav nav-pills">
+            <li id="tab_selector_conspecific" data-ggtools-action="Species" data-ggtools-value="_ListConspecific" class="nav-item"><a class="nav-link active" href="#tab_content_conspecific" data-toggle="tab">Conspecific</a></li>
+            <li id="tab_selector_citation" data-ggtools-action="Citation" data-ggtools-value="_List" class="nav-item"><a class="nav-link" href="#tab_content_citation" data-toggle="tab">Citations</a></li>
+            <li id="tab_selector_taxonomy_common_name" data-ggtools-action="CommonName" data-ggtools-value="_List" class="nav-item"><a class="nav-link" href="#tab_content_taxonomy_common_name" data-toggle="tab">Common Names</a></li>
+            @*<li id="tab_selector_taxonomy_species_synonym_map_b" data-ggtools-action="SpeciesSynonymMap" data-ggtools-value="_ListSynonymsB" class="nav-item"><a class="nav-link" href="#tab_content_taxonomy_species_synonym_map_b" data-toggle="tab">Synonym Of</a></li>*@
+            <li id="tab_selector_taxonomy_species_synonym_map_a" data-ggtools-action="Species" data-ggtools-value="_ListSynonyms" class="nav-item"><a class="nav-link" href="#tab_content_taxonomy_species_synonym_map_a" data-toggle="tab">Synonyms</a></li>
+            <li id="tab_selector_taxonomy_geography_map" data-ggtools-action="GeographyMap" data-ggtools-value="_List" class="nav-item"><a class="nav-link" href="#tab_content_taxonomy_geography_map" data-toggle="tab">Distributions</a></li>
+            <li id="tab_selector_taxonomy_regulation_map" data-ggtools-action="RegulationMap" data-ggtools-value="_List" class="nav-item"><a class="nav-link" href="#tab_content_taxonomy_regulation_map" data-toggle="tab">Regulations</a></li>
+            <li id="tab_selector_taxonomy_use" data-ggtools-action="EconomicUse" data-ggtools-value="_List" class="nav-item"><a class="nav-link" href="#tab_content_taxonomy_use" data-toggle="tab">Economic Uses</a></li>
+            <li id="tab_selector_taxonomy_cwr_map" data-ggtools-action="CWRMap" data-ggtools-value="_List" class="nav-item"><a class="nav-link" href="#tab_content_taxonomy_cwr_map" data-toggle="tab">CWR Maps</a></li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_content_conspecific">
+            </div>
+            <div class="tab-pane" id="tab_content_citation">
+            </div>
+            <div class="tab-pane" id="tab_content_taxonomy_common_name">
+            </div>
+            <div class="tab-pane" id="tab_content_taxonomy_species_synonym_map_a">
+            </div>
+            <div class="tab-pane" id="tab_content_taxonomy_species_synonym_map_b">
+            </div>
+            <div class="tab-pane" id="tab_content_taxonomy_geography_map">
+            </div>
+            <div class="tab-pane" id="tab_content_taxonomy_regulation_map">
+            </div>
+            <div class="tab-pane" id="tab_content_taxonomy_use">
+            </div>
+            <div class="tab-pane" id="tab_content_taxonomy_cwr_map">
+            </div>
+        </div>
+    </div>
+    <div id="progress_overlay" class="overlay">
+        <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+</div>
+<script type="text/javascript">
+     $('#section-dependent-data ul.nav li').on('click', function () {
+        var selectedId = $(this).attr('id');
+        var action =  $(this).data("ggtools-action");
+        var value = $(this).data("ggtools-value");
+
+        LoadDependentData(selectedId, action, value);
+    });
+
+    function LoadDependentData(controlId, eventAction, eventValue) {
+        var link = '@Url.Action("EVENT_VALUE","EVENT_ACTION", new { speciesId = "SPECIES_ID" })';
+        var entityId = $("#Entity_ID").val();
+        var genusId = $("#Entity_GenusID").val();
+        var genusName = $("#Entity_Name").val();
+        var formData = new FormData();
+        var sectionData = controlId.replace("tab_selector", "tab_content");
+
+        link = link.replace("SPECIES_ID", entityId);
+        link = link.replace("EVENT_ACTION", eventAction);
+        link = link.replace("EVENT_VALUE", eventValue);
+
+        formData.append("SpeciesID", entityId);
+
+        $("#progress_overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#" + sectionData).html(response);
+                $("#progress_overlay").hide();
+            }
+        });
+    }
+</script>

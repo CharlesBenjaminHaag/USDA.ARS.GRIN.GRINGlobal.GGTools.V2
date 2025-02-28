@@ -1,0 +1,101 @@
+﻿<div class="modal fade" id="modal-protologue-lookup" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="search-progress-overlay-protologue" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Protologue Lookup</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Search Text</label>
+                            <input type="text" id="txtLookupProtologue" class="form-control" />
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="margin">
+                                <button id="btnReset" class="btn btn-danger">Reset</button>
+                                <button id="btnLookupProtologue" class="btn btn-default float-right">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="section-protologue-lookup-search-results" class="col-md-12">
+                        </div>
+                    </div>
+                </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $("#btnOpenProtologueLookupModal").click(function () {
+        OpenLookupModal("protologue");
+    });
+
+    $('#modal-protologue-lookup').on('keypress', function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            /*alert("ENTER clicked");*/
+            SearchProtologues();
+            event.preventDefault();
+        }
+    });
+
+    $("#btnLookupProtologue").click(function () {
+        SearchProtologues();
+    });
+
+    function SearchProtologues() {
+        var link = '@Url.Action("LookupProtologues","Species")';
+        var protologueText = $("#txtLookupProtologue").val();
+
+        var formData = new FormData();
+
+        formData.append("Protologue", protologueText);
+
+        $("#search-progress-overlay-protologue").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-protologue-lookup-search-results").html(response);
+                $("#search-progress-overlay-protologue").hide();
+            },
+            error: function () {
+                alert("Error");
+                $("#search-progress-overlay-protologue").hide();
+            }
+        });
+    }
+
+    $(document).on("click", "[id*='btnSaveProtologue']", function () {
+        $('#modal-protologue-lookup').modal('hide');
+        var convertedProtologue = "";
+        var selectedProtologue = GetSelectedEntityText("data-table-protologue-lookup");
+        convertedProtologue = htmlUnescape(selectedProtologue.toString());
+        $("#Entity_Protologue").val(convertedProtologue);
+    });
+
+    function htmlUnescape(str) {
+        return str.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+    }
+</script>

@@ -1,0 +1,73 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyMapViewModel
+<div class="card card-default card-outline dual-select">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-leaf"></i> Species
+        </h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("Edit", "GeographyMap", FormMethod.Post, new { id = "frmGeographyMap" }))
+        {
+            @Html.HiddenFor(x=>x.Entity.SpeciesID)
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Species</label>
+                        <div class="input-group">
+                            <span id="placeholder-AcceptedName" style="background-color: #ecf0f5; border: 1px solid #ced4da; width: 100%; position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; min-width: 0; margin-bottom: 0; padding: 0.375rem 0.75rem; height: calc(2.25rem + 2px);">@Html.Raw(Model.Entity.AcceptedName) </span>
+                            <span class="input-group-append">
+                                @if (Model.Entity.AcceptedID > 0)
+                                {
+                                    <a href="@Url.Action("Edit", "Species", new { @entityId = Model.Entity.AcceptedID })" class="btn btn-default btn-flat">
+                                        <i class="fa fa-link"></i>
+                                    </a>
+                                }
+                                <button id="btnOpenSpeciesLookupModal"
+                                        type="button"
+                                        data-toggle="modal"
+                                        data-ggtools-id-field="Entity_SpeciesID"
+                                        data-ggtools-name-field="Entity_AcceptedName"
+                                        data-target="#modal-species-lookup"
+                                        class="btn btn-default btn-flat">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    @*<div class="form-group clearfix float-right" style="margin-top:10px;">
+                        <div class="icheck-primary d-inline">
+                            @Html.CheckBoxFor(x => x.SearchEntity.SpeciesIsAcceptedNameOption)
+                            <label for="SearchEntity.SpeciesIsAcceptedNameOption">
+                                Search only accepted names
+                            </label>
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="ddlGeographyStatusCode" class="form-control">
+                            <option value="a">Adventive</option>
+                            <option value="c">Cultivated</option>
+                            <option value="n" selected>Native</option>
+                            <option value="i">Naturalized</option>
+                            <option value="o">Other</option>
+                            <option value="u">Uncertain</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+    <div class="card-footer">
+        <button id="btnClearSpecies" class="btn btn-default">Reset</button>
+        <button id="btnGenerateGeographyMaps" class="btn btn-default float-right">Generate Maps</button>
+    </div>
+</div>

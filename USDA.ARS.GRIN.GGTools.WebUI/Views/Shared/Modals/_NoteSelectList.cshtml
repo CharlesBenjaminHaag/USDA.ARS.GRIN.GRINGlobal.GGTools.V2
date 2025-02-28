@@ -1,0 +1,26 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.ReferenceViewModel
+<hr />
+<button id="btnSaveNote1" type="button" class="btn btn-default float-right m-1 note-selector" data-dismiss="modal">Add Selected Note</button>
+<table id="data-table-note-lookup" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollectionCodeValues)
+        {
+            <tr>
+                <td>1</td>
+                <td>@Html.Raw(result.Description)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<button id="btnSaveNote2" type="button" class="btn btn-default float-right m-1 note-selector" data-dismiss="modal">Add Selected Note</button>
+<script type="text/javascript">
+    InitDataTableLookupFormat("data-table-note-lookup");
+</script>
+
+

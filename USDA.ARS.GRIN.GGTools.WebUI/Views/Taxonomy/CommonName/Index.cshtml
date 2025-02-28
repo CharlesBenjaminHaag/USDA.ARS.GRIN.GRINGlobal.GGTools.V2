@@ -1,0 +1,29 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CommonNameViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Taxonomy/CommonName/_Detail.cshtml")
+@Html.Partial("~/Views/Taxonomy/CommonName/_List.cshtml")
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Init();
+        SetExtendedFields();
+    });
+
+    function Init() {
+        var taxonType = $("#EventValue").val();
+        var tabId = "tab-" + taxonType;
+        $("[id=" + tabId + "]").addClass("active");
+    }
+
+    $('.citation-detail').click(function () {
+        var id = $(this).attr('id');
+        $("#section-citation-id").html(id);
+        $("#modal-citation-detail").modal("show");
+    });
+</script>

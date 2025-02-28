@@ -1,0 +1,48 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CommonNameLanguageViewModel
+<table id="data_table_taxonomy_common_name_language" class="table table-striped ggtools">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Item</th>
+            <th>Key</th>
+            <th>Name</th>
+            <th>Simplified Name</th>
+            <th>Transcription</th>
+            <th>Country</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+            <tr>
+                <td>@result.ID</td>
+                <td>   </td>
+                <td>   </td>
+                <td>@result.LanguageName</td>
+                <td>@result.LanguageSimplifiedName</td>
+                <td>
+                    @result.LanguageTranscription
+                </td>
+                <td>
+                    @result.CountryDescription
+                </td>
+                <td style="text-align:right;">
+                    <a href="@Url.Action("Edit", "CommonNameLanguage", new { entityId = result.ID, sysFolderId = Model.SearchEntity.FolderID })" class="btn btn-default btn-sm pull-right row-edit">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("~/Views/Taxonomy/CommonNameLanguage/Modals/_EditBatch.cshtml")
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableFolderFormat("data_table_taxonomy_common_name_language");
+    });
+
+    function BatchEdit() {
+        $("#modal-taxonomy-common-name-language-edit-batch").modal("show");
+    }
+</script>

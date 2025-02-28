@@ -1,0 +1,127 @@
+﻿<div class="modal fade" id="modal-delete-confirm" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Please Confirm</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @*@if (Model.Entity.RelatedItemCount > 0)
+                {
+                    <p>
+                        <span style="font-weight:bold;">Note:</span>
+                        There are currently @Model.Entity.RelatedItemCount records in GRIN that are linked to this record. You will have to remove, or reassign, these records before deleting this one.
+                    </p>
+                }
+                else
+                {*@
+                <p>
+                    <strong>
+                        This will permanently delete this record from the GRIN database.
+                    </strong>
+                    Are you sure?
+                </p>
+                @*}*@
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn bg-danger" data-dismiss="modal">Cancel</button>
+                <button id="btnDeleteConfirm" type="button" class="btn btn-default" data-dismiss="modal">Yes, Please Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-delete-dependency-warning" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Dependent Data Found</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    You cannot delete this record until records dependent 
+                    on it have been removed, or linked to a record
+                    other than this one.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light float-right" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-configuration-error" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-warning">
+            <div class="modal-header">
+                <h4 class="modal-title">Configuration Error</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Table not correctly configured in GRIN-Global database.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light float-right" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).on("click", "[id='btnDelete']", function () {
+        $("#modal-delete-confirm").modal("show");
+    });
+
+    $("#btnDeleteConfirm").click(function () {
+        Delete();
+    });
+
+    function Delete() {
+        var tableName = $("#TableName").val();
+        var tableCode = $("#TableCode").val();
+        var link = '@Url.Action("DeleteEntity","[ACTION]")';
+        var refreshLink = '@Url.Action("Index","[ACTION]")';
+        var entityId = $("#Entity_ID").val();
+        var formData = new FormData();
+
+        link = link.replace("[ACTION]", tableCode);
+        refreshLink = refreshLink.replace("[ACTION]", tableCode);
+        formData.append("TableName", tableName);
+        formData.append("EntityID", entityId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                console.log("DEBUG Folder Delete ret code " + response.errorMessage);
+                if (response.errorMessage == "547") {
+                    $("#modal-delete-dependency-warning").modal("show");
+                }
+                else {
+                    if (response.errorMessage == "50000") {
+                    }
+                    else {
+                        window.location.href = refreshLink;
+                    }
+                }
+            },
+            error: function () {
+                alert("Error calling " + link);
+            }
+        });
+    }
+</script>

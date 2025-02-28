@@ -1,0 +1,69 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SiteAdminViewModelBase
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="far fa-gears"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">CGC Committees</span>
+                <span class="info-box-number">1,410</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="far fa-gears"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">CGC Documents</span>
+                <span class="info-box-number">1,410</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="far fa-gears"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Crop Descriptors</span>
+                <span class="info-box-number">1,410</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("Search", "CGCCooperator", FormMethod.Post, new { id = "frmSearch" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.AuthenticatedUserCooperatorID)
+    @Html.HiddenFor(x => x.ItemIDList)
+
+    <div class="card-default">
+        <div class="box-body" style="border:none;">
+            
+            <div class="box-footer no-padding">
+            </div>
+        </div>
+    </div>
+    <div id="section-search-results" class="data-list">
+        
+    </div>
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Init();
+        InitDataTable("data-table-cooperators");
+    });
+
+    function Init() {
+        
+    }
+ 
+</script>

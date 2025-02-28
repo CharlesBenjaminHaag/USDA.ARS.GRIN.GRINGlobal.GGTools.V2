@@ -1,0 +1,71 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GenusViewModel
+
+@if (Model.DataCollection.Count == 0)
+{
+    <p>No genera are currently assigned. <a href="@Url.Action("Add","Genus", new { @familyId = Model.SearchEntity.FamilyID })" class="btn btn-default btn-flat">Add Genus</a></p>
+}
+else
+{
+    <table id="data_table_taxonomy_genus" class="table table-striped ggtools-table" style="width:100%;">
+        <thead>
+            <tr>
+                <th width="5%">ID</th>
+                <th>Name</th>
+                <th>Family</th>
+                <th>Qualifying Code</th>
+                <th>Hybrid Code</th>
+                <th style="text-align:center;">Accepted?</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model.DataCollection)
+            {
+                <tr>
+                    <td>
+                        @result.ID
+                    </td>
+                    <td>
+                        @Html.Raw(result.AssembledName)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Family", new { @entityId = result.FamilyID })">
+                            @Html.Raw(result.FamilyName)
+                        </a>
+                    </td>
+                    <td>
+                        @result.QualifyingCodeTitle
+                    </td>
+                    <td>
+                        @result.HybridCodeTitle
+                    </td>
+                    <td style="text-align:center;">@Html.Raw(Model.FormatBoolean(result.IsAcceptedName))</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Genus", new { entityId = result.ID })" class="btn btn-default btn-sm float-right row-edit">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<script type="text/javascript">
+    function GetBatchEditor() {
+        var link = '@Url.Action("GetBatchEditor", "Family")';
+        var formData = new FormData();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-modal-email").html(response);
+                $("#modal-email").modal("show");
+            }
+        });
+    }
+</script>

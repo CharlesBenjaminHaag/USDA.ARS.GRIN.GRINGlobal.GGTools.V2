@@ -1,0 +1,67 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+@{
+    ViewBag.Title = "Web Order Search";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("Search", "WebOrder", FormMethod.Post, new { id = "frmSearch" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.Partial("~/Views/WebOrder/_Detail.cshtml")
+}
+@Html.Partial("~/Views/WebOrder/_List.cshtml")
+@*@Html.Partial("~/Views/WebOrder/Modals/_BatchEdit.cshtml")*@
+@Html.Partial("~/Views/Shared/Modals/_SaveSearch.cshtml")
+
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    InitDataTable("data-table-web-order-requests");
+    //});
+
+    $("#btnOpenBatchCancelModal").click(function () {
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-web-order-requests");
+        $("#lblBatchEditModalTitle").html("Cancel Orders (" + selectedItemIdList.length + ")");
+        $("#modal-web-order-batch-edit").modal("show");
+        //DEBUG
+        //alert("SELECTED " + selectedItemIdList);
+        //    $("#lblFolderEditModalTitle").html("Add " + selectedItemIdList.length + " Selected Record(s) To Folder");
+        //    $("#modal-folder-edit").modal("show");
+    });
+
+    function GetSelectedEntityIDs(tableName) {
+        var table = $('#' + tableName).DataTable();
+        var ids = $.map(table.rows('.selected').data(), function (item) {
+            return item[0]
+        });
+        console.log(ids)
+        return ids;
+    }
+
+
+    $("#btnSaveBatchEdits").click(function () {
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-web-order-requests");
+        var link = "@Url.Action("BatchEdit","WebOrder")";
+
+        var formData = new FormData();
+        formData.append("IDList", selectedItemIdList);
+        formData.append("StatusCode", "CANCELLED");
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+                $("#modal-family-edit").modal("hide");
+                window.location.href = refreshLink;
+            },
+            error: function () {
+                alert("Error in AddToFolder()");
+            }
+        });
+    });
+
+</script>

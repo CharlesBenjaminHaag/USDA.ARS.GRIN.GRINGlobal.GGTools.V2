@@ -1,0 +1,105 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorGroupViewModel
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Cooperators (@Model.DataCollection.Count())</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="card-body">
+        <table id="data-table-cooperators" class="table table-striped">
+            <thead>
+                <tr>
+                    <th width="5%"></th>
+                    <th>ID</th>
+                    <th>Current ID</th>
+                    <th>Status</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Organization</th>
+                    <th>Site</th>
+                    <th>Short Name</th>
+                    <th>User Name</th>
+                    <th>Enabled</th>
+                    <th>Password Expires</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.DataCollection != null)
+                {
+                    if (Model.DataCollection.Count() > 0)
+                    {
+                        foreach (var result in Model.DataCollection)
+                        {
+                            <tr>
+                                <td>
+                                    @result.ID
+                                </td>
+                                <td>
+                                    @result.ID
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Edit","Cooperator", new { entityId = result.ID })">
+                                        @result.CurrentCooperatorID
+                                    </a>
+                                </td>
+                                <td>
+                                    @if (result.StatusCode == "ACTIVE")
+                                    {
+                                        <span class="badge bg-green">
+                                            @result.StatusCode
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-red">
+                                            @result.StatusCode
+                                        </span>
+                                    }
+                                </td>
+                                <td>@Html.Raw(result.FirstName)</td>
+                                <td>@Html.Raw(result.LastName)</td>
+                                <td>@result.Organization</td>
+                                <td>@result.SiteName</td>
+                                <td>@result.SiteShortName</td>
+                                <td>@result.SysUserName</td>
+                                <td style="text-align:center;">
+                                    @if (result.SysUserIsEnabled == "Y")
+                                    {
+                                        <span class="badge bg-green">
+                                            YES
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-red">
+                                            NO
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (result.SysUserPasswordExpirationDate > DateTime.MinValue)
+                                    {
+                                        @result.SysUserPasswordExpirationDate.ToShortDateString()
+                                    }
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "Cooperator", new { entityId = result.ID })" class="btn btn-default btn-flat btn-sm pull-right row-edit">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

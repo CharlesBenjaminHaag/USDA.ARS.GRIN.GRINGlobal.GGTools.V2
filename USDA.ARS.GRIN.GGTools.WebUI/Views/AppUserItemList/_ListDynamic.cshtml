@@ -1,0 +1,11 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemListViewModel
+@foreach (var result in Model.DataCollection)
+{
+<div class="row">
+    <div class="col-md-3">@result.ID</div>
+    <div class="col-md-3">@result.IDType</div>
+</div>
+<div class="row">
+    @result.Properties
+</div>
+}

@@ -1,0 +1,57 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel 
+<div class="card card-primary card-outline collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">Extended Fields</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body p-3" style="display: none;">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Reference Title</label>
+                    @Html.TextBoxFor(x => x.Entity.ReferenceTitle, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Reference Description</label>
+                    @Html.TextBoxFor(x => x.Entity.ReferenceDescription, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true" })
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group form-horizontal">
+                    <label>Method ID</label>
+                    @Html.TextBoxFor(x => x.Entity.MethodID, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group form-horizontal">
+                    <label>Accession ID</label>
+                    @Html.TextBoxFor(x => x.Entity.AccessionID, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group form-horizontal">
+                    <label>Accession IPR ID</label>
+                    @Html.TextBoxFor(x => x.Entity.AccessionIPRID, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group form-horizontal">
+                    <label>Accession Pedigree ID</label>
+                    @Html.TextBoxFor(x => x.Entity.AccessionPedigreeID, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group form-horizontal">
+                    <label>Genetic Marker ID</label>
+                    @Html.TextBoxFor(x => x.Entity.GeneticMarkerID, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

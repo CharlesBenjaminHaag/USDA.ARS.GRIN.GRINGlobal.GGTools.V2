@@ -1,0 +1,13 @@
+﻿@{
+    string controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    string actionName = ViewContext.RouteData.Values["action"].ToString();
+    string urlReferrer = Request.Url.PathAndQuery.ToString();
+}
+@if (actionName.ToLower() == "add")
+{
+    <a href="@Url.Action("Index", controllerName)" class="btn btn-default">Reset</a>
+}
+else
+{
+    <a href="@urlReferrer" class="btn btn-default">Reset</a>
+}

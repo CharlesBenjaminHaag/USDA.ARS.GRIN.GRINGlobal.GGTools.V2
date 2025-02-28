@@ -1,0 +1,35 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.EconomicUseViewModel
+<table id="data-table-economic-uses" class="table table-striped table-responsive">
+    <thead>
+        <tr>
+            <th></th>
+            <th width="5%">ID</th>
+            <th>Species Name</th>
+            <th>Usage Code</th>
+            <th>Usage Description</th>
+            <th>Usage Type</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+        <tr>
+            <td>
+                @result.ID
+            </td>
+            <td><span class="badge">@result.ID</span></td>
+            <td>@result.SpeciesName</td>
+            <td>@result.EconomicUsageCode</td>
+            <td>@result.EconomicUsageDescription</td>
+            <td>@result.EconomicUsageType</td>
+            <td>
+                <a href="@Url.Action("Edit", "EconomicUse", new { entityId = result.ID })" class="btn btn-default btn-sm pull-right row-edit">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+

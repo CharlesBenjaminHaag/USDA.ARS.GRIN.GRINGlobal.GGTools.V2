@@ -1,0 +1,34 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+@if (Model.Entity.ID > 0)
+{
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-book"></i>
+                Citation
+                <a href="" class="margin-left-15" data-toggle="modal" data-target="#modal-species-citation-lookup">[Change]</a>
+                <a href="@Url.Action("Edit", "Citation", new { @entityId = Model.Entity.ID })" class="margin-left-15">[Edit]</a>
+                @*<a href="" class="margin-left-2px">[Delete]</a>*@
+            </h3>
+        </div>
+        <div class="card-body">
+            <p>@Html.Raw(Model.Entity.AssembledName)</p>
+        </div>
+    </div>
+}
+else
+{ 
+    <div class="alert alert-warning alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-exclamation-triangle"></i> No Supporting Citation Found</h5>
+        There is currently no supporting citation for this record. <button id="btnOpenSpeciesCitationLookupModal" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-species-citation-lookup">Fix it</button> 
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnOpenSpeciesCitationLookupModal').on('click', function () {
+            $("#modal-species-citation-lookup").modal("show");
+        });
+    });
+</script>

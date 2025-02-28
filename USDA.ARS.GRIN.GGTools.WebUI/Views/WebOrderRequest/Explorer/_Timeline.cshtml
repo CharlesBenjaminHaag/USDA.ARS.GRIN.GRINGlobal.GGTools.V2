@@ -1,0 +1,49 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<div class="timeline timeline-inverse">
+
+    
+
+    @if (Model.DataCollectionActionGroups.Count() > 0)
+    {
+        foreach (var actionGroup in Model.DataCollectionActionGroups)
+        {
+            <div class="time-label">
+                <span class="bg-info">
+                    @actionGroup.DateGroup.ToShortDateString()
+                </span>
+            </div>
+
+            foreach (var webOrderRequestAction in actionGroup.WebOrderRequestActions)
+            {
+                <div>
+                    <i class="@Model.GetCSSClass(webOrderRequestAction.ActionCode)"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="far fa-clock"></i> @webOrderRequestAction.CreatedDate.ToShortTimeString()</span>
+                        <h3 class="timeline-header"><a href="#">@webOrderRequestAction.ActionTitle</a> by @webOrderRequestAction.CreatedByCooperatorName</h3>
+                        @if (!String.IsNullOrEmpty(webOrderRequestAction.Note))
+                        {
+                            <div class="timeline-body">
+                                @if (webOrderRequestAction.CreatedByCooperatorID != 1)
+                                {
+                                    @Html.Raw(webOrderRequestAction.Note)
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        <div>
+            <i class="far fa-clock bg-gray"></i>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-info"></i> No Actions Taken</h5>
+            No actions have been logged for this web order request.
+        </div>
+    }
+
+</div>

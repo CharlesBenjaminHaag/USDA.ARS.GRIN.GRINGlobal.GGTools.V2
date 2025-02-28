@@ -1,0 +1,218 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GenusViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    ViewBag.ID = Model.ID;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@Html.HiddenFor(x => x.EventAction)
+@Html.HiddenFor(x => x.EventValue)
+@Html.HiddenFor(x => x.EventInfo)
+
+<div id="section-search-results" class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Family</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results">
+            <div id="section-search-results">
+                <table id="example" class="table table-striped" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Family Name</th>
+                            <th>Genus Name</th>
+                            <th>Subgenus Name</th>
+                            <th>Section Name</th>
+                            <th>Subsection Name</th>
+                            <th>Series Name</th>
+                            <th>Subseries Name</th>
+                            <th>Last Modified</th>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+@{Html.RenderAction("RenderLookupModal", "Family"); }
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var editor = new DataTable.Editor({
+            ajax: '@Url.Action("EditBatch","Genus")',
+            fields: [
+                {
+                    label: 'ID:',
+                    name: 'taxonomy_genus.taxonomy_genus_id'
+                },
+                {
+                    label: 'Family:',
+                    name: 'taxonomy_family.family_name',
+                    type: 'readonly'
+                },
+                {
+                    label: 'Name:',
+                    name: 'taxonomy_genus.genus_name'
+                },
+                {
+                    label: 'Subfamily:',
+                    name: 'taxonomy_genus.subgenus_name'
+                },
+                {
+                    label: 'Tribe:',
+                    name: 'taxonomy_genus.section_name'
+                },
+                {
+                    label: 'Subtribe:',
+                    name: 'taxonomy_genus.subsection_name'
+                },
+                {
+                    label: 'Subtribe:',
+                    name: 'taxonomy_genus.series_name'
+                },
+                {
+                    label: 'Subtribe:',
+                    name: 'taxonomy_genus.subseries_name'
+                }
+            ],
+            table: '#example'
+        });
+
+        var table = $('#example').DataTable({
+            ajax: '@Url.Action("EditBatch","Genus")',
+            autoFill: {
+                editor: editor
+            },
+            //buttons: [
+            //    { extend: 'create', editor: editor },
+            //    { extend: 'edit', editor: editor },
+            //    { extend: 'remove', editor: editor }
+            //],
+            columns: [
+                {
+                    data: 'taxonomy_genus.taxonomy_genus_id',
+                    render: function (data, type, row, meta) {
+                        var url = '@Url.Action("Edit","Genus")' + '?entityId=' + row.taxonomy_genus.taxonomy_genus_id;
+                        return '<a href="' + url + '">' + data + '</a>';
+                    }
+                },
+                {
+                    data: 'taxonomy_family.family_name',
+                    render: function (data, type, row, meta) {
+                        if (row.taxonomy_family.family_name != null) {
+                            return '<a id=button_modal-family-lookup_' + row.taxonomy_genus.taxonomy_genus_id + ' href="#">' + row.taxonomy_family.family_name + '</a>';
+                        }
+                        else {
+                            return '';
+                        }
+                    }
+                },
+                { data: 'taxonomy_genus.genus_name', className: 'editable' },
+                { data: 'taxonomy_genus.subgenus_name', className: 'editable' },
+                { data: 'taxonomy_genus.section_name', className: 'editable'},
+                { data: 'taxonomy_genus.subsection_name', className: 'editable'},
+                { data: 'taxonomy_genus.series_name', className: 'editable'},
+                { data: 'taxonomy_genus.subseries_name', className: 'editable' },
+                { data: 'taxonomy_genus.modified_date' }
+            ],
+            keys: {
+                /*columns: ':not(:first-child)',*/
+                columns: [3,4,5,6,7],
+                keys: [9],
+                editor: editor,
+                editOnFocus: true
+            },
+            layout: {
+                topStart: {
+                    buttons: [
+                        { extend: 'create', editor: editor },
+                        { extend: 'edit', editor: editor },
+                        { extend: 'remove', editor: editor }
+                    ]
+                }
+            },
+            order: [[1, 'asc']],
+            scrollX: true,
+            scrollY: 500,
+            paging: false,
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, 'All']
+            ],
+            dom: "Bflrtip",
+            select: {
+                blurable: true,
+                selector: 'td:first-child',
+                style: 'os'
+            }
+        });
+
+        // Activate an inline edit on click of a table cell
+        table.on('click', 'tbody td.editable', function (e) {
+            editor.inline(this);
+        });
+
+    });
+
+    $(document).on("click", "[id*='button_modal']", function () {
+        var controlId = $(this).attr('id');
+        var separator = "_";
+        var controlIdArray = controlId.split(separator);
+        var modalId = "#" + controlIdArray[1];
+        var regulationMapId = controlIdArray[2];
+
+        //DEBUG
+        /*alert("OPEN MODAL " + modalId + " FOR REG MAP ID " + regulationMapId);*/
+
+        $("#EventAction").val("RegulationMap");
+        $("#EventValue").val("EditBatch");
+        $("#EventInfo").val(regulationMapId);
+        OpenModal(modalId);
+    });
+
+     function RefreshTable() {
+        var table = $("#example").DataTable();
+        table.ajax.reload(null, false);
+    }
+
+    function SaveFamilyToBatch(genusId, familyId) {
+        //TODO
+        // Ajax call to save change(s) to selected reg map
+        // Redraw grid
+        var link = '@Url.Action("SaveBatch","Genus")';
+        var formData = new FormData();
+
+        formData.append("genusId", genusId);
+        formData.append("familyId", familyId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                RefreshTable();            },
+            error: function (ex) {
+                alert("Error");
+                $("#search-progress-overlay").hide();
+            }
+        });
+    }
+
+    function OpenModal(modalId) {
+        var overlayId = "#search-progress-overlay-" + modalId.replace("#modal-", "");
+
+        $(overlayId).hide();
+        $(modalId).modal("show");
+    }
+</script>

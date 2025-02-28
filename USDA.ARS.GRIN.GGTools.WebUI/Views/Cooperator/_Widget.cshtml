@@ -1,0 +1,53 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModel
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-user"></i>
+            My Cooperator Record</h3>
+    </div>
+
+    <div class="card-body">
+        <strong><i class="fas fa-book mr-1"></i> Status</strong>
+        <p class="text-muted">
+            @if (Model.Entity.StatusCode == "ACTIVE")
+            {
+                <span class="badge bg-green">
+                    @Model.Entity.StatusCode
+                </span>
+            }
+            else
+            {
+                <span class="badge bg-red">
+                    @Model.Entity.StatusCode
+                </span>
+            }
+        </p>
+        <hr>
+        <strong><i class="fas fa-map-marker-alt mr-1"></i> Site</strong>
+        <p class="text-muted">
+            <a href="@Url.Action("Edit","Site", new { @entityId = Model.Entity.SiteID})">
+                @Model.Entity.SiteName (@Model.Entity.SiteShortName)
+            </a>
+        </p>
+        <hr>
+        <strong><i class="fas fa-pencil-alt mr-1"></i> Organization</strong>
+        <p class="text-muted">
+            @Model.Entity.Organization @Model.Entity.OrganizationAbbrev
+        </p>
+        @*<hr>
+        <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
+        <p class="text-muted">@Note</p>
+        *@
+    
+    </div>
+    <div class="card-footer">
+        @if (Model.IsReadOnly == "Y")
+        {
+            <a href="@Url.Action("Edit","Cooperator", new { @entityId = Model.Entity.ID })" class="btn btn-default btn-block"><b>View</b></a>
+        }
+        else
+        {
+            <a href="@Url.Action("Edit","Cooperator", new { @entityId = Model.Entity.ID })" class="btn btn-default btn-block"><b>Edit</b></a>
+        }
+    </div>
+</div>

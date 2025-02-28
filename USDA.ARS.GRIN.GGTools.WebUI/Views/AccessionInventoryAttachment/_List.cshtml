@@ -1,0 +1,63 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AccessionInventoryAttachmentViewModel
+<table id="data-table-attachments" class="table table-responsive table-striped ggtools-table" style=" width:100%;">
+    <thead>
+        <tr>
+            <th width="5%"></th>
+            <th width="5%">ID</th>
+            <th>Accession Name</th>
+            <th>Title</th>
+            <th>Code</th>
+            <th>Category</th>
+            <th>Content Type</th>
+            <th class="table-col-centered">Web Visible</th>
+            <th class="table-col-centered">Image Valid</th>
+            <th class="table-col-centered">Thumb. Valid</th>
+            <th>Validated Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+      
+        @if (Model.DataCollection != null)
+        {
+            if (Model.DataCollection.Count() > 0)
+            {
+                foreach (var result in Model.DataCollection)
+                {
+                <tr>
+                    <td>
+                        @result.ID
+                    </td>
+                    <td>
+                        @result.ID
+                    </td>
+                    <td>@result.InventoryText</td>
+                    <td>@Html.Raw(result.Title)</td>
+                    <td>@result.AttachmentDescriptionCode</td>
+                    <td>@result.CategoryCode</td>
+                    <td>@result.ContentType</td>
+                    <td class="table-col-centered">
+                        @Html.Raw(Model.FormatBoolean(result.IsWebVisible))
+                    </td>
+                    <td class="table-col-centered">
+                        @Html.Raw(Model.FormatBoolean(result.IsVirtualPathValid))
+                    </td>
+                    <td class="table-col-centered">
+                        @Html.Raw(Model.FormatBoolean(result.IsThumbnailVirtualPathValid))
+                    </td>
+                    <td>@if (result.ValidatedDate != DateTime.MinValue)
+                        { 
+                            @result.ValidatedDate.ToShortDateString()
+                        }
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "AccessionInventoryAttachment", new { entityId = result.ID })" class="btn btn-default btn-flat btn-sm pull-right row-edit">
+                            <i class="fa fa-info"></i> View
+                        </a>
+                    </td>
+                </tr>
+                }
+            }
+        }
+    </tbody>
+</table>

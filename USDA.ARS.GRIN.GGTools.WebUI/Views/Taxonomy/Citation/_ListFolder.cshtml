@@ -1,0 +1,79 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+
+    <table id="data_table_sys_folder" class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Item</th>
+                <th>Type</th>
+                <th>Species Name</th>
+                <th>Citation Title</th>
+                <th>Abbreviation</th>
+                <th>Year</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model.DataCollection)
+            {
+                <tr>
+                    <td>
+                        @result.ID
+                    </td>
+                    <td>
+                        @result.SysFolderItemMapID
+                    </td>
+                    
+                    <td>
+                        @result.TypeCode
+                    </td>
+                    <td>
+                        @if (result.FamilyID > 0)
+                        {
+                            <a href="@Url.Action("Edit", "FamilyMap", new { entityId = result.FamilyID })">
+                                @Html.Raw(result.FamilyName)
+                            </a>
+                        }
+                        else
+                        {
+                            if (result.GenusID > 0)
+                            {
+                                <a href="@Url.Action("Edit", "Genus", new { entityId = result.GenusID })">
+                                    @Html.Raw(result.GenusName)
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Edit", "Species", new { entityId = result.SpeciesID })">
+                                    @Html.Raw(result.SpeciesName)
+                                </a>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @Html.Raw(result.CitationTitle)
+                    </td>
+                    <td>
+                        @result.Abbreviation
+                    </td>
+                    @*<td>
+                            @result.AuthorName
+                        </td>*@
+                    <td>
+                        @result.CitationYear
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Citation", new { entityId = result.ID, sysFolderId = Model.SearchEntity.FolderID } )" class="btn btn-default btn-sm pull-right row-edit">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableFolderFormat("data_table_sys_folder");
+    });
+</script>

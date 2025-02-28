@@ -1,0 +1,113 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.EconomicUsageTypeViewModelBase
+<div class="modal fade" id="modal-economic-usage-type-lookup" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Economic Usage Type Lookup
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="section-search-criteria" class="modal-body">
+                @using (Html.BeginForm(new { id = "frmEconomicUsageTypeLookup", onsubmit = "return false;" }))
+                {
+                    <input type="hidden" id="hfEconomicUsageTypeLookupIDFieldName" />
+                    <input type="hidden" id="hfEconomicUsageTypeLookupNameFieldName" />
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Usage Code</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.EconomicUsageCode, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Usage Type</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.UsageType, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Note</label>
+                                @Html.TextBoxFor(x => x.SearchEntity.Note, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button id="btnSearchEconomicUsageType" type="button" class="btn btn-default float-right">Search</button>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div id="section-economic-usage-type-lookup-search-results" class="col-md-12">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+                <button id="btnSaveEconomicUsageType" type="button" class="btn btn-info" data-dismiss="modal">Add Selected Type</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#modal-economic-usage-type-lookup').on('keypress', function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            /*alert("ENTER clicked");*/
+            EconomicUsageType_Search();
+            event.preventDefault();
+        }
+    });
+
+    $("#btnOpenEconomicUsageTypeLookupModal").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var eventValue = $(this).data("ggtools-value");
+        $("#hfEconomicUsageTypeLookupIDFieldName").val(eventAction);
+        $("#hfEconomicUsageTypeLookupNameFieldName").val(eventValue);
+    });
+
+    $("#btnSearchEconomicUsageType").click(function () {
+        EconomicUsageType_Search();
+    });
+
+    function EconomicUsageType_Search() {
+        var link = '@Url.Action("Lookup", "EconomicUsageType")';
+        var formData = new FormData();
+      
+        formData.append("SearchEntity.EconomicUsageCode", $("#SearchEntity_EconomicUsageCode").val());
+        formData.append("SearchEntity.UsageType", $("#SearchEntity_UsageType").val());
+        formData.append("SearchEntity.Note", $("#SearchEntity_Note").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-economic-usage-type-lookup-search-results").html(response);
+            },
+            error: function (ex) {
+                alert("Error");
+            }
+        });
+    }
+
+    $(document).on("click", "[id*='btnSaveEconomicUsageType']", function () {
+        var idField = $("#hfEconomicUsageTypeLookupIDFieldName").val();
+        var nameField = $("#hfEconomicUsageTypeLookupNameFieldName").val();
+        var idList = GetSelectedEntityIDs("data-table-economic-usage-type-lookup");
+        var nameList = GetSelectedEntityText("data-table-economic-usage-type-lookup");
+   
+        $("#Entity_" + idField).val(idList);
+        $("#Entity_" + nameField).val(nameList);
+    });
+</script>
+
+

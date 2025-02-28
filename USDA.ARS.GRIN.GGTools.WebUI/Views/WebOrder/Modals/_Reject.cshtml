@@ -1,0 +1,118 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<div id="modal-web-order-request-reject" class="modal modal-danger" role='dialog'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">
+                    <i class="fa fa-thumbs-down"></i>
+                    Reject Web Order #<span id="web-order-request-id"></span>
+                </h4>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <h4>
+                    This will set this web order request to <strong>Cancelled</strong> status, and make it visble
+                    within the Order Wizard.
+                </h4>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Add Note (Internal User Only)</label>
+                            <textarea id="txtRejectNote" class="form-control note-format" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="text" disabled="" readonly class="form-control" style="background-color: #dd4b39; color: white;" value="Send email to curators">
+                            <span class="input-group-addon" style="background-color: #dd4b39; color:white;">
+                                <input id="cbxRejectEmailCurators" type="checkbox" checked="checked">
+                            </span>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" disabled="" readonly class="form-control" style="background-color: #dd4b39; color: white;" value="Send email to requestor">
+                            <span class="input-group-addon" style="background-color: #dd4b39; color:white;">
+                                <input id="cbxRejectEmailRequestor" type="checkbox" checked="checked">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="section-modal-reject-email-fields" style="margin-top:15px;">
+                    <div class="form-group">
+                        <label>To</label>
+                        <input id="txtEmailRejectTo" class="form-control" type="text" placeholder="To" readonly="readonly" disabled="disabled" value="@Model.Entity.WebCooperatorEmail">
+                    </div>
+                    <div class="form-group">
+                        <label>From</label>
+                        <input id="txtEmailRejectFrom" class="form-control" type="text" placeholder="From" readonly="readonly" value="@Model.DataCollectionEmailTemplates.Where(x =>x.CategoryCode=="RRJ").First().EmailFrom">
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input id="txtEmailRejectSubject" class="form-control" type="text" placeholder="Subject" value="@Model.DataCollectionEmailTemplates.Where(x =>x.CategoryCode=="RRJ").First().Subject.Replace("[ID_HERE]", Model.Entity.ID.ToString())">
+                    </div>
+                    <div class="form-group">
+                        <label>Body</label>
+                        <textarea id="txtEmailRejectBody" class="form-control" rows="10">
+                            @Model.DataCollectionEmailTemplates.Where(x =>x.CategoryCode=="RRJ").First().Body.Replace("[ID_HERE]", Model.Entity.ID.ToString())
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSubmitReject" class="btn btn-outline" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#btnSubmitReject").click(function () {
+        var eventNote = $("#txtRejectNote").val();
+        if ($("#cbxRejectEmailRequestor").is(":checked")) { }
+        {
+            // Get email text from modal, allowing for user to have made changes to templated text.
+            var emailRequestorTo = $("#txtEmailRejectTo").val();
+            var emailRequestorFrom = $("#txtEmailRejectFrom").val();
+            var emailRequestorSubject = $("#txtEmailRejectSubject").val();
+            var emailRequestorBody = $("#txtEmailRejectBody").val();
+            var emailRequestorBCC = "TEST";
+
+            //emailRequestorBody = CKEDITOR.instances["txtEmailRejectBody"].getData();
+
+            $("#EventAction").val("UPDATE");
+            $("#EventValue").val("NRR_REJECT");
+            $("#EventNote").val(eventNote);
+            $("#SendRequestorNotification").val(true);
+            $("#ActionEmailTo").val(emailRequestorTo);
+            $("#ActionEmailFrom").val(emailRequestorFrom);
+            $("#ActionEmailBCC").val(emailRequestorBCC);
+            $("#ActionEmailSubject").val(emailRequestorSubject);
+            $("#ActionEmailBody").val(emailRequestorBody);
+        }
+
+        if ($("#cbxRejectEmailCurators").is(":checked")) {
+            $("#SendInternalNotification").val(true);
+        }
+        else {
+            $("#SendInternalNotification").val(false);
+        }
+
+        if ($("#cbxRejectEmailRequestor").is(":checked")) {
+            $("#SendRequestorNotification").val(true);
+        }
+        else {
+            $("#SendRequestorNotification").val(false);
+        }
+
+        $("#frmEdit").submit();
+    });
+
+    $("#cbxRejectEmailRequestor").click(function () {
+        if ($(this).is(":checked")) {
+            $("#section-modal-reject-email-fields").show();
+        } else {
+            $("#section-modal-reject-email-fields").hide();
+        }
+    });
+</script>

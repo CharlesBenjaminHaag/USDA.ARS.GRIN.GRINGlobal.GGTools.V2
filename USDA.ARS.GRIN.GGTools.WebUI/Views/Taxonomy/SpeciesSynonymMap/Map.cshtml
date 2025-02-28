@@ -1,0 +1,422 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SynonymMapViewModel
+@{
+    ViewBag.Title = "Synonym Mapping";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style type="text/css">
+    .widget-user-2 .widget-user-username, .widget-user-2 .widget-user-desc {
+        margin-left: 0px;
+    }
+
+    .dual-select {
+        min-height: 350px;
+    }
+
+    .dataTables_info {
+        display: none;
+    }
+</style>
+@Html.HiddenFor(x => x.TableName)
+@Html.HiddenFor(x => x.EventAction)
+@Html.HiddenFor(x => x.EventValue)
+@Html.HiddenFor(x => x.SpeciesID)
+@Html.HiddenFor(x => x.SpeciesName)
+
+<div id="section-validation-errors" class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h5><i class="icon fas fa-ban"></i> Error!</h5>
+    To generate a map, please select:
+    <ul>
+        <li>Species A</li>
+        <li>The type of synonym relationship</li>
+        <li>Species B</li>
+    </ul>
+</div>
+
+<div id="section-search-criteria" class="row">
+    <div class="col-md-5">
+        <div class="card card-primary card-outline dual-select">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-leaf"></i> Species A
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.SearchEntity.SpeciesAName, new { @class = "form-control" })
+                            @Html.HiddenFor(x => x.SearchEntity.SpeciesAID)
+                            <span class="input-group-append">
+                                <button type="button" id="btnLookupSpeciesA" data-ggtools-action="species-a" data-ggtools-value="" class="btn btn-default btn-flat"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                        <div class="form-group clearfix float-right" style="margin-top:10px;">
+                            <div class="icheck-primary d-inline">
+                                @Html.CheckBoxFor(x => x.SearchEntity.SpeciesAIsAcceptedOption)
+                                <label for="SearchEntity_SpeciesAIsAcceptedOption">
+                                    Search only accepted names
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="section-search-results-species-a" class="col-md-12">
+                        <!-- DATA HERE -->
+                    </div>
+                </div>
+            </div>
+            <div id="search-progress-overlay-species-a" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="card-footer">
+                <button id="btnClearAllSpeciesA" class="btn btn-default">Reset</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card card-primary dual-select">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-link"></i>
+                    Relationship
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="table-synonym-codes" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var result in Model.SynonymCodes)
+                        {
+                            <tr>
+                                <td>@result.Value</td>
+                                <td>@result.Text</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card card-primary card-outline dual-select">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-leaf"></i>
+                    Species B
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.SearchEntity.SpeciesBName, new { @class = "form-control" })
+                            @Html.HiddenFor(x => x.SearchEntity.SpeciesBID)
+                            <span class="input-group-append">
+                                <button type="button" id="btnLookupSpeciesB" data-ggtools-action="species-b" data-ggtools-value="" class="btn btn-default btn-flat"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                        <div class="form-group clearfix float-right" style="margin-top:10px;">
+                            <div class="icheck-primary d-inline">
+                                @Html.CheckBoxFor(x => x.SearchEntity.SpeciesBIsAcceptedOption)
+                                <label for="SearchEntity_SpeciesBIsAcceptedOption">
+                                    Search only accepted names
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="section-search-results-species-b" class="col-md-12">
+                        <!-- DATA HERE -->
+                    </div>
+                </div>
+            </div>
+            <div id="search-progress-overlay-species-b" class="overlay">
+                <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="card-footer">
+                <button id="btnClearAllSpeciesB" class="btn btn-default">Reset</button>
+                <button id="btnGenerateMaps" class="btn btn-default float-right">Generate Maps</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Maps</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div id="section-synonym-maps" class="col-md-12">
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{Html.RenderAction("GetEditModal", "SysFolder", new { sysTableName = Model.TableName }); }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var speciesID = $("#SearchEntity_SpeciesAID").val();
+
+        if (speciesID > 0) {
+            var speciesName = $("#SearchEntity_SpeciesAName").val();
+            $("#EventAction").val("subject");
+            //$("#txtSpeciesNameSubject").val(speciesName);
+            SearchSpecies("species-a", speciesID, speciesName, "", "section-search-results-species-a", "table-search-results-species-a");
+        }
+        InitDataTableMinimal("table-synonym-codes");
+        $("#section-validation-errors").hide();
+
+        $("#search-progress-overlay-species-a").hide();
+        $("#search-progress-overlay-species-b").hide();
+    }
+
+    $("#btnLookupSpeciesA").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var searchText = $("#SearchEntity_SpeciesAName").val();
+        var isAcceptedName = "";
+
+        if ($("#SearchEntity_SpeciesAIsAcceptedOption").is(":checked")) {
+            isAcceptedName = "Y";
+        }
+        SearchSpecies(eventAction, 0, searchText, isAcceptedName, "section-search-results-" + eventAction, "table-search-results-" + eventAction);
+    });
+
+    $("#btnLookupSpeciesB").click(function () {
+        var eventAction = $(this).data("ggtools-action");
+        var searchText = $("#SearchEntity_SpeciesBName").val();
+        var isAcceptedName = "";
+
+        if ($("#SearchEntity_SpeciesBIsAcceptedOption").is(":checked")) {
+            isAcceptedName = "Y";
+        }
+        SearchSpecies(eventAction, 0, searchText, isAcceptedName, "section-search-results-" + eventAction, "data-table-search-results-" + eventAction);
+    });
+
+    function SearchSpecies(eventAction, speciesId, searchText, isAcceptedName, searchResultSectionName, searchResultTableName) {
+        var link = '@Url.Action("Lookup","Species")';
+        var formData = new FormData();
+
+        formData.append("EventAction", eventAction);
+        formData.append("SearchEntity.SpeciesID", speciesId);
+        formData.append("SearchEntity.SpeciesName", searchText);
+        formData.append("SearchEntity.IsAcceptedName", isAcceptedName);
+        formData.append("SearchEntity.IsMultiSelect", "Y");
+
+        $("#search-progress-overlay-" + searchResultSectionName).show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#" + searchResultSectionName).html(response);
+                $("#search-progress-overlay-" + searchResultSectionName).hide();
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    $(document).on("click", "[id*='btnGenerateMaps']", function () {
+        GenerateMaps();
+    });
+
+    function GenerateMaps() {
+        var link = '@Url.Action("Add", "SpeciesSynonymMap")';
+        var selectedSpeciesIDListSubject = GetSelectedEntityIDs("data-table-search-results-species-a");
+        var selectedSynonymCode = GetSelectedEntityIDs("table-synonym-codes");
+        var selectedSpeciesIDListPredicate = GetSelectedEntityIDs("data-table-search-results-species-b");
+        var formData = new FormData();
+
+        // Ensure that all params are present.
+        if ((selectedSpeciesIDListSubject.length == 0) ||
+            (selectedSpeciesIDListPredicate.length == 0)) {
+            (selectedSynonymCode.length == 0)
+            $("#section-validation-errors").show();
+            return;
+        }
+        else {
+            $("#section-validation-errors").hide();
+        }
+
+        formData.append("SynonymCode", selectedSynonymCode);
+        formData.append("SpeciesIDListSubject", selectedSpeciesIDListSubject);
+        formData.append("SpeciesIDListPredicate", selectedSpeciesIDListPredicate);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-synonym-maps").html(response);
+                InitDataTableSingleSelect("data-table-synonym-maps");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    $(document).on("click", "[id='btnClear']", function () {
+        Clear();
+    });
+
+    function Clear() {
+        var link = '@Url.Action("Clear", "SpeciesSynonymMap")';
+        var formData = new FormData();
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-synonym-maps").html(response);
+                InitDataTable("#data-table-species-synonym-maps");
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    $(document).on("click", "[id='btnClearSelectedSpeciesA']", function () {
+        DeleteSelected("data-table-search-results-species-a");
+    });
+
+    $(document).on("click", "[id='btnClearSelectedSpeciesB']", function () {
+        ClearSelected("data-table-search-results-species-b");
+    });
+
+    $(document).on("click", "[id='btnClearAllSpeciesA']", function () {
+        ClearAll("data-table-search-results-species-a");
+    });
+
+    $(document).on("click", "[id='btnClearAllSpeciesB']", function () {
+        ClearAll("data-table-search-results-species-b");
+    });
+
+    function ClearSelected(tableName) {
+        tableName = '#' + tableName;
+        var table = $(tableName).DataTable();
+
+        var rows = table
+            .rows('.selected')
+            .remove()
+            .draw();
+    }
+
+    function ClearAll(tableName) {
+        var table = $('#' + tableName).DataTable();
+
+        table
+            .clear()
+            .draw();
+    }
+
+    function toTitleCase(str) {
+        return str.replace(
+            /\w\S*/g,
+            function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+
+    function InitDataTableSingleSelect(tableName) {
+        $(document).ready(function () {
+            //$.fn.dataTable.moment('mm/dd/yyyy');
+            var table = $('#' + tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                "pageLength": 5,
+                responsive: true,
+                stateSave: true,
+                buttons: [
+                    'selectAll',
+                    'selectNone'
+                ],
+                select: {
+                    style: 'single'
+                },
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                columnDefs: [
+                    { targets: [0], visible: false }
+
+                ]
+            });
+        });
+    }
+
+    function InitDataTableMinimal(tableName) {
+        $(document).ready(function () {
+            tableName = "#" + tableName;
+
+            if ($.fn.dataTable.isDataTable(tableName)) {
+                table = $(tableName).DataTable();
+            }
+            else {
+                table = $(tableName).DataTable({
+                    paging: true,
+                    responsive: true,
+                    select: {
+                        style: 'single'
+                    },
+                    searching: false,
+                    paging: false,
+                    columnDefs: [
+                        { targets: [0], visible: false }
+                    ]
+                });
+                table.row(':contains("Basionym")').select()
+            }
+        });
+    }
+
+</script>

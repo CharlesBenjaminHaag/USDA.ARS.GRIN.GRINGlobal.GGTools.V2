@@ -1,0 +1,39 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModelBase
+<table id="data_table_lookup_citations_by_species" class="table table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Citation</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+        <tr>
+            <td>@result.ID</td>
+            <td>@result.ID</td>
+            <td>
+                @result.TypeCode
+            </td>
+            <td>
+                @Html.Raw(result.AssembledName)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+@*<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="btn-group float-right">
+            <button id="btnSaveSelectedCitation" type="button" class="btn btn-info float-right" data-dismiss="modal">Use Selected Citation</button>
+        </div>
+    </div>
+</div>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableGeo("data_table_lookup_citations_by_species");
+    });
+</script>

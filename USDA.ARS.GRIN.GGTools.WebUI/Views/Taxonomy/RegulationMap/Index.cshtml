@@ -1,0 +1,53 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.RegulationMapViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Taxonomy/RegulationMap/_Detail.cshtml")
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Regulation Map</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div id="section-search-results" class="card-body">
+        @Html.Partial("~/Views/Taxonomy/RegulationMap/_List.cshtml")
+    </div>
+</div>
+
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+
+@using (Html.BeginForm("GetBatchEditor", "RegulationMap", FormMethod.Post, new { id = "frmGetBatchEditor" }))
+{
+    @Html.HiddenFor(x => x.ItemIDList)
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+        SetExtendedFields();
+    });
+
+    function Init() {
+        var searchType = $("#SearchEntity_TableName").val();
+        var formGroupName = "#form-group-" + searchType;
+        $(".overlay").hide();
+        $("#form-group-taxonomy_family").hide();
+        $("#form-group-taxonomy_genus").hide();
+        $("#form-group-taxonomy_species").hide();
+        $(formGroupName).show();
+    }
+
+    //$(document).keypress(function (event) {
+    //    var keycode = (event.keyCode ? event.keyCode : event.which);
+    //    if (keycode == '13') {
+    //        $("#btnSearch").click();
+    //    }
+    //});
+</script>

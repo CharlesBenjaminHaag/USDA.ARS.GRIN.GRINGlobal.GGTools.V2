@@ -1,0 +1,645 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.TaxonomyExplorerViewModel
+@{
+    ViewBag.Title = "Navigator";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style>
+    #section-hierarchical-list .card-body {
+        padding: .25rem;
+    }
+
+    #section-hierarchical-list .card {
+        margin-bottom: .5rem;
+    }
+
+    #section-hierarchical-list .card-title {
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .tab-pane {
+        padding: .5rem;
+    }
+    
+</style>
+
+<div id="overlay"></div>
+<div class="row">
+    <div id="section-hierarchical-list" class="col-md-3">
+        <div class="card">
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link" href="#tab-hierarchy-family" data-toggle="tab">Family</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tab-hierarchy-genus" data-toggle="tab">Genus</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#tab-hierarchy-species" data-toggle="tab">Species</a></li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane" id="tab-hierarchy-family">
+                        @{Html.RenderAction("_ListFamily", "Explorer");}
+                    </div>
+                    <div class="tab-pane" id="tab-hierarchy-genus">
+                        @{Html.RenderAction("_ListRelatedFolders", "Explorer", new { tableName = "taxonomy_genus" }); }
+                        <div class="form-group" style="padding:.3rem;">
+                            <label>Genus</label>
+                            <div class="input-group">
+                                <input type="text" id="txtLookupGenus" class="form-control" value="Poa" />
+                                <span class="input-group-btn">
+                                    <button id="btnGenusNameLookup" type="button" data-toggle="modal" data-ggtools-action="AcceptedID" data-ggtools-value="AcceptedName" data-target="#modal-species-lookup" class="btn btn-default btn-flat">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        @{Html.RenderAction("_ListGenus", "Explorer");}
+                    </div>
+                    <div id="tab-hierarchy-species" class="tab-pane active">
+                        @{Html.RenderAction("_ListRelatedFolders", "Explorer", new { tableName = "taxonomy_species" }); }
+                        <div class="form-group">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" id="txtLookupSpecies" class="form-control" placeholder="Enter species name" />
+                                    <span class="input-group-btn">
+                                        <button id="btnLookupSpecies" class="btn btn-default btn-flat">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" id="customCheckbox1" value="option1">
+                                        <label for="customCheckbox1" class="custom-control-label">Search accepted names only.</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div id="section-species-lookup-search-results">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="progress_overlay" class="overlay">
+                <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div id="section-unsaved-changes" style="display:none;" class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-exclamation-triangle"></i> Alert!</h5>
+            Warning alert preview. This alert is dismissable.
+        </div>
+
+        <!--<div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-leaf"></i><span id="section-species-name"></span></h5>-->
+            @*<span id="section-species-note"></span>*@
+        <!--</div>-->
+
+    <div id="section-species-detail">
+        
+    </div>
+        <div id="section-species-citations">
+        </div>
+        <div id="section-common-names">
+        </div>
+        <div id="section-distributions">
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Taxonomy/CommonName/_Edit.cshtml")
+
+<div id="section-geography-map-modal"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+    });
+
+    function InitSpeciesLookupDataTable() {
+        tableName = "#data-table-species-lookup";
+        table = $(tableName).DataTable({
+            paging: false,
+            responsive: true,
+            select: {
+                style: 'single'
+            },
+            searching: true,
+            columnDefs: [
+                { targets: [0], visible: false }
+            ]
+        });
+
+        //Select first row by default; load related data.
+        table.row(':eq(0)', { page: 'current' }).select();
+        var firstRowData = table.row(':eq(0)', { page: 'current' }).data();
+        LoadSpecies(firstRowData[0]);
+
+        $('#data-table-species-lookup tbody').on('click', 'tr', function () {
+            var data = table.row(this).data();
+            LoadSpecies(data[0]);
+        });
+    }
+
+    $('#txtLookupSpecies').on('input', function (e) {
+        $("#ddlSelectFolder_taxonomy_species").val("-9");
+        $("#section-species-detail").html("");
+        $("#section-species-lookup-search-results").html("");
+    });
+
+    $('select').on('change', function () {
+
+        $("#txtLookupSpecies").val("");
+
+        var folderType = this.id.replace("ddlSelectFolder_", "");
+        var folderId = this.value;
+
+        switch (folderType) {
+            case "taxonomy_family_map":
+                LoadFamilyFolder(folderId);
+                break;
+            case "taxonomy_genus":
+                LoadGenusFolder(folderId);
+                break;
+            case "taxonomy_species":
+                LoadSpeciesFolder(folderId);
+                break;
+        }
+
+    });
+
+    $(document).ready(function () {
+        $("#progress_overlay").hide();
+        InitDataTableByClass();
+    });
+
+    /*
+    **********************************************************************************
+    FAMILY
+    **********************************************************************************
+    */
+    $('#btnFamilyNameLookup').on('click', function () {
+        LookupFamily();
+    });
+
+    function LookupFamily() {
+        var link = '@Url.Action("LookupFamily","Explorer")';
+        var speciesName = $("#txtLookupFamily").val();
+        var formData = new FormData();
+
+        formData.append("FamilyName", speciesName);
+        if ($("#cbxLookupFamilyIsAcceptedName").is(":checked")) {
+            formData.append("IsAcceptedName", "Y");
+        }
+
+        $("#progress_overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-genus-lookup-search-results").html(response);
+                $("#progress_overlay").hide();
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    function LoadFamilyFolder(id) {
+        /*alert("DEBUG FAM FOLDER");*/
+    }
+    /*
+    **********************************************************************************
+    GENUS
+    **********************************************************************************
+    */
+    $('#btnGenusNameLookup').on('click', function () {
+        LookupGenus();
+    });
+
+    function LookupGenus() {
+        var link = '@Url.Action("LookupGenus","Explorer")';
+        var speciesName = $("#txtLookupSpecies").val();
+        var formData = new FormData();
+
+        formData.append("GenusName", speciesName);
+        if ($("#cbxLookupGenusIsAcceptedName").is(":checked")) {
+            formData.append("IsAcceptedName", "Y");
+        }
+
+        $("#progress_overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-genus-lookup-search-results").html(response);
+                $("#progress_overlay").hide();
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    function LoadGenusFolder(id) {
+        /*alert("DEBUG GEN FOLDER");*/
+    }
+    /*
+    **********************************************************************************
+    SPECIES
+    **********************************************************************************
+    */
+    $('#btnLookupSpecies').on('click', function () {
+        LookupSpecies();
+    });
+
+    $('ul.species-selector li').on('click', function () {
+        var selectedSpeciesId = $(this).attr('id');
+        LoadSpecies(selectedSpeciesId);
+    });
+
+    function LoadSpecies(id) {
+        //var selectedGenusId = $(this).data("ggtools-value");
+        //var genusNodeId = "#list-taxa-" + selectedGenusId;
+
+        //if (id == -9) {
+        //    Add(selectedGenusId);
+        //}
+        //else {
+            Edit(id);
+            LoadCommonNames(id);
+            LoadDistributions(id);
+        //}
+
+        //DEBUG unsaved-changes logic. Need? --CBH 11/15/22
+        //if ($('.changed-input').length) {
+        //    //alert("DEBUG UNSAVED CHANGES");
+        //}
+        //else {
+
+        //}
+    }
+
+    $('#btnSave').on('click', function () {
+        AjaxFormSubmit();
+    });
+
+    function Add(genusId) {
+        link = '@Url.Action("_Add","Species")';
+        var formData = new FormData();
+
+        ResetDependentData();
+
+        try {
+            formData.append("genusId", genusId);
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-species-detail").html(response);
+                }
+            });
+        }
+        catch (exception) {
+
+        }
+    }
+
+    function Edit(speciesId) {
+        link = '@Url.Action("_Edit","Species")';
+        var formData = new FormData();
+
+        try {
+            formData.append("entityId", speciesId);
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-species-detail").html(response);
+                    var speciesName = $("#Entity_FullName").val() + "[" + $("#Entity_ID").val() + "]";
+                    var speciesNote = $("#Entity_Note").val();
+                    $("#section-species-name").html(speciesName);
+                    $("#section-species-note").html(speciesNote);
+                }
+            });
+        }
+        catch (exception) {
+
+        }
+    }
+
+    function LookupSpecies() {
+        var link = '@Url.Action("Lookup","Species")';
+        var speciesName = $("#txtLookupSpecies").val();
+        var formData = new FormData();
+
+        formData.append("SpeciesName", speciesName);
+        if ($("#cbxLookupSpeciesIsAcceptedName").is(":checked")) {
+            formData.append("IsAcceptedName", "Y");
+        }
+
+        $("#progress_overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-lookup-search-results").html(response);
+                $("#progress_overlay").hide();
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+
+    function LoadSpeciesFolder(id) {
+        var link = '@Url.Action("_ListFolderItems", "Species")';
+        var formData = new FormData();
+
+        formData.append("folderId", id);
+        formData.append("displayFormat", "SELECT");
+        
+        $("#progress_overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-lookup-search-results").html(response);
+                $("#progress_overlay").hide();
+                InitSpeciesLookupDataTable();
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+    /*
+    **********************************************************************************
+    CITATIONS
+    **********************************************************************************
+    */
+    function LoadCitations(speciesId) {
+        link = '@Url.Action("_List","Citation")';
+        var formData = new FormData();
+
+        formData.append("SpeciesID", speciesId);
+        formData.append("FormatCode", "1");
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-species-citations").html(response);
+            }
+        });
+    }
+
+    /*
+    **********************************************************************************
+    COMMON NAME
+    **********************************************************************************
+    */
+    function LoadCommonNames(speciesId) {
+        link = '@Url.Action("_List","CommonName")';
+        var formData = new FormData();
+
+        if (speciesId > 0) {
+
+            formData.append("speciesId", speciesId);
+
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-common-names").html(response);
+                }
+            });
+        }
+        else {
+            alert("ERROR: Species ID is 0");
+        }
+    }
+
+    $(document).on("click", "[id='btnAddCommonName']", function () {
+        $("#modal-common-name-edit").modal("show");
+        var speciesId = $("#Entity_ID").val();
+        /*AddCommonName(speciesId);*/
+    });
+
+    $(document).on("click", "[id='btnSaveCommonName']", function () {
+        $("#modal-common-name-edit").modal("hide");
+        var speciesId = $("#Entity_ID").val();
+        SaveCommonName(speciesId);
+    });
+
+    function SaveCommonName(speciesId) {
+        link = '@Url.Action("_Save","CommonName")';
+        var name = $("#txtCommonNameEditName").val();
+        var formData = new FormData();
+        formData.append("Entity.SpeciesId", speciesId);
+        formData.append("Entity.Name", name);
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                LoadCommonNames(speciesId);
+            }
+        });
+    }
+
+    function ResetDependentData() {
+        $("#section-distributions").html("");
+        $("#section-common-names").html("");
+    }
+
+    /*
+    **********************************************************************************
+    DISTRIBUTION
+    **********************************************************************************
+    */
+
+    $(document).on("click", "[id='btnAddDistribution']", function () {
+        $("#modal-geography-map-edit").modal("show");
+        var speciesId = $("#Entity_ID").val();
+        AddDistribution(speciesId);
+    });
+
+    $(document).on("click", "[id='btnSaveDistribution']", function () {
+        $("#modal-geography-map-edit").modal("hide");
+        var speciesId = $("#Entity_ID").val();
+        SaveDistribution(speciesId);
+    });
+
+    function AddDistribution(speciesId) {
+        link = '@Url.Action("_Add","GeographyMap")';
+        var formData = new FormData();
+
+        try {
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-geography-map-modal").html(response);
+                    $("#modal-geography-map-edit").modal("show");
+                }
+            });
+        }
+        catch (exception) {
+
+        }
+    }
+
+    function SaveDistribution(speciesId) {
+        link = '@Url.Action("_Save","GeographyMap")';
+        var formData = new FormData();
+        formData.append("Entity.SpeciesId", speciesId);
+        formData.append("Entity.Name", name);
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                LoadDistributions(data.geographyMap.SpeciesID);
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    function LoadDistributions(speciesId) {
+        link = '@Url.Action("_List","GeographyMap")';
+        var formData = new FormData();
+
+        if (speciesId > 0) {
+
+            formData.append("entityId", speciesId);
+
+            $.ajax({
+                url: link,
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                    $("#section-distributions").html(response);
+                }
+            });
+        }
+        else {
+            alert("ERROR: Species ID is 0");
+        }
+    }
+
+    function AjaxFormSubmit() {
+        var link = $("#frmEdit").attr("action");
+
+        //Add the Field values to FormData object.
+        var formData = new FormData();
+        formData.append("Entity.ID", $("#Entity_ID").val());
+        formData.append("Entity.SpeciesID", $("#Entity_SpeciesID").val());
+        formData.append("Entity.GenusID", $("#Entity_GenusID").val());
+        formData.append("Entity.Rank", $("#Entity_Rank").val());
+        formData.append("Entity.SpeciesName", $("#Entity_SpeciesName").val());
+        formData.append("Entity.Authority", $("#Entity_Authority").val());
+        formData.append("Entity.Protologue", $("#Entity_Protologue").val());
+        formData.append("Entity.Note", $("#Entity_Note").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                //////DEBUG
+                ////alert("SAVED CHANGES FOR SPECIES ID " + data.species.ID);
+                Edit(data.species.ID);
+                LoadCommonNames(data.species.ID);
+                LoadDistributions(data.species.ID);
+            },
+            error: function (ex) {
+            }
+        });
+
+        //$.ajax({
+        //    type: 'POST',
+        //    url: url,
+        //    data: formData,
+        //    dataType: 'json',
+        //    contentType: false,
+        //    processData: false,
+        //    contentType: false
+        //}).done(function (response) {
+        //    if (response) {
+        //        alert("DEBUG NEW SPECIES ID " + response.data.newSpeciesId);
+        //        //$("#section-species-detail").html(response);
+        //        //var speciesId = $("#Entity_SpeciesID").val();
+        //        //var speciesName = $("#Entity_SpeciesName").val();
+        //        LoadCommonNames(speciesId);
+        //        LoadDistributions(speciesId);
+        //    }
+        //    else {
+        //        //alert("Invalid Form data!");
+        //    }
+        //});
+    }
+
+</script>

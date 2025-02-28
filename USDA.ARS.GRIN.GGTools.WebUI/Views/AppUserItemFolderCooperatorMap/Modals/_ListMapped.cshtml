@@ -1,0 +1,29 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderCooperatorMapViewModel
+<table id="data-table-mapped-cooperators" class="table table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Shared WIth</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollectionMappedCooperators)
+        {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    @result.FullName
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableDualSelectFormat("data-table-mapped-cooperators");
+    });
+</script>
+
+

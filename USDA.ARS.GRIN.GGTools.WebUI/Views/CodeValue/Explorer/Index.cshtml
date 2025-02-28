@@ -1,0 +1,276 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CodeValueViewModel
+@{
+    ViewBag.Title = "Code Value Search";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@Html.HiddenFor(x=>x.SelectedCodeValueID)
+
+<div id="section-error" class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h5><i class="icon fas fa-ban"></i> Error</h5>
+    <span id="section-error-message"></span>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">Groups</h3>
+                <div class="card-tools">
+                    <button id="btn" type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="data-table-groups" class="table table-striped ggtools-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            @foreach (var result in Model.DataCollectionGroups)
+                            {
+                                <tr>
+                                    <td>@result.Title</td>
+                                </tr>
+                            }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div id="section-search-results" class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title"><span id="SelectedGroup"></span> Code Values (@Model.DataCollection.Count)</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="section-code-value-detail" class="card-body">
+            </div>
+            @*<div id="progress_overlay" class="overlay">
+                <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+            </div>*@
+            <div class="card-footer">
+                <button id="btnSaveEdits" type="submit" class="btn btn-default float-right">
+                    <i class="fa fa-save"></i> Save Edits
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/CodeValue/Modals/_Edit.cshtml")
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Init();
+        InitSelectorDataTable("data-table-groups");
+        /*var selectedValue = $('#SelectedGroup').val();*/
+        /*console.log('Selected Value on Page Load: ' + selectedValue);*/
+        /*GetCodeValueList(selectedValue);*/
+    });
+
+    $(document).ready(function () {
+        $('button[data-card-widget="collapse"]').on('click', function () {
+            console.log('Card collapsed/expanded');
+            // Add your custom functionality here
+        });
+    });
+
+    $(document).ready(function () {
+        $('#SelectedGroup').on('change', function () {
+            var selectedIndex = $(this).prop('selectedIndex');
+            var selectedValue = $(this).val();
+            
+            console.log('Selected Index: ' + selectedIndex);
+            console.log('Selected Value: ' + selectedValue);
+            GetCodeValueList(selectedValue);
+        });
+    });
+
+    function InitSelectorDataTable(tableName) {
+        tableName = "#" + tableName;
+
+        var tableNameString = tableName + " tbody";
+
+        table = $(tableName).DataTable({
+            paging: false,
+            select: {
+                style: 'single'
+            },
+            searching: true,
+            //columnDefs: [
+            //    { targets: [0], visible: false }
+            //]
+        });
+
+        // When the page loads, select the first row by default, and
+        // load the detail matching the code value ID.
+
+        var lastSelectedCodeValueId = $("#SelectedCodeValueID").val();
+        if (lastSelectedCodeValueId > 0) {
+            var rowIndex = table.column(0).data().indexOf(lastSelectedCodeValueId);
+            table.row(rowIndex).select();
+        }
+        else {
+            table.row(':eq(0)', { page: 'current' }).select();
+        }
+
+        var row = table.row({ selected: true });
+
+        // Check if a row is selected
+        if (row.any()) {
+            // Get data for the selected row
+            var data = row.data();
+
+            // Assuming you want to get the value of the first column
+            var fieldValue = data[0];
+
+            console.log("DEBUG SEL GRP " + fieldValue);
+            GetCodeValueList(fieldValue);
+        } else {
+             
+        }
+
+        $("#data-table-code-values tbody").on('click', 'tr', function () {
+            var selRowdata = table.row(this).data()[0];
+            console.log("DEBUG SEL GRP " + selRowdata);
+            GetCodeValueList(selRowdata);
+        });
+    }
+
+    function GetCodeValueList(groupName) {
+        var link = '@Url.Action("Component_CodeValueList", "CodeValue", new { groupName = "GROUP_NAME" })';
+        link = link.replace("GROUP_NAME", groupName);
+        var formData = new FormData();
+
+        $("#SelectedCodeGroup").val(groupName);
+
+        formData.append("groupName", groupName);
+
+        $("#progress_overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-code-value-list").html(response);
+                InitSelectorDataTable("data-table-code-values");
+                $("#progress_overlay").hide();
+            }
+        });
+
+
+    }
+
+    function GetCodeValueDetail(id) {
+        var link = '@Url.Action("Component_Editor","CodeValue")';
+        var formData = new FormData();
+
+        link = link + "?codeValueId=" + id;
+
+        $("#SelectedCodeValueID").val(id);
+
+        $.ajax({
+            url: link,
+            type: 'GET',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-code-value-detail").html(response);
+                //GetCodeValueList(selectedGroupName);
+            }
+        });
+    }
+
+    $("#btnSaveEdits").click(function () {
+        SaveEdits();
+    });
+
+    function SaveEdits() {
+        var link = '@Url.Action("Save","CodeValue")';
+        var formData = new FormData();
+
+        formData.append("Entity.ID", $("#Entity_ID").val());
+        formData.append("Entity.CodeValueID", $("#Entity_CodeValueID").val());
+        formData.append("Entity.CodeValueLangID", $("#Entity_CodeValueLangID").val());
+        formData.append("Entity.GroupName", $("#Entity_GroupName").val());
+        formData.append("Entity.SysLangID", $("#Entity_SysLangID").val());
+        formData.append("Entity.Code", $("#Entity_Code").val());
+        formData.append("Entity.CodeTitle", $("#Entity_CodeTitle").val());
+        formData.append("Entity.CodeDescription", $("#Entity_CodeDescription").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+            if (response.success) {
+                    var selectedGroupName = $("#SelectedGroup").val();
+                    var selectedCodeValueId = $("#SelectedCodeValueID").val();
+                    GetCodeValueDetail(selectedCodeValueId);
+                    GetCodeValueList(selectedGroupName);
+                    SetCurrentRow(selectedCodeValueId);
+                    
+                } else {
+                    HandleError(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                HandleError(errorMessage);
+            }
+        });
+    }
+
+    function Init() {
+        $("#section-error").hide();
+    }
+
+    function SetCurrentRow(id) {
+        var table = $('#data-table-code-values').DataTable();
+       
+        // Define the value you are looking for
+        var searchValue = id;
+
+        // Use the DataTables API to find the row
+        var rowIndex = table.column(0).data().indexOf(searchValue);
+
+        console.log("VALUE " + id + " IS IN ROW " + rowIndex);
+
+        if (rowIndex !== -1) {
+            // Use the row().select() API to select the row
+            table.row(rowIndex).select();
+
+            //// Optional: scroll to the row
+            //$('html, body').animate({
+            //    scrollTop: $(table.row(rowIndex).node()).offset().top
+            //}, 1000);
+        } else {
+            console.log('Row not found');
+        }
+    }
+
+    function HandleError(message) {
+        $("#section-error").show();
+        $("#section-error-message").html(message);
+        
+    }
+</script>

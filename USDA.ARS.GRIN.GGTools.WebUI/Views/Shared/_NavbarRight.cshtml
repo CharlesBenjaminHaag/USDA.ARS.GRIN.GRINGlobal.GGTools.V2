@@ -1,0 +1,22 @@
+﻿<li class="nav-item dropdown">
+    <a class="nav-link" data-toggle="dropdown" href="#">
+        <i class="far fa-user"></i>
+    </a>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
+        <span class="dropdown-item dropdown-header">
+            @AppInfo.GetAuthenticatedUser().FullName
+        </span>
+        <div class="dropdown-divider"></div>
+        <a href="#" class="dropdown-item">
+            <i class="fas fa-clock mr-2"></i> Logged In
+            <span class="float-right text-muted text-sm"> </span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="@Url.Action("Logout","Login")" class="dropdown-item dropdown-footer bg-danger">Log Out</a>
+    </div>
+</li>
+<li class="nav-item">
+    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+        <i class="fas fa-expand-arrows-alt"></i>
+    </a>
+</li>

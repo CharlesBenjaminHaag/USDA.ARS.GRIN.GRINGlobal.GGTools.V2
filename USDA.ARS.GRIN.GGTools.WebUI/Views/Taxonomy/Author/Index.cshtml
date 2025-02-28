@@ -1,0 +1,20 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.AuthorViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Taxonomy/Author/_Detail.cshtml")
+@Html.Partial("~/Views/Taxonomy/Author/_List.cshtml")
+
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+
+<script type="text/javascript">
+    $(document).on("click", "[id='btnSubmitSearch']", function () {
+        event.preventDefault();
+        if ($("#section-search-criteria").is(":visible")) {
+            $("#EventAction").val("SHOW-SEARCH");
+        }
+        $("#frmMain").submit();
+    });
+</script>

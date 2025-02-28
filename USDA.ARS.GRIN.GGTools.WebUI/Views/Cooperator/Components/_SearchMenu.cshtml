@@ -1,0 +1,26 @@
+﻿@using USDA.ARS.GRIN.GGTools.DataLayer;
+<ul class="navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+    </li>
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="@Url.Action("Index", "Home")" class="nav-link">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Add", ViewBag.EventAction)" role="button">New</a>
+    </li>
+    @{
+        SysUser authenticatedUser = AppInfo.GetAuthenticatedUser();
+
+        if (authenticatedUser.IsInRole("GGTOOLS_TRAINING") || authenticatedUser.IsInRole("GGTOOLS_ADMIN"))
+        {
+            <li class="nav-item dropdown">
+                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Training</a>
+                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                    <li><a href="" class="dropdown-item">Set Up Roster</a></li>
+                    <li><a href="@Url.Action("EditBatch","Cooperator")" class="dropdown-item">Batch-Add Students</a></li>
+                </ul>
+            </li>
+        }
+    }
+</ul>

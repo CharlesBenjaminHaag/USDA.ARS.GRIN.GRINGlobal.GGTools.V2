@@ -1,0 +1,270 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style>
+    .users-list img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .info-box {
+        background-color: #e2e4ea;
+    }
+
+    .dashboard-link {
+        color: white;
+        text-decoration: underline;
+    }
+
+    .dashboard-link a, a:hover {
+        color: white;
+    }
+
+    .ggtools-selector input {
+        opacity: 1;
+        margin-right: 5px;
+        margin-left: 3px;
+    }
+
+    .ggtools-selector-label {
+        margin-left: 25px;
+    }
+
+    #data-table-dashboard-web-order-requests a, a:hover {
+        color: blue;
+    }
+
+    
+</style>
+
+<section class="content">
+    <input type="hidden" id="hfSelectedTimeFrame" />
+    <input type="hidden" id="hfSelectedStatusList" />
+    <input type="hidden" id="hfSelectedWebUserList" />
+
+    <div id="section-web-order-totals">
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Filter by Status</h3>
+                </div>
+                <div class="card-body">
+                    <div id="section-status-list" class="list-group">
+                        <label class="list-group-item ggtools-selector bg-gray-light">
+                            <input type="checkbox" class="form-check-input" style="opacity:1; margin-right:5px;" id="NRR_FLAG" checked="checked">
+                            <span class="ggtools-selector-label">NRR Flagged</span>
+                        </label>
+                        <label class="list-group-item ggtools-selector bg-gray-light">
+                            <input type="checkbox" class="form-check-input" style="opacity:1; margin-right:5px;" id="SUBMITTED">
+                            <span class="ggtools-selector-label">Submitted</span>
+                        </label>
+                        <label class="list-group-item ggtools-selector bg-gray-light">
+                            <input type="checkbox" class="form-check-input" style="opacity:1; margin-right:5px;" id="CANCELED">
+                            <span class="ggtools-selector-label">Canceled</span>
+                        </label>
+                        <label class="list-group-item ggtools-selector bg-gray-light">
+                            <input type="checkbox" class="form-check-input" style="opacity:1; margin-right:5px;" id="CANCELED">
+                            <span class="ggtools-selector-label">Accepted</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Filter by User</h3>
+                </div>
+                <div class="card-body">
+                    <div id="section-user-list" class="list-group">
+                        <label class="list-group-item ggtools-selector bg-gray-light">
+                            <input type="checkbox" class="form-check-input" id="9098">
+                            <span class="ggtools-selector-label">
+                                <i class="fas fa-user"></i>
+                                Reisinger, Marty
+                            </span>
+                        </label>
+                        <label class="list-group-item ggtools-selector bg-gray-light">
+                            <input type="checkbox" class="form-check-input" id="33816">
+                            <span class="ggtools-selector-label">
+                                <i class="fas fa-user"></i>
+                                Kinard, Gary
+                            </span>
+                        </label>
+                        <label class="list-group-item ggtools-selector bg-gray-light">
+                            <input type="checkbox" class="form-check-input" id="">
+                            <span class="ggtools-selector-label">
+                                <i class="fas fa-user"></i>
+                                Galarneau, Erin
+                            </span>
+                        </label>
+                        <label class="list-group-item ggtools-selector bg-gray-light">
+                            <input type="checkbox" class="form-check-input" id="4210">
+                            <span class="ggtools-selector-label">
+                                <i class="fas fa-user"></i>
+                                Bockelman, Harold
+                            </span>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div id="section-web-order-requests" class="card-header p-2">
+                    <ul id="tab_web_order_requests" class="nav nav-pills">
+                        <li id="7DY" class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">The Last 7 Days</a></li>
+                        <li id="30D" class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">The Last 30 Days</a></liid="30D">
+                        <li id="60D" class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">The Last 60 Days</a></li>
+                        <li id="90D" class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">The Last 90 Days</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        @*<div class="tab-pane active" id="activity">
+
+                            <div>
+                                <button id="btnReset" type="button" class="btn btn-default">Reset</button>
+                                <div class="btn-group float-right">
+                                    <button type="submit" class="btn btn-default">Search</button>
+                                    <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu" role="menu" style="">
+                                        <a id="btnOpenDynamicFolderModal" class="dropdown-item" href="#">Save Search</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="timeline">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    
+                                </div>
+                            </div>
+                        </div>*@
+                    </div>
+
+
+                    <div id="section-web-order-search-results">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+        InitDataTable("data-table-dashboard-web-order-requests");
+    });
+
+    function Init() {
+        var selectedStatusList = GetSelectedStatuses();
+        var selectedWebUserList = GetSelectedWebUsers();
+        var selectedTimeFrame = "7DY";
+        $("#hfSelectedTimeFrame").val(selectedTimeFrame);
+        LoadChildData(selectedTimeFrame, selectedStatusList, selectedWebUserList);
+    }
+
+    $(function () {
+        $(".form-check-input").change(function () {
+            var selectedStatusList = GetSelectedStatuses();
+            var selectedWebUserList = GetSelectedWebUsers();
+            var selectedTimeFrame = GetSelectedTimeFrame();
+
+            $("#hfSelectedStatusList").val(selectedStatusList);
+            $("#hfSelectedWebUserList").val(selectedWebUserList);
+            LoadChildData(selectedTimeFrame, selectedStatusList, selectedWebUserList);
+        });
+    });
+
+    $('#section-web-order-requests ul.nav li').on('click', function () {
+        var selectedTimeFrame = $(this).attr('id');
+        var selectedStatusList = GetSelectedStatuses();
+        var selectedWebUserList = GetSelectedWebUsers();
+
+        $("#hfSelectedTimeFrame").val(selectedTimeFrame);
+
+        LoadChildData(selectedTimeFrame, selectedStatusList, selectedWebUserList);
+    });
+
+    $(document).on("click", ".open-modal", function () {
+        var id = $(this).attr('id');
+        var idValues = id.split('-');
+
+        var buttonName = idValues[0];
+        var webOrderRequestId = idValues[1];
+        var webCooperatorId = idValues[2];
+
+        $("#hidden-web-order-request-id").val(webOrderRequestId);
+        $("#hidden-web-cooperator-id").val(webCooperatorId);
+        $("#web-order-request-id").html(webOrderRequestId);
+
+        if (buttonName == "btnApprove") {
+            var myHeading = "<p>Approve Web Order " + webOrderRequestId + "</p>";
+            $('#modal-approve').modal('show');
+        }
+        else {
+            var myHeading = "<p>Deny Web Order " + webOrderRequestId + "</p>";
+            $('#modal-deny').modal('show');
+        }
+    });
+
+    function GetSelectedTimeFrame()
+    {
+        //var selectedTimeFrame = $("#section-web-order-requests li.active").attr('id');
+        //var selectedTimeFrame = $('ul#tab_web_order_requests').find('li.active').attr('id');
+        var selectedTimeFrame = "";
+        selectedTimeFrame = $("#hfSelectedTimeFrame").val();
+        return selectedTimeFrame;
+    }
+
+    function GetSelectedStatuses() {
+        var valueArray = [];
+        $("#section-status-list input:checked").each(function () {
+            var id = $(this).attr("id");
+            valueArray.push(id);
+        });
+        return valueArray;
+    }
+
+    function GetSelectedWebUsers() {
+        var valueArray = [];
+        $("#section-user-list input:checked").each(function () {
+            var id = $(this).attr("id");
+            valueArray.push(id);
+        });
+        return valueArray;
+    }
+
+    function LoadChildData(timeFrame, selectedStatusList, selectedWebUserList)  {
+        var link = '@Url.Action("_Lookup", "WebOrder")';
+        var formData = new FormData();
+
+        formData.append("TimeFrame", timeFrame);
+        formData.append("SelectedStatusList", selectedStatusList);
+        formData.append("SelectedWebUserList", selectedWebUserList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-web-order-search-results").html(response);
+                InitDataTable();
+            }
+        });
+    }
+
+</script>

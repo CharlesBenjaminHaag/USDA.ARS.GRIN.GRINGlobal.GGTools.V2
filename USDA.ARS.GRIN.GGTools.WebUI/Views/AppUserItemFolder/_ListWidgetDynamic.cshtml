@@ -1,0 +1,82 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderViewModel
+
+<div class="row">
+    @if (Model.DataCollectionDynamicFolders.Count > 0)
+    {
+        foreach (var result in Model.DataCollectionDynamicFolders)
+        {
+            <div class="col-md-4">
+                <div class="info-box shadow">
+                    <span class="info-box-icon bg-info">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">
+                            @if (result.IsFavorite == "Y")
+                            {
+                                <i class="fas fa-star text-warning"></i>
+                            }
+                            @result.FolderName
+                        </span>
+                        <a href="@Url.Action("Index", result.TableCode, new { @eventAction = "RUN_SEARCH", @folderId = result.ID })">
+                            <span class="info-box-number">Run Query</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        }
+    }
+    else
+    { 
+         
+            <div class="col-md-12">
+                <div class="alert alert-info alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-info"></i> No Folders Found</h5>
+                    There are currently no folders in this category.
+                </div>
+            </div>
+         
+    }
+</div>
+
+<script type="text/javascript">
+    //InitFolderDataTable("data_table_app_user_item_folder");
+
+    //function InitFolderDataTable(tableName) {
+    //    tableName = "#" + tableName;
+    //    $(document).ready(function () {
+    //        table = $(tableName).DataTable({
+    //            //dom: 'Blfrtip',
+    //            //paging: true,
+
+    //            "pageLength": 10,
+    //            responsive: true,
+    //            //buttons: [
+    //            //    'selectAll',
+    //            //    'selectNone',
+    //            //    'csv',
+    //            //    'excel',
+    //            //    'pdf',
+    //            //    {
+    //            //        text: 'Edit Batch',
+    //            //        action: function (e, dt, node, config) {
+    //            //            EditBatch();
+    //            //        }
+    //            //    }
+    //            //],
+    //            /*select: true,*/
+
+
+    //            /*lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],*/
+    //            //columnDefs: [
+    //            //    { targets: [0], visible: false }
+    //            //]
+    //        });
+
+    //    });
+    //}
+
+
+</script>

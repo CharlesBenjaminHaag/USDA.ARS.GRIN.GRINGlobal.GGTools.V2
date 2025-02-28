@@ -1,0 +1,27 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+<hr />
+<button id="btnSaveSpecies1" type="button" class="btn btn-default float-right m-1" data-dismiss="modal">Add Selected Species</button>
+<table id="data-table-species-lookup" class="table table-striped ggtools" style="width:100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Name</th>
+            <th>Name</th>
+            <th>Accepted</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+        <tr>
+            <td>@result.ID</td>
+            <td>@result.ID</td>
+            <td>@result.Name</td>
+            <td>@Html.Raw(result.AssembledName)</td>
+            <td>@Html.Raw(Model.FormatBoolean(result.IsAcceptedName))</td>
+        </tr>
+        }
+    </tbody>
+</table>
+<button id="btnSaveSpecies2" type="button" class="btn btn-default  float-right m-1" data-dismiss="modal">Add Selected Species</button>

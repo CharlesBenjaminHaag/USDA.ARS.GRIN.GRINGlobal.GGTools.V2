@@ -1,0 +1,85 @@
+﻿@using System.Data;
+@model USDA.ARS.GRIN.GGTools.ViewModelLayer.ReportViewModel
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_LayoutAdminLTE.cshtml";
+}
+        <div>
+            <section class="invoice">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2 class="page-header">
+                            <i class="fa fa-newspaper-o"></i> @Model.ReportTitle
+                            <small class="pull-right">Report</small>
+                        </h2>
+                    </div>
+                </div>
+                <div class="row invoice-info">
+                    <div class="col-md-12">
+                        <div class="callout callout-info">
+                            <h4>About This Report</h4>
+                            <p>@Model.ReportDescription</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="section-report-data" class="col-xs-12 table-responsive">
+                    @Html.Partial(Model.ReportPartialViewName)
+                    </div>
+                </div>
+                @*<div class="row no-print">
+                    <div class="col-xs-12">
+                        <a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a>
+                        <button type="button" class="btn btn-default pull-right" style="margin-right: 5px;">
+                            <i class="fa fa-download"></i> Generate PDF
+                        </button>
+                    </div>
+                </div>*@
+            </section>
+        </div>
+ 
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    var table = $('#data-table-report').DataTable({
+    //        dom: 'Blfrtip',
+    //        paging: true,
+    //        responsive: true,
+    //        stateSave: true,
+    //        buttons: [
+    //            'selectAll',
+    //            'selectNone'
+    //        ],
+    //        select: true,
+    //        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+            
+    //    });
+    //});
+
+    $(document).ready(function () {
+        // DataTable initialisation
+        $('#data-table-report').DataTable(
+            {
+                "paging": true,
+                "searching": true,
+                "autoWidth": true,
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api();
+                    nb_cols = api.columns().nodes().length;
+                    var j = 4;
+                    while (j < nb_cols) {
+                        var pageTotal = api
+                            .column(j, { page: 'current' })
+                            .data()
+                            .reduce(function (a, b) {
+                                return Number(a) + Number(b);
+                            }, 0);
+                        // Update footer
+                        $(api.column(j).footer()).html(pageTotal);
+                        j++;
+                    }
+                }
+            }
+        );
+    });
+
+</script>

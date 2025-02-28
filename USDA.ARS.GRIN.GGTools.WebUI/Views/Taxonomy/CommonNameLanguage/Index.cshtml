@@ -1,0 +1,42 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CommonNameLanguageViewModel
+@{
+    ViewBag.Title = ViewBag.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Taxonomy/CommonNameLanguage/_Detail.cshtml")
+@Html.Partial("~/Views/Taxonomy/CommonNameLanguage/_List.cshtml")
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Init();
+        SetExtendedFields();
+    });
+
+    function Init() {
+        var eventAction = $("#EventAction").val();
+        if (eventAction == "SHOW-SEARCH") {
+            $("#section-search-criteria").show();
+        }
+
+        // Set default view
+        //$("#ddlDataRangeFilter").val("RA");
+        //$("#frmMain").submit();
+    }
+
+
+    $(document).on("click", "[id='btnSubmitSearch']", function () {
+        event.preventDefault();
+        if ($("#section-search-criteria").is(":visible")) {
+            $("#EventAction").val("SHOW-SEARCH");
+        }
+        $("#frmMain").submit();
+    });
+
+    $(document).on("click", "[id='btnReset']", function () {
+        Reset();
+    });
+
+</script>

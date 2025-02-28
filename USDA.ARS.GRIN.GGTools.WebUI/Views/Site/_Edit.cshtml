@@ -1,0 +1,168 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SiteViewModel
+<div id="section-input-fields">
+    @using (Html.BeginForm("Edit", "Site", FormMethod.Post, new { id = "frmEdit" }))
+    {
+        @Html.HiddenFor(x => x.EventAction)
+        @Html.HiddenFor(x => x.EventValue)
+        @Html.HiddenFor(x => x.TableName)
+        @Html.HiddenFor(x => x.Entity.ID)
+        @Html.HiddenFor(x => x.Entity.CooperatorID)
+        @Html.HiddenFor(x => x.Entity.ShortName)
+        @Html.HiddenFor(x => x.IsReadOnly)
+        @*@Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")*@
+        @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Long Name</label>
+                    @Html.TextBoxFor(x => x.Entity.LongName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Type</label>
+                    @Html.DropDownListFor(x => x.Entity.TypeCode, Model.Types, "Select type", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Provider</label>
+                    @Html.TextBoxFor(x => x.Entity.ProviderIdentifier, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>FAO Institute No.</label>
+                    @Html.TextBoxFor(x => x.Entity.FAOInstituteNumber, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Email</label>
+                    @Html.TextBoxFor(x => x.Entity.EmailAddress, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-group">
+                    <div class="col-md-2">
+                        <div class="form-group clearfix" style="margin-top:40px;">
+                            <div class="icheck-primary d-inline">
+                                @Html.CheckBoxFor(x => x.Entity.IsInternalOption, new { id = "cbxIsInternal" })
+                                <label for="cbxIsInternal">
+                                    Internal
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="form-group clearfix" style="margin-top:40px;">
+                            <div class="icheck-primary d-inline">
+                                @Html.CheckBoxFor(x => x.Entity.IsDistributionSiteOption, new { id = "cbxIsDistributionSite" })
+                                <label for="cbxIsDistributionSite">
+                                    Distrib.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Primary Address</label>
+                    @Html.TextBoxFor(x => x.Entity.PrimaryAddress1, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(x => x.Entity.PrimaryAddress2, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(x => x.Entity.PrimaryAddress3, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Secondary Address</label>
+                    @Html.TextBoxFor(x => x.Entity.SecondaryAddress1, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(x => x.Entity.SecondaryAddress2, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(x => x.Entity.SecondaryAddress3, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>City</label>
+                    @Html.TextBoxFor(x => x.Entity.City, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Primary Phone</label>
+                    @Html.TextBoxFor(x => x.Entity.PrimaryPhone, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>City</label>
+                    @Html.TextBoxFor(x => x.Entity.SecondaryCity, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>State</label>
+                    @Model.Entity.State
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Secondary Phone</label>
+                    @Html.TextBoxFor(x => x.Entity.SecondaryPhone, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label>Note</label>
+                @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-default">View Public Website</button>
+                <button class="btn btn-default float-right">Save</button>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+$(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var isReadOnly = $("#IsReadOnly").val();
+        if (isReadOnly == "Y") {
+            SetReadOnly();
+        }
+    }
+
+</script>
+
+
+
+
+
+
+

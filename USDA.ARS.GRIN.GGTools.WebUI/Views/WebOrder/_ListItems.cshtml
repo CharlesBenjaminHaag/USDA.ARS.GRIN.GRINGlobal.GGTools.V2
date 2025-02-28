@@ -1,0 +1,34 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<table id="data-table-web-order-requests" class="table table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Plant Name</th>
+            <th>Taxonomy</th>
+            <th>Form Distributed</th>
+            <th>Item Status</th>
+            <th>Genebank</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var webOrderRequestItem in Model.DataCollectionItems)
+        {
+            <tr>
+                <td>@webOrderRequestItem.ID</td>
+                <td>@webOrderRequestItem.PlantName</td>
+                <td>@webOrderRequestItem.SpeciesName</td>
+                <td>@webOrderRequestItem.</td>
+                <td>@webOrderRequestItem.StatusCode</td>
+                <td>@webOrderRequestItem.SiteShortName</td>
+                <td>@webOrderRequestItem.Note</td>
+            </tr>
+        }
+    </tbody>
+</table>
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTable("data-table-web-order-requests");
+    });
+</script>

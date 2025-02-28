@@ -1,0 +1,65 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CooperatorViewModelBase
+<div id="section-controls" class="box box-default" style="border:none;">
+    <div class="box-header">
+        
+    </div>
+    <!-- /.box-header -->
+    <div id="section-search-criteria" class="search-criteria">
+        <div class="mailbox-controls">
+            <div class="btn-group">
+                <a href="@Url.Action("Add","Cooperator")" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> New</a>
+            </div>
+        </div>
+        <!-- Search criteria -->
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Created</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.CreatedTimeFrame, Model.TimeFrameOptions, "Anytime", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Last Modified</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.ModifiedTimeFrame, Model.TimeFrameOptions, "Anytime", new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Status</label>
+                    <select id="=" ddlCooperatorStatus class="form-control">
+                        <option value="ACTIVE">ACTIVE</option>
+                        <option value="INACTIVE">INACTIVE</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Cooperator First Name</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.FirstName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Cooperator Last Name</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.LastName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Cooperator Email</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.EmailAddress, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box-footer">
+        <div class="btn-group pull-right">
+            <button id="btnReset" type="button" class="btn btn-default">Reset</button>
+            <button id="btnSubmitSearch" type="submit" class="btn btn-default">Search</button>
+        </div>
+    </div>
+</div>
+
+

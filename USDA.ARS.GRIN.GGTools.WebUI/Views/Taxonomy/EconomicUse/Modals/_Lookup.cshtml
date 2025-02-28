@@ -1,0 +1,34 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.EconomicUseViewModel
+<div class="modal fade" id="modal-economic-use-lookup">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 id="lblFolderEditModalTitle" class="modal-title">Add Economic Use</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Usage</label>
+                            @Html.DropDownListFor(x => x.Entity.EconomicUsageCode, Model.EconomicUsageCodes, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Plant Part</label>
+                            @Html.DropDownListFor(x => x.Entity.PlantPartCode, Model.PlantPartCodes, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSaveEconomicUse" class="btn btn-default btn-flat">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+

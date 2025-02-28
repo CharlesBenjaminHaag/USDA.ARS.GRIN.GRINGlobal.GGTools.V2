@@ -1,0 +1,34 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModelBase
+@if (!String.IsNullOrEmpty(Model.UserMessage))
+{
+    <div class="alert alert-danger">
+        <h4 style="margin-bottom:0px; margin-top:0px; padding-bottom:0px; padding-top:0px;">Login Error</h4>
+        @Model.UserMessage
+    </div>
+}
+
+@Html.AntiForgeryToken()
+<div id="section-login-fields">
+    <div class="form-group has-feedback">
+        <label>User Name</label>
+    </div>
+    <div class="form-group has-feedback">
+        <label>Password</label>
+        @Html.TextBoxFor(x => x.Entity.Password, new { @placeholder = "Enter GRIN-Global password", @type = "password", @class = "form-control", @autocomplete = "off" })
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+    </div>
+</div>
+
+<div class="row">
+    <!-- /.col -->
+    <div class="col-md-6">
+        <a href="@Url.Action("RequestPasswordReset","Login")" id="btnResetPassword" class="btn btn-default btn-block btn-flat">
+            <i class="fa fa-unlock"></i>
+            Reset Password
+        </a>
+    </div>
+    <div class="col-md-6">
+        <button id="btnLogin" class="btn btn-default btn-block btn-flat" data-pdsa-action="submit">Log In</button>
+    </div>
+    <!-- /.col -->
+</div>

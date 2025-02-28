@@ -1,0 +1,27 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.RegulationViewModel
+<hr />
+<button id="btnSaveRegulation1" type="button" class="btn btn-default float-right m-1" data-dismiss="modal">Add Selected Regulation</button>
+<table id="data-table-regulation-lookup" class="table table-striped ggtools" style="width:100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Geography</th>
+            <th>Type</th>
+            <th>Level</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>@result.GeographyDescription</td>
+                <td>@result.RegulationTypeDescription</td>
+                <td>@result.RegulationLevelDescription</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<button id="btnSaveRegulation2" type="button" class="btn btn-default  float-right m-1" data-dismiss="modal">Add Selected Regulation</button>

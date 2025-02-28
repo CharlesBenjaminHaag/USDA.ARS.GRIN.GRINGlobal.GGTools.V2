@@ -1,0 +1,234 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemListViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav text-sm">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                    <img src="~/dist/img/GGlogo_BW.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- BEGIN EDIT PAGE MENU -->
+                    <ul class="navbar-nav">
+                    </ul>
+                    <!-- END EDIT PAGE MENU-->
+                </div>
+                <!-- BEGIN RIGHT-ALIGNED NAV MENU -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    @Html.Partial("~/Views/Shared/_NavbarRight.cshtml")
+                </ul>
+                <!-- END RIGHT-ALIGNED NAV MENU -->
+
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">
+                                Folder Import
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+                    <div class="row">
+                        <div id="section-lists-by-tab" class="col-md-3">
+                            @{Html.RenderAction("GetListsByTab", "AppUserItemList", new { @tabName = "Tab 1" });}
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card card-primary shadow-none">
+                                <div class="card-header">
+                                    <h3 id="section-detail-title" class="card-title"></h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                                <div id="section-items-by-list" class="card-body">
+                                </div>
+                                <div id="section-progress-overlay" class="overlay">
+                                    <i class="fas fa-2x fa-sync-alt"></i>
+                                </div>
+                            </div>
+                        
+                            <!-- TEST SESSION LIST-->
+                            
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+      
+    </div>
+</body>
+</html>
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")
+<script type="text/javascript">
+
+    document.getElementById("tabNode1").click();
+    /*$("#myUL ul li:first").css("background-color", "yellow");*/
+    var defaultTab = $("#myUL ul li:first").attr('id');
+
+    //DEBUG
+    /*alert("DEFAULT TAB FIRST IN LIST IS " + defaultTab);*/
+
+    $("#section-progress-overlay").hide();
+
+    LoadItemsByList(defaultTab.replace("selector-",""));
+
+    //$('#section-tab-list ul.nav li').on('click', function () {
+    //    var selectedId = $(this).attr('id').replace("tab-","");
+    //    //DEBUG
+    //    alert("SEL TAB IS " + selectedId);
+    //    LoadListsByTab(selectedId);
+    //});
+
+    //$(function () {
+    //    $('.selector-button').click(function () {
+    //        var myValue = $(this).attr("id");
+    //        alert(myValue);
+    //    });
+    //});
+
+
+    @*function LoadListsByTab(tabName) {
+        var link = '@Url.Action("GetListsByTab", "AppUserItemList", new { tabName = "TAB_NAME" })';
+        link = link.replace("TAB_NAME", tabName);
+
+        var formData = new FormData();
+        formData.append("tabName", tabName);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#tab-content").html(response);
+                InitDataTableSingleColumnFormat("data-table-app-user-item-lists-by-tab");
+            }
+        });
+    }*@
+
+    function LoadData() {
+        LoadListsByTab("Tab 1");
+    //    LoadItemsByList(GetDefaultFolderName());
+    }
+
+    function LoadListsByTab(tabName) {
+        var link = '@Url.Action("GetListsByTab", "AppUserItemList", new { tabName = "TAB_NAME" })';
+        link = link.replace("TAB_NAME", tabName);
+
+        var formData = new FormData();
+        formData.append("tabName", tabName);
+
+        $("#section-progress-overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-lists-by-tab").html(response);
+                $("#section-progress-overlay").hide();
+
+                document.getElementById("tabNode1").click();
+                var defaultTab = $("#myUL ul li:first").attr('id');
+                LoadItemsByList(defaultTab.replace("selector-", ""));
+            }
+        });
+    }
+
+    function LoadItemsByList(listName) {
+        var link = '@Url.Action("GetItemsByList", "AppUserItemList", new { listName = "LIST_NAME" })';
+        link = link.replace("LIST_NAME", listName);
+
+        var formData = new FormData();
+        formData.append("listName", listName);
+
+        $("#section-progress-overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-items-by-list").html(response);
+                InitDataTableFolderImportFormat("data-table-app-user-item-list-items");
+                $("#section-detail-title").html(listName);
+                $("#section-progress-overlay").hide();
+            }
+        });
+    }
+
+    function EditBatch() {
+        OpenFolderModal();
+    }
+
+    function InitDataTableFolderImportFormat(tableName) {
+        tableName = "#" + tableName;
+        $(document).ready(function () {
+            table = $(tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                "pageLength": 10,
+                responsive: true,
+                buttons: [
+                    'selectAll',
+                    'selectNone',
+                    'csv',
+                    'excel',
+                    'pdf',
+                    {
+                        text: 'Import Selected Records',
+                        action: function (e, dt, node, config) {
+                            EditBatch();
+                        }
+                    }
+                ],
+                select: true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                columnDefs: [
+                    { targets: [0], visible: false }
+                ]
+            });
+
+            $('table.ggtools').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                /*alert('You clicked on ' + data[0] + "'s row");*/
+            });
+        });
+    }
+</script>

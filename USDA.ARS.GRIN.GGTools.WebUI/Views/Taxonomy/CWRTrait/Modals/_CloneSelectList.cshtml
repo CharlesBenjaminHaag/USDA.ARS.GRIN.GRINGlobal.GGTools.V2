@@ -1,0 +1,91 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CWRTraitViewModel
+<br />
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-copy"></i>
+            CWR Traits Cloned (@Model.DataCollectionBatch.Count)
+        </h3>
+    </div>
+    <div class="card-body">
+
+        @foreach (var result in Model.DataCollectionBatch)
+        {
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Map</label>
+                    @Html.TextBoxFor(x => x.Entity.AssembledName, new { @class = "form-control", @readonly = "readonly" })
+                </div>
+                <div class="col-md-3">
+                    <label>Trait Class</label>
+                    @Html.TextBoxFor(x => x.Entity.TraitClassTitle, new { @class = "form-control", @readonly = "readonly" })
+                </div>
+                <div class="col-md-3">
+                    <label>Breeding Type</label>
+                    @Html.TextBoxFor(x => x.Entity.BreedingTypeTitle, new { @class = "form-control", @readonly = "readonly" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    @if (result.Citations.Count > 0)
+                    {
+                        <div class="form-group">
+                            <label>Citation</label>
+                            <select id="sel-cwr-trait-@result.ID" class="form-control">
+                                @foreach (var citation in result.Citations)
+                                {
+                                    <option value="@citation.ID">[@citation.ID] @citation.AssembledName</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                    else
+                    {
+                        <label>Citation</label>
+                        <div class="alert alert-warning alert-dismissible">
+                            @*<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>*@
+                            @*<h5><i class="icon fas fa-exclamation-triangle"></i>Species Has No Citations</h5>*@
+                            Please add at least one citation to the parent species.
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    $("#btnSaveCWRTraitBatch").click(function () {
+        var keyList = [];
+
+        $("select[id^='sel-cwr-trait-']").each(function () {
+            var val = $(this).val();
+            var id = $(this).attr("id").replace("sel-cwr-trait-", "");
+            var key = id + "_" + val;
+            keyList.push(key);
+        });
+        SaveBatch(keyList);
+    });
+
+    function SaveBatch(keyList) {
+        var link = '@Url.Action("BatchEdit","CWRTrait")';
+        var formData = new FormData();
+
+        formData.append("keyList", keyList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                $("#frmMain").submit();
+            },
+            error: function (ex) {
+            }
+        });
+    }
+</script>
+

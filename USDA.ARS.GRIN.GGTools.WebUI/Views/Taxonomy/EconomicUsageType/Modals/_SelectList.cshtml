@@ -1,0 +1,29 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.EconomicUsageTypeViewModel
+<hr />
+<button id="btnSaveEconomicUsageType1" type="button" class="btn btn-default float-right" data-dismiss="modal">Add Selected Usage Type</button>
+<table id="data-table-economic-usage-type-lookup" class="table table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Usage Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>@result.AssembledName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<button id="btnSaveEconomicUsageType2" type="button" class="btn btn-default float-right" data-dismiss="modal">Add Selected Usage Type</button>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableLookupFormat("data-table-economic-usage-type-lookup");
+    });
+</script>

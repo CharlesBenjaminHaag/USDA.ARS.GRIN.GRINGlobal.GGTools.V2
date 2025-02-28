@@ -1,0 +1,62 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModelBase
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="btn-group float-right">
+            <button id="btnSaveSelectedTaxonCitationTop" 
+                    type="button" 
+                    class="btn btn-default float-right">Use Selected Citation</button>
+        </div>
+    </div>
+</div>
+<br />
+<table id="data_table_lookup_taxon_citations" class="table table-striped" style="margin-top:25px; width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th width="5%">ID</th>
+            <th>Taxon</th>
+            <th>Text</th>
+            <th>Type</th>
+            <th>Abbreviation</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.DataCollectionTaxon != null)
+        {
+            if (Model.DataCollectionTaxon.Count() > 0)
+            {
+                foreach (var result in Model.DataCollectionTaxon)
+                {
+                    <tr>
+                        <td>@result.ID</td>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>
+                             
+                        </td>
+                        <td>
+                            @Html.Raw(result.CitationTitle)
+                        </td>
+                        <td>@result.TypeCode</td>
+                        <td>@result.Abbreviation</td>
+                    </tr>
+            }
+        }
+    }
+    </tbody>
+</table>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="btn-group float-right">
+            <button id="btnSaveSelectedTaxonCitation" 
+                    type="button" 
+                    class="btn btn-default float-right">Use Selected Citation</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    InitDataTableLight('data_table_lookup_taxon_citations');
+</script>

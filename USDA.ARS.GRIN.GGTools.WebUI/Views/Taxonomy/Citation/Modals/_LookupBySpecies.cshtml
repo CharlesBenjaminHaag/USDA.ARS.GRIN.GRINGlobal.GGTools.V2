@@ -1,0 +1,83 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+<div id="modal-citation-lookup-by-species" class="modal fade" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Select Species Citation</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="section-citation-lookup-search-results" class="card-body">
+                    @{Html.RenderAction("_ListBySpecies", "Citation", new { @speciesId = Model.SearchEntity.SpeciesID });}
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button id="btnSaveSelectedCitation" type="button" class="btn btn-info" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    
+
+    $(document).on("click", "[id='btnSearch']", function () {
+        LookupCitations();
+    });
+
+    function LookupCitations() {
+        var link = '@Url.Action("_Search","Citation")';
+        var formData = new FormData();
+
+        formData.append("SearchEntity.CreatedByCooperatorID", $("#SearchEntity_CreatedByCooperatorID").val());
+        formData.append("SearchEntity.TypeCode", $("#SearchEntity_TypeCode").val());
+        formData.append("SearchEntity.Abbreviation", $("#SearchEntity_Abbreviation").val());
+        formData.append("SearchEntity.CitationTitle", $("#SearchEntity_CitationTitle").val());
+        formData.append("SearchEntity.AuthorName", $("#SearchEntity_AuthorName").val());
+        formData.append("SearchEntity.CitationYear", $("#SearchEntity_CitationYear").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-citation-lookup-search-results").html(response);
+            }
+        });
+    }
+
+    /*
+    *******************************************************************
+    NEEDS REFACTORING. Urgently. -- CBH 11/7/22
+    *******************************************************************
+    */
+
+    $(document).on("click", "[id='btnSaveSelectedCitation']", function () {
+        GetSelectedCitation("N", "data_table_lookup_citations_by_species");
+    });
+
+    function GetSelectedCitation(editOption, dataTableName) {
+        var tableName = $("#TableName").val();
+        var entityId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs(dataTableName);
+       
+        if (selectedItemIdList.length == 0) {
+            alert("ERROR: NO CITATION SELECTED");
+        }
+        else {
+            SaveSelectedCitation(tableName, entityId, selectedItemIdList);
+            $("#modal-citation-lookup").modal("hide");
+        }
+    }
+   
+   
+
+</script>
+

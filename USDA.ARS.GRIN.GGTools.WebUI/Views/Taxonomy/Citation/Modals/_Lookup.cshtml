@@ -1,0 +1,416 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+<div id="modal-citation-lookup" class="modal fade" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Citation Lookup</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header p-2">
+                        <ul id="list-tab_citations" class="nav nav-pills">
+                            @*<li class="nav-item"><a id="link-tab-citations-taxon" class="nav-link active" href="#taxon-citations" data-toggle="tab">Select Taxon Citation</a></li>*@
+                            <li class="nav-item"><a id="link-tab-citations-search" class="nav-link active" href="#search-citations" data-toggle="tab">Search</a></li>
+                            <li class="nav-item"><a id="link-tab-citations-add" class="nav-link" href="#add-citation" data-toggle="tab">Add</a></li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            @*<div class="tab-pane active" id="taxon-citations">
+                                @Html.Partial("~/Views/Taxonomy/Citation/Modals/_SelectListTaxon.cshtml")
+                            </div>*@
+                            <div class="tab-pane active" id="search-citations">
+                                <div id="section-search-criteria">
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group form-horizontal">
+                                                <label>Created By</label>
+                                                @Html.DropDownListFor(x => x.SearchEntity.CreatedByCooperatorID, Model.Cooperators, "Any Cooperator", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Type</label>
+                                                @Html.DropDownListFor(x => x.SearchEntity.TypeCode, Model.CitationTypes, "All types", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Abbreviation</label>
+                                                @Html.TextBoxFor(x => x.SearchEntity.Abbreviation, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Citation Title</label>
+                                                @Html.TextBoxFor(x => x.SearchEntity.CitationTitle, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Author</label>
+                                                @Html.TextBoxFor(x => x.SearchEntity.AuthorName, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div id="form-group form-group-horizontal">
+                                                <label>Cit. Year</label>
+                                                @Html.TextBoxFor(x => x.SearchEntity.CitationYear, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row margin-top-05em">
+                                        <div class="col-md-12">
+                                            <div class="margin">
+                                                <button id="btnReset" class="btn btn-danger">Reset</button>
+                                                <button id="btnSearch" class="btn btn-default float-right">Search</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="section-citation-lookup-search-results">
+                                        @Html.Partial("~/Views/Taxonomy/Citation/Modals/_SelectList.cshtml")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="add-citation">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Abbreviated Lit. Source</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Entity.Abbreviation, new { @class = "form-control", @readonly = "readonly", @style = "background-color:#ecf0f5;" })
+                                                @Html.HiddenFor(x => x.Entity.LiteratureID)
+                                                @if (Model.Entity.LiteratureID > 0)
+                                                {
+                                                    <span class="input-group-btn">
+                                                        <a href="@Url.Action("Edit", "Literature", new { @entityId = Model.Entity.LiteratureID })" class="btn btn-default btn-flat">
+                                                            <i class="fa fa-link"></i>
+                                                        </a>
+                                                    </span>
+                                                }
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-flat" data-toggle="modal" data-target="#modal-literature-lookup">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Citation Title</label>
+                                            @Html.TextBoxFor(x => x.Entity.CitationTitle, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Ref. Description</label>
+                                            @Html.TextBoxFor(x => x.Entity.ReferenceDescription, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>URL</label>
+                                            @Html.TextBoxFor(x => x.Entity.URL, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Type</label>
+                                            @Html.DropDownListFor(x => x.Entity.TypeCode, Model.CitationTypes, "NULL", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Author Name</label>
+                                            @Html.TextBoxFor(x => x.Entity.AuthorName, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label>Year</label>
+                                            @Html.TextBoxFor(x => x.Entity.CitationYear, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Vol. and Page</label>
+                                            @Html.TextBoxFor(x => x.Entity.Reference, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label>DOI</label>
+                                            @Html.TextBoxFor(x => x.Entity.DOIReference, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="margin">
+                                            <div class="form-group clearfix">
+                                                <div class="icheck-primary d-inline">
+                                                    @Html.CheckBoxFor(x => x.Entity.IsAcceptedNameOption, new { @id = "cbxLookupIsAcceptedName", @class = "custom-control-input" })
+                                                    <label for="cbxLookupIsAcceptedName">
+                                                        Accepted
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="btnSaveNewCitation" type="button" class="btn btn-default float-right" data-dismiss="modal">Save New Citation</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+@{Html.RenderAction("RenderLookupModal", "Literature"); }
+
+<script type="text/javascript">
+
+    $('#modal-citation-lookup').on('keypress', function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            /*alert("ENTER clicked");*/
+            LookupCitations();
+            event.preventDefault();
+        }
+    });
+
+    $(document).on("click", "[id='btnSearch']", function () {
+        LookupCitations();
+    });
+
+    function LookupCitations() {
+        var link = '@Url.Action("_Search","Citation")';
+        var formData = new FormData();
+
+        formData.append("SearchEntity.CreatedByCooperatorID", $("#SearchEntity_CreatedByCooperatorID").val());
+        formData.append("SearchEntity.TypeCode", $("#SearchEntity_TypeCode").val());
+        formData.append("SearchEntity.Abbreviation", $("#SearchEntity_Abbreviation").val());
+        formData.append("SearchEntity.CitationTitle", $("#SearchEntity_CitationTitle").val());
+        formData.append("SearchEntity.AuthorName", $("#SearchEntity_AuthorName").val());
+        formData.append("SearchEntity.CitationYear", $("#SearchEntity_CitationYear").val());
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-citation-lookup-search-results").html(response);
+            }
+        });
+    }
+
+    /*
+    *******************************************************************
+    NEEDS REFACTORING. Urgently. -- CBH 11/7/22
+    *******************************************************************
+    */
+
+    $(document).on("click", "[id='btnSaveSelectedCitation']", function () {
+        GetSelectedCitation("N", "data_table_lookup_citations");
+    });
+
+    $(document).on("click", "[id='btnSaveSelectedCitationTop']", function () {
+        GetSelectedCitation("N", "data_table_lookup_citations");
+    });
+
+    $(document).on("click", "[id='btnSaveSelectedTaxonCitation']", function () {
+        GetSelectedCitation("N","data_table_lookup_taxon_citations");
+    });
+
+    $(document).on("click", "[id='btnSaveSelectedTaxonCitationTop']", function () {
+        GetSelectedCitation("N","data_table_lookup_taxon_citations");
+    });
+
+    function GetSelectedCitation(editOption, dataTableName) {
+        var tableName = $("#TableName").val();
+        var entityId = $("#Entity_ID").val();
+        var selectedItemIdList = GetSelectedEntityIDs(dataTableName);
+       
+        if (selectedItemIdList.length == 0) {
+            alert("ERROR: NO CITATION SELECTED");
+        }
+        else {
+            SaveSelectedCitation(tableName, entityId, selectedItemIdList);
+            $("#modal-citation-lookup").modal("hide");
+        }
+    }
+   
+    $(document).on("click", "[id='btnSaveNewCitation']", function () {
+        SaveNewCitation();
+    });
+
+    function SaveSelectedCitation(tableName, entityId, citationId) {
+        var link = '@Url.Action("Clone","Citation")';
+        var familyId = 0;
+        var genusId = 0;
+        var speciesId = 0;
+        var formData = new FormData();
+
+        switch (tableName) {
+            case "taxonomy_family_map":
+                familyId = $("#Entity_ID").val();
+                break;
+            case "taxonomy_genus":
+                genusId = $("#Entity_ID").val();
+                break;
+            case "taxonomy_species":
+                speciesId = $("#Entity_ID").val();
+                break;
+            default:
+                speciesId = $("#Entity_SpeciesID").val();
+                break;
+        }
+
+        formData.append("Entity.TableName", tableName);
+        formData.append("Entity.ID", citationId);
+        formData.append("Entity.FamilyID", familyId);
+        formData.append("Entity.GenusID", genusId);
+        formData.append("Entity.SpeciesID", speciesId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                if ((tableName == "taxonomy_family_map") ||
+                    (tableName == "taxonomy_genus") ||
+                    (tableName == "taxonomy_species")) {
+                    LoadDependentData("tab_selector_citation","Citation","_List");
+                }
+                else {
+                    //DEBUG
+                    /*alert("NEW CITATION " + data.citation.ID + " AND " + data.citation.AssembledName);*/
+                    $("#Entity_CitationID").val(data.citation.ID);
+                    $("#Entity_CitationTitle").val(data.citation.CitationTitle);
+                    $("#section-citation-assembled-name").html(data.citation.AssembledName);
+                }
+            },
+            error: function (ex) {
+            }
+        });
+    }
+
+    function SaveNewCitation() {
+        var link = '@Url.Action("Add","Citation")';
+        var formData = new FormData();
+        var tableName = $("#TableName").val();
+        var entityId = $("#Entity_ID").val();
+        var literatureId = $("#Entity_LiteratureID").val();
+        var standardAbbreviation = $("#Entity_Abbreviation").val();
+        var citationTitle = $("#Entity_CitationTitle").val();
+        var editorAuthorName = $("#Entity_EditorAuthorName").val();
+        var citationYear = $("#Entity_CitationYear").val();
+        var doiReference = $("#Entity_DOIReference").val();
+        var volumeOrPage = $("#Entity_VolumeOrPage").val();
+        var note = $("#txtCitationNote").val();
+
+        formData.append("TableName", tableName);
+        formData.append("EntityID", entityId);
+        formData.append("LiteratureID", literatureId);
+        formData.append("SpeciesID", entityId);
+        formData.append("StandardAbbreviation", standardAbbreviation);
+        formData.append("CitationTitle", citationTitle);
+        formData.append("EditorAuthorName", editorAuthorName);
+        formData.append("CitationYear", citationYear);
+        formData.append("DOIReference", doiReference);
+        formData.append("VolumeOrPage", volumeOrPage);
+        formData.append("Note", note);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (data) {
+                $("#Entity_CitationID").val(data.citation.ID);
+                $("#Entity_CitationText").val(data.citation.CitationText);
+            },
+            error: function (ex) {
+            }
+        });
+}
+
+    function SaveCitations(link, refreshLink) {
+    var tableName = $("#TableName").val();
+    var entityId = $("#Entity_ID").val();
+    var formData = new FormData();
+    var selectedItemIdList = GetSelectedEntityIDs("citation-lookup-data-table");
+
+    formData.append("TableName", tableName);
+    formData.append("EntityID", entityId);
+    formData.append("IDList", selectedItemIdList);
+
+    $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (result) {
+            $("#modal-citation-search").modal("hide");
+
+            /*window.location.href = refreshLink;*/
+        },
+        error: function () {
+
+        }
+    });
+}
+
+    function DeleteCitations(link, refreshLink) {
+    var tableName = $("#TableName").val();
+    var entityId = $("#Entity_ID").val();
+    var formData = new FormData();
+    var selectedItemIdList = "0";
+
+    formData.append("TableName", tableName);
+    formData.append("EntityID", entityId);
+    formData.append("IDList", selectedItemIdList);
+
+    $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (result) {
+            $("#modal-citation-search").modal("hide");
+            window.location.href = refreshLink;
+        },
+        error: function () {
+
+        }
+    });
+    }
+
+</script>
+

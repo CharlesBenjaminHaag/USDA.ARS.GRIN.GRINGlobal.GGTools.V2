@@ -1,0 +1,138 @@
+﻿@using System.Data;
+@using USDA.ARS.GRIN.GGTools.DataLayer;
+@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDynamicQueryViewModel
+
+@Html.HiddenFor(x => x.RowsAffected)
+
+@{ // REFACTOR: Set id of DataTable based on DB table extracted from query.
+        SysTableField sysTableFieldHeading = new SysTableField();
+        SysTableField sysTableField = new SysTableField();
+        var tableId = "data_table_" + Model.TableName;
+        
+}
+
+@if (Model.DataCollectionDataTable.Rows.Count > 0)
+{
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="far fas fa-table nav-icon"></i>
+                Query Results
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <table id="data_table_sys_dynamic_query" class="table table-striped" style="width:100%;">
+                <thead>
+                    <tr>
+                        @foreach (DataColumn col in Model.DataCollectionDataTable.Columns)
+                        {
+                            <th>
+                                @col.ColumnName
+                            </th>
+                        }
+                </thead>
+                <tbody>
+                    @foreach (DataRow dr in Model.DataCollectionDataTable.Rows)
+                    {
+                        <tr>
+                            @foreach (DataColumn rowCol in Model.DataCollectionDataTable.Columns)
+                            {
+                                //{
+                                //    sysTableField = Model.GetColumnInfo(Model.TableName, rowCol.ColumnName);
+                                //}
+
+                                <td>
+                                    @dr[rowCol.ColumnName]  
+                                </td>
+
+                                
+
+                                @*if (sysTableField.IsPrimaryKey == "Y")
+                                    {
+                                        keyColumnCount++;
+                                        <td>
+                                            @dr[rowCol.ColumnName]
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Edit", Model.TableTitle, new { entityId = @dr[rowCol.ColumnName] })" , target="_blank">[Edit]</a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @dr[rowCol.ColumnName]
+                                        </td>
+                                    }*@
+                            }
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    @*@if (keyColumnCount == 0)
+                        {
+                            <div class="alert alert-warning alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <h5><i class="icon fas fa-exclamation-triangle"></i> No Primary Key Defined</h5>
+                                This query does not contain a primary key field for the table <strong>@Model.TableTitle</strong>. You will need to add a primary key prior to attempting to export these results to a folder.
+                            </div>
+                        }*@
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var searchResultsVisible = 0;
+        searchResultsVisible = $("#RowsAffected").val();
+
+        if (searchResultsVisible > 0) {
+            var tableName = "data_table_sys_dynamic_query";
+            InitDataTableDynamicQuery(tableName);
+        }
+    });
+
+    function InitDataTableDynamicQuery(tableName) {
+        tableName = "#" + tableName;
+        $(document).ready(function () {
+            table = $(tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                "pageLength": 10,
+                scrollX: true,
+                scrollY: true,
+                responsive: true,
+                buttons: [
+                    'selectAll',
+                    'selectNone',
+                    'csv',
+                    'excel',
+                    'pdf',
+                    //{
+                    //    text: 'Add to Folder',
+                    //    action: function (e, dt, node, config) {
+                    //        OpenFolderModal();
+                    //    }
+                    //}
+                ],
+                select: true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                //columnDefs: [
+                //    { targets: [0], visible: false }
+                //]
+            });
+
+            $('table.ggtools').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                /*alert('You clicked on ' + data[0] + "'s row");*/
+            });
+        });
+    }
+
+</script>

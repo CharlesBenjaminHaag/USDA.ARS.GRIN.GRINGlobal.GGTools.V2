@@ -1,0 +1,75 @@
+﻿<div class="modal fade" id="modal-species-lookup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Generate CWR Maps</h4>
+            </div>
+            <div class="modal-body">
+                <h5>1. Search Species</h5>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="text" id="txtLookupSpeciesName" class="form-control" />
+                            <span class="input-group-addon">
+                                <input id="cbxLookupIsAcceptedName" type="checkbox">
+                                Accepted
+                            </span>
+                            <span class="input-group-btn">
+                                <button type="button" id="btnLookupSpecies" class="btn btn-default btn-flat"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                        @*@Html.CheckBoxFor(x => x.IsAcceptedName, new { style = "margin-left:5x;" })<label style="margin-left:10px;">Accepted Names Only</label>*@
+                    </div>
+                </div>
+                <div id="section-species-lookup-search-results">
+
+                </div>
+                <div class="row cwr-map-options">
+                    <div class="col-md-12">
+                        <h5>2. Specify Options</h5>
+                        <div class="form-group">
+                            <label>Genepool Code</label>
+                            <select class="form-control">
+                                <option value="Primary">Primary</option>
+                                <option value="Primary">Probable Progenitorimary</option>
+                                <option value="Primary">Progenitor</option>
+                                <option value="Primary">...etc</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cwr-map-options">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="text" disabled="" readonly class="form-control" value="Is Crop">
+                            <span class="input-group-addon">
+                                <input id="cbxIsCrop" type="checkbox" checked="checked">
+                            </span>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" disabled="" readonly class="form-control" value="Is Graftstock">
+                            <span class="input-group-addon">
+                                <input id="cbxIsGraftstock" type="checkbox" checked="checked">
+                            </span>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" disabled="" readonly class="form-control" value="Is Potential">
+                            <span class="input-group-addon">
+                                <input id="cbxIsPotential" type="checkbox" checked="checked">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Cancel</button>
+                <button id="btnGenerateCWRMaps" type="button" class="btn btn-success pull-right cwr-map-options" data-dismiss="modal">Generate CWR Maps</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

@@ -1,0 +1,39 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderViewModel
+
+<li class="nav-item dropdown">
+    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Folder</a>
+    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+
+        <li class="nav-item d-none d-sm-inline-block">
+            <a id="btnOpenFolderModalInSingleMode" class="dropdown-item" href="">Add to Folder</a>
+        </li>
+
+        @if (Model.DataCollection.Count > 0)
+        {
+            <li class="dropdown-divider"></li>
+        }
+
+        @foreach (var result in Model.DataCollection)
+        {
+            <li><a href="@Url.Action("AddItems", "AppUserItemFolder", new { @folderId = result.FolderID, @entityId = Model.Entity.ID, @tableName = Model.TableName })" class="dropdown-item">@result.FolderName </a></li>
+        }
+    </ul>
+</li>
+
+@*<li class="nav-item dropdown">
+    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Folder</a>
+    <ul aria-labelledby="dropdownSubMenuFolder" class="dropdown-menu border-0 shadow">
+        
+        @foreach (var result in Model.DataCollection)
+        {
+            <li><a href="@Url.Action("Edit", "Folder", new { @entityId = result.FolderID })" class="dropdown-item">@result.FolderName </a></li>
+        }
+    </ul>
+</li>*@
+
+
+
+
+
+
+

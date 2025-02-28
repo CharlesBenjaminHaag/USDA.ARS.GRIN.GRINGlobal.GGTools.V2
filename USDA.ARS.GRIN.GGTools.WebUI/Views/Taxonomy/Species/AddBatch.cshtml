@@ -1,0 +1,477 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    ViewBag.ID = Model.ID;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style>
+    #templateTable {
+        display: none; /* Keep the template table hidden */
+    }
+
+    .error {
+        background-color: red;
+    }
+</style>
+<div id="errorDiv" class="alert alert-danger">
+    <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+    <ul id="errorList"></ul>
+</div>
+<div id="placeholder-error-message-template">
+
+</div>
+<div id="accordion">
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <h4 class="card-title w-100">
+                <a id="accordionButton1" class="d-block w-100" data-toggle="collapse" href="#collapseOne" aria-expanded="false">
+                    1. Add Species
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="collapse show" data-parent="#accordion" style="">
+            <div class="card-body">
+                <div>
+                    <div>
+
+                        <div>
+                            <p id="display-id"></p>
+                        </div>
+                        <table id="mainTable" class="table table-striped" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Genus</th>
+                                    <th>Epithet</th>
+                                    <th>Authority</th>
+                                    <th>Protologue</th>
+                                    <th>URL</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                        <div id="statusMessage"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button id="saveChanges" class="btn btn-primary float-right"><i class="icon fas fa-save"></i> Save Changes</button>
+                <button id="addRow" class="btn btn-default float-right"><i class="icon fas fa-plus"></i> Add Row </button>
+            </div>
+        </div>
+    </div>
+    <div class="card card-primary card-outline">
+        <div class="card-header">
+            <h4 class="card-title w-100">
+                <a id="accordionButton2" class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="true">
+                    2. Review Added Species
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="collapse" data-parent="#accordion" style="">
+            <div id="placeholder-imported-species" class="card-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TABLE TEMPLATE -->
+<table id="templateTable" style="display:none;">
+    <tr>
+        <td width="25%">
+            <input type="hidden" id="hfRowID" name="RowID" class="unique-id" value="template-id" />
+            <div class="input-group">
+                <span id="GenusName" class="placeholder" style="background-color: #ecf0f5; border: 1px solid #ced4da; width: 100%; position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; min-width: 0; margin-bottom: 0; padding: 0.375rem 0.75rem; height: calc(2.25rem + 2px); position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; min-width: 0; margin-bottom: 0;"></span>
+                <input type="text" class="form-control" id="txtGenusName" name="GenusName" style="display:none;" />
+                <span class="input-group-append">
+                    <button id="btnOpenGenusLookupModal"
+                            type="button"
+                            data-toggle="modal"
+                            data-ggtools-id-field="GenusID"
+                            data-ggtools-name-field="GenusName"
+                            data-target="#modal-genus-lookup"
+                            class="btn btn-default btn-flat">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+            <input type="hidden" id="hfGenusID" name="GenusID" />
+        </td>
+        <td width="25%">
+            <input type="text" class="form-control" id="txtSpeciesName" name="SpeciesName" />
+        </td>
+        <td width="25%">
+            
+
+
+            <div class="input-group">
+                <input type="text" class="form-control" id="txtSpeciesAuthority" name="SpeciesAuthority" />                <span class="input-group-append">
+                    <button id="btnOpenAuthorityLookupModal"
+                            type="button"
+                            data-toggle="modal"
+                            data-ggtools-id-field="SpeciesAuthority"
+                            data-ggtools-name-field="SpeciesAuthority"
+                            data-target="#modal-author-lookup"
+                            class="btn btn-default btn-flat">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+
+        </td>
+        <td width="15%">
+            <input type="text" class="form-control" id="txtProtologue" name="Protologue" />
+        </td>
+        <td width="15%">
+            <input type="text" class="form-control" id="txtProtologueVirtualPath" name="ProtologueVirtualPath" />
+        </td>
+        <td width="5%">
+            <div class="btn-group">
+                <button id="btnDelete" type="button" class="btn btn-default btn-sm delete-row">
+                    Delete
+                </button>
+                <button type="button" class="btn btn-default btn-sm copy-btn">
+                    Copy
+                </button>
+            </div>
+        </td>
+
+    </tr>
+</table>
+<!-- END TABLE TEMPLATE -->
+
+@{Html.RenderAction("RenderLookupModal", "Genus"); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+@{Html.RenderAction("RenderLookupModal", "Author"); }
+
+<script>
+    //function togglePanels() {
+
+    //        // Get the button that controls the panel (use the button's ID)
+    //        var panel1Button = document.getElementById("panel1Toggle");
+    //        var panel2Button = document.getElementById("panel2Toggle");
+
+    //        // Trigger the click event
+    //        panel1Button.click();
+    //        panel2Button.click();
+    //}
+
+    function triggerAccordionHeadingClick(headingId) {
+        // Get the accordion heading by its ID
+        var heading = document.getElementById(headingId);
+
+
+
+        if (heading) {
+            console.log("triggerAccordionHeadingClick heading " + headingId + " found ");
+            // Trigger a click event on the heading
+            heading.click();
+        } else {
+            console.log("triggerAccordionHeadingClick heading " + headingId + " not found ");
+            console.log("Accordion heading not found");
+        }
+    }
+
+    let counter = 1; // Counter to create unique IDs
+
+    var errorDiv = document.getElementById("errorDiv");
+    errorDiv.style.display = "none";
+
+    $(document).ready(function () {
+        $(document).on('input', 'input[type="text"]', function () {
+            $(this).css('background-color', 'white');
+        });
+
+        $(document).on('change', 'input[type="text"]', function () {
+            $(this).css('background-color', 'white');
+            $('span.placeholder').css('background-color', 'white');
+        });
+    });
+
+    class SpeciesDTO {
+        constructor(ID, GenusID, GenusName, SpeciesName, Protologue, ProtologueVirtualPath, SpeciesAuthority, Note) {
+            this.ID = ID;
+            this.GenusID = GenusID;
+            this.GenusName = GenusName;
+            this.SpeciesName = SpeciesName;
+            this.Protologue = Protologue;
+            this.ProtologueVirtualPath = ProtologueVirtualPath;
+            this.SpeciesAuthority = SpeciesAuthority;
+            this.Note = Note;
+        }
+    }
+
+    // Add row from template to main table
+    document.getElementById('addRow').addEventListener('click', function () {
+        // Clone the template row
+        let templateRow = document.querySelector('#templateTable tr').cloneNode(true);
+
+        // Set id's of all 1) textboxes, 2) hidden fields, 3) buttons.
+        let textboxes = templateRow.querySelectorAll('input[type="text"]');
+        textboxes.forEach((textbox, index) => {
+            textbox.id = textbox.id + "-" + counter;
+        });
+
+        let hiddenFields = templateRow.querySelectorAll('input[type="hidden"]');
+        hiddenFields.forEach((hiddenField, index) => {
+            hiddenField.id = hiddenField.id + "-" + counter;
+        });
+
+        let buttons = templateRow.querySelectorAll('button');
+        buttons.forEach((button, index) => {
+            button.id = button.id + "-" + counter;
+
+            if (button.hasAttribute(`data-ggtools-id-field`) && button.hasAttribute(`data-ggtools-name-field`)) {
+                let dataAttr1Value = button.getAttribute(`data-ggtools-id-field`);
+                let dataAttr2Value = button.getAttribute(`data-ggtools-name-field`);
+
+                button.setAttribute(`data-ggtools-id-field`, 'hf' + dataAttr1Value + '-' + counter);
+                button.setAttribute(`data-ggtools-name-field`, 'txt' + dataAttr2Value + '-' + counter);
+
+                //DEBUG
+                //console.log(button.id);
+                //console.log(dataAttr1Value);
+                //console.log(dataAttr2Value);
+            }
+        });
+
+        let spans = templateRow.querySelectorAll('span');
+        spans.forEach((span, index) => {
+            span.id = 'txt' + span.id + '-' + counter + '-Placeholder';
+        });
+
+        // Set unique hidden field ID
+        let hiddenField = templateRow.querySelector('input[type="hidden"]');
+        hiddenField.value = 'unique-id-' + counter;
+
+        // Make the row visible and append it to the main table
+        document.querySelector('#mainTable tbody').appendChild(templateRow);
+
+        // Update the counter for the next row
+        counter++;
+    });
+
+    // Handle row deletion and display unique ID before deletion
+    document.querySelector('#mainTable').addEventListener('click', function (event) {
+        if (event.target.classList.contains('delete-row')) {
+            let row = event.target.closest('tr');
+            let uniqueId = row.querySelector('input[type="hidden"]').value;
+
+            /*alert('Deleting row with ID: ' + uniqueId);*/
+
+            // Remove the row from the table
+            row.remove();
+        }
+
+        if (event.target.classList.contains('copy-btn')) {
+            let row = event.target.closest('tr');
+            let clonedRow = row.cloneNode(true);
+            let table = row.closest('table');
+            table.querySelector('tbody').appendChild(clonedRow);
+        }
+
+
+    });
+
+    // Open modal and pass the value from another field in the row
+    //document.querySelector('#mainTable').addEventListener('click', function (event) {
+    //    if (event.target.classList.contains('open-modal')) {
+    //        let row = event.target.closest('tr');
+    //        let valueToPass = row.querySelector('input[type="text"]').value;
+
+    //        // Set modal content
+    //        document.getElementById('modalContent').textContent = 'Value from row: ' + valueToPass;
+
+    //        // Open the modal
+    //        $('#infoModal').modal('show');
+    //    }
+    //});
+
+    // Save changes using AJAX
+    $('#saveChanges').click(function () {
+        var isValid = true;
+        var table = getDomElement("#mainTable");
+        var errors = [];
+
+        var errorDiv = document.getElementById("errorDiv");
+        errorDiv.style.display = "none"; // Hide error div initially
+        var ul = document.getElementById("errorList");
+        if (ul) {
+            //console.log("DEBUG clearing errors");
+            ul.innerHTML = "";
+        }
+
+        if (table) {
+            const tableBody = document.querySelector('#mainTable tbody');
+            const rows = tableBody.querySelectorAll('tr');
+
+            rows.forEach((row) => {
+                var rowId = $(row).find('input[name="RowID"]').val();
+                var id = $(row).find('input[name="ID"]').val();
+                var genusId = $(row).find('input[name="GenusID"]').val();
+                var genusName = $(row).find('input[name="GenusName"]').val();
+                var speciesName = $(row).find('input[name="SpeciesName"]').val();
+                var speciesAuthority = $(row).find('input[name="SpeciesAuthority"]').val();
+                var protologue = $(row).find('input[name="Protologue"]').val();
+                var protologueVirtualPath = $(row).find('input[name="ProtologueVirtualPath"]').val();
+                var note = $(row).find('input[name="Note"]').val();
+
+                //DEBUG
+                console.log("DEBUG EPITHET IS " + speciesName + " AUTH IS " + speciesAuthority + " PROTO IS " + protologue + " URL IS " + protologueVirtualPath);
+
+                if ((genusId == 0) || (genusId == null)) {
+                    /* VALIDATION OPTION: Set all error fields to red */
+                    //$(row).find('input[name="GenusName"]').css('background-color', 'red');
+                    $('span.placeholder').css('background-color', 'red');
+                    errors.push("Genus required.");
+                    isValid = false;
+                }
+
+                if ((speciesName == null) || speciesName.trim() == "") {
+                    errors.push("Species name required.");
+                    $(row).find('input[name="SpeciesName"]').css('background-color', 'red');
+                    isValid = false;
+                }
+
+                if (isValid == true) {;
+                    //console.log("DEBUG isValid TRUE");
+                    var species = new SpeciesDTO(id, genusId, genusName, speciesName, protologue, protologueVirtualPath, speciesAuthority, note);
+                    SaveSpecies(rowId, species);
+
+                }
+                else {
+                    if (errors.length > 0) {
+                        errorDiv.style.display = "block"; // Show error div
+                        errors.forEach(function (error) {
+                            var li = document.createElement("li");
+                            li.textContent = error;
+                            errorList.appendChild(li);
+                        });
+                    }
+                }
+            });
+        }
+    });
+
+    function SaveSpecies(rowId, speciesDTO) {
+        $.ajax({
+            url: '@Url.Action("SaveBatch","Species")',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+
+            data: JSON.stringify( { speciesDTO: speciesDTO }),
+            success: function (response) {
+                if (response.success) {
+                    GetSpeciesBatch();
+                } else {
+                    //TODO
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
+            }
+
+        });
+    }
+
+    function GetSpeciesBatch() {
+        $.ajax({
+            url: '@Url.Action("_ListBatch","Species")',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#placeholder-imported-species").html(response);
+                triggerAccordionHeadingClick("accordionButton2");
+                ResetTable("mainTable");
+                InitDataTable("data_table_taxonomy_species");
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
+            }
+        });
+    }
+
+    function ResetTable(tableId) {
+        // Get the table by its ID
+        var table = document.getElementById(tableId);
+
+        // Find the tbody within the table
+        var tbody = table.getElementsByTagName('tbody')[0];
+
+        // Make sure tbody exists
+        if (tbody) {
+            // Remove all rows (<tr>) from tbody
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+        }
+    }
+
+    function getDomElement(selector) {
+        try {
+            const element = document.querySelector(selector);
+
+            if (!element) {
+                throw new Error(`Element with selector "${selector}" not found.`);
+            }
+
+            return element; // Return the DOM element reference if it exists
+        } catch (error) {
+            console.error(error.message);
+            return null; // Return null if there's an error
+        }
+    }
+
+    /* ROW COPY LOGIC */
+    // Function to handle the COPY button click
+    function copyRow(buttonElement) {
+        // Find the <tr> that contains the clicked button
+        let rowToCopy = buttonElement.closest('tr');
+
+        // Clone the row
+        let clonedRow = rowToCopy.cloneNode(true);
+
+        counter++;
+
+        // Set ID of cloned row
+        $(clonedRrow).find('input[name="RowID"]').val(counter);
+
+        // Optionally, remove the ID attributes of cloned row elements if needed
+        clonedRow.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
+
+
+
+
+        // Find the table where the row belongs
+        let table = rowToCopy.closest('table');
+
+        // Append the cloned row to the end of the table
+        table.querySelector('tbody').appendChild(clonedRow);
+    }
+
+    // Attach event listeners to all COPY buttons inside the table
+    document.querySelectorAll('templateTable button.copy-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            copyRow(this);
+        });
+    });
+
+    function HandleError() {
+        //TODO show error(s) in activated panel.
+    }
+
+    function copyDivContent() {
+        // Get the source and target divs
+        var sourceDiv = document.getElementById("sourceDiv");
+        var targetDiv = document.getElementById("targetDiv");
+
+        // Copy the inner HTML from sourceDiv to targetDiv
+        targetDiv.innerHTML = sourceDiv.innerHTML;
+    }
+
+</script>
+

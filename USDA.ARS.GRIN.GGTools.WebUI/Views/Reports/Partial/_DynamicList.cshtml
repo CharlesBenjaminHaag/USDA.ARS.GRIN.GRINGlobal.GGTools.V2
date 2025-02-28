@@ -1,0 +1,75 @@
+﻿@using System.Data;
+@model USDA.ARS.GRIN.GGTools.ViewModelLayer.ReportViewModel
+<table id="data-table-report" class="table table-striped">
+    <thead>
+        <tr>
+            @foreach (DataColumn col in Model.ReportDataTable.Columns)
+            {
+                <th>@col.ColumnName</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataRow dr in Model.ReportDataTable.Rows)
+        {
+        <tr>
+            @foreach (DataColumn rowCol in Model.ReportDataTable.Columns)
+            {
+                if (rowCol.ColumnName == "OrderID")
+                {
+                    <td>
+                        <span class="badge">
+                            <a href="@Url.Action("View", "Order", new { entityId = dr[rowCol.ColumnName] })" style="color:white; text-decoration:underline;">
+                                @dr[rowCol.ColumnName]
+                            </a>
+                        </span>
+                    </td>
+                }
+                else
+                {
+                    if (rowCol.ColumnName.Contains("WebOrderID"))
+                    {
+                    <td>
+                        <span class="badge">
+                            <a href="@Url.Action("View", "WebOrder", new { entityId = dr[rowCol.ColumnName] })" style="color:white; text-decoration:underline;">
+                                @dr[rowCol.ColumnName]
+                            </a>
+                        </span>
+                    </td>
+                    }
+                    else
+                    {
+                        if (rowCol.ColumnName.Contains("EmailAddress"))
+                        {
+                        <td>
+                            <a href="@Url.Action("Search", "WebOrder", new { emailAddress = dr[rowCol.ColumnName] })">@dr[rowCol.ColumnName]</a>
+                        </td>
+                        }
+                        else
+                        {
+                            if (rowCol.ColumnName.Contains("Organization"))
+                            {
+                            <td>
+                                <a href="@Url.Action("Search", "WebOrder", new { organization = dr[rowCol.ColumnName] })">@dr[rowCol.ColumnName]</a>
+                            </td>
+                            }
+                            else
+                            {
+                            <td>@dr[rowCol.ColumnName]</td>
+                            }
+                        }
+                    }
+                }
+            }
+        </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            @foreach (DataColumn col in Model.ReportDataTable.Columns)
+            {
+                <td></td>
+            }
+        </tr>
+    </tfoot>
+</table>

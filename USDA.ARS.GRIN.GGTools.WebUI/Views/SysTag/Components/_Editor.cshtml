@@ -1,0 +1,102 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysTagViewModel
+@Html.HiddenFor(x => x.TableName, new { id = "ReferencedTableName" })
+
+<h3>ID IS @Model.Entity.IDNumber</h3>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="card card-primary card-outline card-outline-tabs">
+            <div class="card-header p-0 border-bottom-0">
+                <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Create a New Tag</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Select an Existing Tag</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="custom-tabs-four-tabContent">
+                    <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+                        <div class="form-group">
+                            <label for="newTag">Enter a New Tag</label>
+                            @Html.TextBoxFor(x => x.Entity.TagText, new { @id = "newTag", @class = "form-control" })
+                            @*<input type="text" id="newTag" class="form-control" placeholder="Enter new tag">*@
+                        </div>
+                        <div class="form-group">
+                            <label for="tagColor">Tag Color</label>
+                            <input type="color" class="form-control" id="tagColor">
+                        </div>
+                        <button id="btnSaveNewTag" type="button" class="btn btn-default btn-flat float-right">Save New Tag</button>
+                    </div>
+                    <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+                        @{ Html.RenderAction("Component_Select", "SysTag", new { @tableName = "sys_folder", @idNumber = Model.Entity.ID }); }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        @{Html.RenderAction("Component_SysTagsByTable", "SysTag", new { @tableName = "sys_folder", @idNumber = Model.Entity.IDNumber }); }
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).on("click", "[id='btnSaveNewTag']", function () {
+        SaveNewTag();
+    });
+
+    function SaveNewTag() {
+        var link = '@Url.Action("Save", "SysTag")';
+        var tableName = $("#TableName").val();
+        var idNumber = $("#Entity_ID").val();
+        var tagText = $("#newTag").val();
+        var tagFormatString = $("#tagColor").val();
+
+        var formData = new FormData();
+
+        formData.append("Entity.TableName", $("#ReferencedTableName").val());
+        formData.append("Entity.IDNumber", idNumber);
+        formData.append("Entity.TagText", tagText);
+        formData.append("Entity.TagFormatString", tagFormatString);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    
+
+                } else {
+                    HandleError(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                HandleError(errorMessage);
+            }
+        });
+
+        
+
+        function HandleError(message) {
+            $("#section-error").show();
+            $("#section-error-message").html(message);
+
+        }
+    }
+
+    function GetSavedTags() {
+
+    }
+</script>
+   
+    
+

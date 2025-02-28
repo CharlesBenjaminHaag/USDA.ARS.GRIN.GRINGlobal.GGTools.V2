@@ -1,0 +1,60 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysGroupViewModel
+
+<div class="card card-primary">
+    <div class="card-header">
+        Groups
+    </div>
+    <div class="card-body" style="padding:.8rem;">
+
+        <table id="data_table_sys_group" class="table table-striped" style="width:100%;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.DataCollection)
+                {
+                    <tr>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>@result.ID</td>
+                        <td>@Html.Raw(result.GroupTag)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+
+        @*<ul id="list-sys-groups" class="nav nav-pills flex-column sys-group-selector">
+            @if (Model.DataCollection.Count > 0)
+            {
+                foreach (var result in Model.DataCollection)
+                {
+                    <li id="@result.ID" data-ggtools-value="@result.ID" class="nav-item active">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-users"></i><span style="margin-left:.5rem;">@Html.Raw(result.GroupTag)</span>
+                            @if (result.IsEnabled == "Y")
+                            {
+                                <span class="badge bg-success float-right">Yes</span>
+                            }
+                        </a>
+                    </li>
+                }
+            }
+        </ul>*@
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableLightMultiSelect("data_table_sys_group");
+    });
+</script>
+
+
+
+

@@ -1,0 +1,191 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+@using (Html.BeginForm("Edit", "Geography", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.Entity.ID)
+
+    if (Model.AppUserItemFolderID > 0)
+    {
+        Html.RenderAction("RenderRelatedFoldersWidget", "AppUserItemFolder", new { idNumber = Model.Entity.ID });
+    }
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Geography Edit</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>Region</label>
+                            @Html.DropDownListFor(x => x.Entity.RegionID, Model.Regions, "NULL", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Country</label>
+                        @Html.DropDownListFor(x => x.Entity.CountryCode, Model.Countries, "NULL", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Adm 1</label>
+                        @Html.TextBoxFor(x => x.Entity.Admin1, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Adm 1 Abbrev</label>
+                        @Html.TextBoxFor(x => x.Entity.Admin1Abbrev, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Adm 1 Type</label>
+                        @Html.DropDownListFor(x => x.Entity.Admin1TypeCode, Model.Admin1Types, "NULL", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Adm 2</label>
+                        @Html.TextBoxFor(x => x.Entity.Admin2, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Adm 2 Abbrev</label>
+                        @Html.TextBoxFor(x => x.Entity.Admin2Abbrev, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Adm 2 Type</label>
+                        @Html.DropDownListFor(x => x.Entity.Admin2TypeCode, Model.Admin2Types, "NULL", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group clearfix" style="margin-top:40px;">
+                        <div class="icheck-primary d-inline">
+                            @Html.CheckBoxFor(x => x.Entity.IsValidOption, new { @id = "cbxIsValidOption" })
+                            <label for="cbxIsValidOption">
+                                Valid
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="margin-top:1.0em;">
+                    <label>Note</label>
+                    @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="@Url.Action("Refresh")" class="btn btn-default">Cancel</a>
+            @if (Model.Entity.ID > 0)
+            {
+                <button id="btnDelete" type="button" class="btn btn-danger">
+                    Delete
+                </button>
+            }
+            <button type="submit" class="btn btn-default float-right">Save</button>
+        </div>
+    </div>
+}
+
+@if (Model.Entity.ID > 0)
+{
+    <div class="card">
+        <div id="section-dependent-data" class="card-header p-2">
+            <ul id="list-dependent-data" class="nav nav-pills">
+                <li id="tab_selector_taxonomy_geography_map" data-ggtools-action="GeographyMap" data-ggtools-value="_List" class="nav-item"><a class="nav-link active" href="#tab_content_taxonomy_geography_map" data-toggle="tab">Distributions</a></li>
+                <li id="tab_selector_taxonomy_regulation_map" data-ggtools-action="RegulationMap" data-ggtools-value="_List" class="nav-item"><a class="nav-link" href="#tab_content_taxonomy_regulation_map" data-toggle="tab">Regulations</a></li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_content_taxonomy_geography_map">
+                </div>
+                <div class="tab-pane" id="tab_content_taxonomy_regulation_map">
+                </div>
+            </div>
+        </div>
+        <div id="progress_overlay" class="overlay">
+            <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+        </div>
+    </div>
+}
+
+@Html.Partial("~/Views/Shared/Modals/_NoteLookup.cshtml")
+@Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+
+<script>
+    $(document).ready(function () {
+        Init();
+    });
+
+    $('#section-dependent-data ul.nav li').on('click', function () {
+        var selectedId = $(this).attr('id');
+        var action = $(this).data("ggtools-action");
+        var value = $(this).data("ggtools-value");
+        LoadDependentData(selectedId, action, value);
+    });
+
+    function Init() {
+        // Ensure that the overlays in each modal are hidden by default
+        $(".overlay").hide();
+
+        SetControlVisibility();
+
+        // Load default-visible tab of dependent data.
+        var defaultId = $('ul#list-dependent-data li:first').attr("id");
+        var action = $('ul#list-dependent-data li:first').data("ggtools-action");
+        var value = $('ul#list-dependent-data li:first').data("ggtools-value");
+        LoadDependentData(defaultId, action, value);
+    }
+
+    function LoadDependentData(controlId, eventAction, eventValue) {
+        var link = '@Url.Action("EVENT_VALUE","EVENT_ACTION", new { geographyId = "GEOGRAPHY_ID" })';
+        var entityId = $("#Entity_ID").val();
+        var formData = new FormData();
+        var sectionData = controlId.replace("tab_selector", "tab_content");
+
+        link = link.replace("GEOGRAPHY_ID", entityId);
+        link = link.replace("EVENT_ACTION", eventAction);
+        link = link.replace("EVENT_VALUE", eventValue);
+
+        $("#progress_overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#" + sectionData).html(response);
+                $("#progress_overlay").hide();
+            }
+        });
+    }
+</script>

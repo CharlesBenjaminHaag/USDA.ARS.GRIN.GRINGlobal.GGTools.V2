@@ -1,0 +1,92 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GenusViewModel
+
+    <div id="section-extended-search-fields-body" style="display: none;">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group form-horizontal">
+                    <label>Created By</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.CreatedByCooperatorID, Model.Cooperators, "All Cooperators", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Created Date</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.CreatedDate, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group form-horizontal">
+                    <label>Modified By</label>
+                    @Html.DropDownListFor(x => x.SearchEntity.ModifiedByCooperatorID, Model.Cooperators, "All Cooperators", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group form-horizontal">
+                    <label>Modified Date</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.ModifiedDate, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group form-horizontal">
+                    <label>ID</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.ID, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-11">
+                <div class="form-group form-horizontal">
+                    <label>Note</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.Note, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Accepted Name</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.AcceptedName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Authority</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.Authority, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Subgenus</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.SubgenusName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Section</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.SectionName, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Subsection</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.SubSectionName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Series</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.SeriesName, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group form-horizontal">
+                    <label>Subseries</label>
+                    @Html.TextBoxFor(x => x.SearchEntity.SubseriesName, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+

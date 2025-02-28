@@ -1,0 +1,30 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CodeValueViewModel
+@{
+    ViewBag.Title = "Code Value Search";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@using (Html.BeginForm("Search", "CodeValue", FormMethod.Post, new { id = "frmMain" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.AuthenticatedUserCooperatorID)
+    @Html.Partial("~/Views/CodeValue/_Detail.cshtml")
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Code Values (@Model.DataCollection.Count())</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="card-body">
+        @Html.Partial("~/Views/CodeValue/_List.cshtml")
+        </div>
+</div>

@@ -1,0 +1,63 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.ExplorationViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+@Html.Partial("~/Views/Exploration/_Detail.cshtml")
+
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Explorations (@Model.DataCollection.Count)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results" class="data-list">
+            @Html.Partial("~/Views/Exploration/_List.cshtml")
+        </div>
+    </div>
+    <div id="section-batch-edit-modal">
+    </div>
+
+</div>
+
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+
+<script type="text/javascript">
+
+    //$(document).keypress(function (event) {
+    //    var keycode = (event.keyCode ? event.keyCode : event.which);
+    //    if (keycode == '13') {
+    //        $("#btnSearch").click();
+    //    }
+    //});
+
+    $(document).ready(function () {
+        Init();
+        SetExtendedFields();
+    });
+
+    function Init() {
+        var eventAction = $("#EventAction").val();
+        if (eventAction == "SHOW-SEARCH") {
+            $("#section-search-criteria").show();
+        }
+    }
+
+    $(document).on("click", "[id='btnSubmitSearch']", function () {
+        event.preventDefault();
+        if ($("#section-search-criteria").is(":visible")) {
+            $("#EventAction").val("SHOW-SEARCH");
+        }
+        $("#frmMain").submit();
+    });
+
+    $(document).on("click", "[id='btnReset']", function () {
+        Reset();
+    });
+</script>

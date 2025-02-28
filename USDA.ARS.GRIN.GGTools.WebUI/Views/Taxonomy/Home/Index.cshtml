@@ -1,0 +1,189 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.HomeViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@{Html.RenderAction("RenderListWidget", "Cooperator", new { sysGroupTag = "MANAGE_TAXONOMY" });}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var tabName = $("#section-user-tabs ul li:first").attr('id');
+        LoadUserLists(tabName);
+        // Intialize all folder data tables.
+        //$(".folder-table").DataTable();
+        InitDataTablesByClass(".folder-table");
+    }
+
+    function InitDataTablesByClass(className) {
+        $(document).ready(function () {
+            var table = $(className).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                "pageLength": 10,
+                initComplete: function () {
+                    SetControlVisibility(tableName);
+                },
+                responsive: true,
+                buttons: [
+                    'selectAll',
+                    'selectNone',
+                    'csv',
+                    'excel',
+                    'pdf',
+                    {
+                        text: '+ Add',
+                        action: function (e, dt, node, config) {
+                            AddRecord();
+                        }
+                    }
+                ],
+                select: true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                columnDefs: [
+                    { targets: [0], visible: false }
+                ]
+            });
+
+            //var table = $(tableName).DataTable(); // Valid initialized DataTable
+            //if (table instanceof $.fn.dataTable.Api) {
+            //    //DEBUG
+            //    alert(tableName + " IS DTABLE");
+            //} else {
+
+            //}
+
+
+            //if (!$.fn.DataTable.isDataTable(tableName)) {
+            //    var table = $(tableName).DataTable({
+            //        dom: 'Blfrtip',
+            //        paging: true,
+            //        "pageLength": 10,
+            //        initComplete: function () {
+            //            SetControlVisibility(tableName);
+            //        },
+            //        responsive: true,
+            //        buttons: [
+            //            'selectAll',
+            //            'selectNone',
+            //            'csv',
+            //            'excel',
+            //            'pdf'
+            //        ],
+            //        select: true,
+            //        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            //        columnDefs: [
+            //            { targets: [0], visible: false }
+            //        ]
+            //    });
+            //}
+            //else {
+
+            //}
+        });
+    }
+
+    $('#section-user-tabs ul.nav li').on('click', function () {
+        var tabName = $(this).attr('id');
+        LoadUserLists(tabName);
+    });
+
+    $('#section-user-lists ul.nav li').on('click', function () {
+        var id = $(this).attr('id');
+        //TODO
+    });
+
+    /*================================================================================
+    * Populates the list of GRIN-Global (CT) folders
+    *================================================================================
+    */
+    function LoadUserLists(listName) {
+        var link = '@Url.Action("_List", "AppUserItemList")';
+        var formData = new FormData();
+
+        formData.append("TabName", listName);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#user-tab-name").html(listName);
+                $("#section-user-lists-data").html(response);
+            }
+        });
+    }
+
+    /*================================================================================
+     * Populates the list of Taxonomy-specific folders
+     *================================================================================
+    */
+    function LoadUserFolders() {
+        var link = '@Url.Action("_List", "Folder")';
+        var formData = new FormData();
+
+        formData.append("TabName", listName);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#user-tab-name").html(listName);
+                $("#section-user-lists-data").html(response);
+            }
+        });
+    }
+
+
+    function LoadFolderItems(folderTypeDescription, folderId)  {
+        var link = '@Url.Action("FolderItems", "CONTROLLER_NAME")';
+        link = link.replace("CONTROLLER_NAME", folderTypeDescription);
+
+        var formData = new FormData();
+        formData.append("FolderID", folderId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-folder-items").html(response);
+            },
+            error: function (jqXHR) {
+                alert("Error loading folder contents");
+            }
+        });
+    }
+
+    // Handle form submission
+    $('#tagForm').submit(function (event) {
+        event.preventDefault();
+        let existingTag = $('#existingTag').val();
+        let newTag = $('#newTag').val();
+        let tagColor = $('#tagColor').val();
+
+        if (newTag) {
+            // Add code to handle creation of a new tag
+            console.log("Creating new tag:", newTag, "with color:", tagColor);
+        } else if (existingTag) {
+            // Add code to handle selection of an existing tag
+            console.log("Selected existing tag:", existingTag);
+        } else {
+            alert("Please select an existing tag or enter a new one.");
+        }
+    });
+
+</script>

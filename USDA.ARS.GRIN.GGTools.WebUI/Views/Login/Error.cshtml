@@ -1,0 +1,17 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+@{
+    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_LayoutAdminLTE3Login.cshtml";
+}
+
+<div class="login-box" style="width:450px;">
+    <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+            <a href="../../index2.html" class="h1"><b>GRIN-Global</b></a>
+            <h4>Validation Link Expired</h4>
+        </div>
+        <div class="card-body">
+            <p>Your GRIN-Global Curator Tool password-reset link has expired. You can <a href="@Url.Action("RequestPasswordReset","Login")">request a new one here.</a></p>
+        </div>
+    </div>
+</div>

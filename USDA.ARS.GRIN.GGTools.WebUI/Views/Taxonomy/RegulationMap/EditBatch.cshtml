@@ -1,0 +1,478 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.RegulationMapViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    ViewBag.ID = Model.ID;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@Html.HiddenFor(x => x.EventAction)
+@Html.HiddenFor(x => x.EventValue)
+@Html.HiddenFor(x => x.EventInfo)
+
+<div id="section-search-results" class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Regulation Map</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results">
+            <div id="section-search-results">
+                <table id="example" class="table table-striped" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Family</th>
+                            <th>Genus</th>
+                            <th>Species</th>
+                            <th>Regulation</th>
+                            <th>Exempt?</th>
+                            <th>Note</th>
+                            <th>Last Modified</th>
+                            <th>DEBUG</th>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+@{Html.RenderAction("RenderLookupModal", "Family"); }
+@{Html.RenderAction("RenderLookupModal", "Genus"); }
+@{Html.RenderAction("RenderLookupModal", "Species"); }
+@{Html.RenderAction("RenderLookupModal", "Regulation"); }
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var editor = new DataTable.Editor({
+            ajax: '@Url.Action("EditBatch","RegulationMap")',
+            fields: [
+
+                {
+                    label: 'ID:',
+                    name: 'taxonomy_regulation_map.taxonomy_regulation_map_id'
+                },
+                {
+                    label: 'Family:',
+                    name: 'taxonomy_family2.family_name'
+                },
+                {
+                    label: 'Genus:',
+                    name: 'taxonomy_genus.genus_name'
+                },
+                {
+                    label: 'Species:',
+                    name: 'taxonomy_species.name'
+                },
+                {
+                    label: 'Regulation:',
+                    name: 'taxonomy_regulation.regulation_type_code'
+                },
+                {
+                    label: 'Regulation:',
+                    name: 'taxonomy_regulation.regulation_level_code'
+                },
+                {
+                    label: "Exempt",
+                    name: "taxonomy_regulation_map.is_exempt",
+                    type: "select", // Specify the type as 'select' for drop-down
+                    options: [
+                        { label: "Yes", value: "Y" },
+                        { label: "No", value: "N" },
+                        { label: "NULL", value: "" }
+                    ]
+                },
+                {
+                    label: 'Note:',
+                    name: 'taxonomy_regulation_map.note'
+                },
+                {
+                    label: 'ID:',
+                    name: 'taxonomy_regulation_map.taxonomy_regulation_map_id2'
+                }
+            ],
+            table: '#example'
+        });
+
+        var table = $('#example').DataTable({
+            ajax: '@Url.Action("EditBatch","RegulationMap")',
+            autoFill: {
+                editor: editor
+            },
+            //buttons: [
+            //    { extend: 'create', editor: editor },
+            //    { extend: 'edit', editor: editor },
+            //    { extend: 'remove', editor: editor }
+            //],
+            columns: [
+                { data: 'taxonomy_regulation_map.taxonomy_regulation_map_id' },
+                {
+                    data: 'taxonomy_family.family_name',
+                    render: function (data, type, row, meta) {
+                        if (row.taxonomy_family.family_name != null) {
+                            return '<a id=button_modal-family-lookup_' + row.taxonomy_regulation_map.taxonomy_regulation_map_id + ' href="#">' + row.taxonomy_family.family_name + '</a>';
+                        }
+                        else {
+                            return '';
+                        }
+                    }
+                },
+                {
+                    data: 'taxonomy_genus.genus_name',
+                    render: function (data, type, row, meta) {
+                        if (row.taxonomy_genus.genus_name != null) {
+                            return '<a id=button_modal-genus-lookup_' + row.taxonomy_regulation_map.taxonomy_regulation_map_id + ' href="#">' + row.taxonomy_genus.genus_name + '</a>';
+                        }
+                        else {
+                            return '';
+                        }
+                    }
+                },
+                {
+                    data: 'taxonomy_species.name',
+                    render: function (data, type, row, meta) {
+                        if (row.taxonomy_species.name != null) {
+                            return '<a id=button_modal-species-lookup_' + row.taxonomy_regulation_map.taxonomy_regulation_map_id + ' href="#">' + row.taxonomy_species.name + '</a>';
+                        }
+                        else {
+                            return '';
+                        }
+                    }
+
+                },
+                {
+                    data: 'taxonomy_regulation.regulation_lookup',
+                    render: function (data, type, row, meta) {
+                        if (row.taxonomy_regulation.regulation_lookup != null) {
+                            return '<a id=button_modal-regulation-lookup_' + row.taxonomy_regulation_map.taxonomy_regulation_map_id + ' href="#">' + row.taxonomy_regulation.regulation_lookup + '</a>';
+                        }
+                        else {
+                            return '';
+                        }
+                    }
+                },
+                { data: 'taxonomy_regulation_map.is_exempt' },
+                { data: 'taxonomy_regulation_map.note' },
+                { data: 'taxonomy_regulation_map.modified_date' },
+                {
+                    data: 'taxonomy_regulation_map.taxonomy_regulation_map_id',
+                    render: function (data, type, row, meta) {
+                        var url = '@Url.Action("Edit","RegulationMap")' + '?entityId=' + row.taxonomy_regulation_map.taxonomy_regulation_map_id;
+                        return '<a id=' + row.taxonomy_regulation_map.taxonomy_regulation_map_id + ' href="' + url + '">[Edit]</a>';
+                    }
+                }
+            ],
+            keys: {
+                /*columns: ':not(:first-child)',*/
+                columns: [5,6,7],
+                keys: [9],
+                editor: editor,
+                editOnFocus: true
+            },
+            layout: {
+                topStart: {
+                    buttons: [
+                        { extend: 'create', editor: editor },
+                        { extend: 'edit', editor: editor },
+                        { extend: 'remove', editor: editor }
+                    ]
+                }
+            },
+            order: [[1, 'asc']],
+            scrollX: true,
+            scrollY: 500,
+            paging: false,
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, 'All']
+            ],
+            dom: "Bflrtip",
+            select: {
+                blurable: true,
+                selector: 'td:first-child',
+                style: 'os'
+            }
+        });
+
+        // Activate an inline edit on click of a table cell
+        //$('#example').on('click', 'tbody td:not(:first-child)', function (e) {
+        //    editor.inline(this, {
+        //        onBlur: 'submit'
+        //    });
+        //});
+
+        //$('#example').on('click', 'td', function () {
+        //    var cellData = table.cell(this).data();
+
+        //    console.log(cellData);
+
+        //    $('#placeholder-value').html(cellData);
+        //    $('#modal-test-species').modal("show");
+        //});
+
+        // When the user clicks the following columns, open the corresponding lookup modal:
+        // Family
+        // Genus
+        // Species
+        // Regulation
+        // MODAL LOGIC
+        // When the user selects an item and clicks "Save,"
+        // 1. Get the reg map id of the parent record.
+        // 2. Call method that updates that parent record with the relevant data (family, genus, species, reg)
+        // 3. Refresh table to reflect change to user.
+
+        //$('#example tbody').on('click', 'td', function () {
+        //    // BEGIN OLD
+        //    //var cellIndex = table.cell(this).index();
+
+        //    //console.log('Row index: ' + cellIndex.row);
+        //    //console.log('Column index: ' + cellIndex.column);
+        //    //console.log('Column visible index: ' + cellIndex.columnVisible);
+        //    //var rowData = table.row(cellIndex.row).data();
+
+        //    //if (rowData) {
+        //    //    if (Array.isArray(rowData)) {
+        //    //        rowData.forEach(function (value, index) {
+        //    //            console.log("Value of column " + index + ": " + value);
+        //    //        });
+        //    //    } else {
+        //    //        if (typeof rowData === 'object') {
+
+        //    //            //DEBUG
+        //    //            var DEBUGrowID = rowData["DT_RowId"];
+        //    //            console.log("ROW ID " + DEBUGrowID);
+
+        //    //            for (var key in rowData) {
+        //    //                if (rowData.hasOwnProperty(key)) {
+        //    //                    var value = rowData[key];
+        //    //                    console.log("Property:", key, "Value:", value);
+        //    //                }
+        //    //            }
+        //    //        }
+        //    //        else {
+        //    //            console.log("Row data is not an array.");
+        //    //        }
+        //    //    }
+        //    //} else {
+        //    //    console.log("Row data is undefined or empty.");
+        //    //}
+        //    // END OLD
+
+        //    var cellIndex = table.cell(this).index();
+
+        //    //console.log('Row index: ' + cellIndex.row);
+        //    //console.log('Column index: ' + cellIndex.column);
+        //    //console.log('Column visible index: ' + cellIndex.columnVisible);
+
+        //    var rowData = table.row(cellIndex.row).data();
+
+        //    if (rowData) {
+        //        // Check if rowData is an object
+        //        if (typeof rowData === 'object' && rowData !== null) {
+        //            // Iterate through the properties of the object
+        //            for (var key in rowData) {
+        //                if (rowData.hasOwnProperty(key)) {
+        //                    // Check if the property value is also an object
+        //                    if (typeof rowData[key] === 'object' && rowData[key] !== null) {
+        //                        /*console.log("Property:", key, "is an object.");*/
+        //                        // Iterate through the properties of the nested object
+        //                        for (var nestedKey in rowData[key]) {
+        //                            if (rowData[key].hasOwnProperty(nestedKey)) {
+        //                                var nestedValue = rowData[key][nestedKey];
+
+        //                                // If clicked column is any of the following, open corresponding modal:
+        //                                // family
+        //                                // genus
+        //                                // species
+        //                                // regulation
+
+
+
+        //                                console.log("INNERMOST Nested Property:", nestedKey, "Nested Value:", nestedValue);
+        //                            }
+        //                        }
+        //                    } else {
+        //                        var value = rowData[key];
+        //                        /*console.log("Property:", key, "Value:", value);*/
+        //                    }
+        //                }
+        //            }
+        //        } else {
+        //            console.log("Row data is not an object.");
+        //        }
+        //    } else {
+        //        console.log("Row data is undefined or empty.");
+        //    }
+
+        //});
+
+        // Handle update button click
+        $('#updateButton').on('click', function () {
+            console.log('DEBUG ENTERED: ' + $("#txtDEBUG").val());
+            //  TODO
+            // 1. Get ID from first col of current row
+            // 2. Get
+
+
+            // Assuming you have initialized your DataTable with Editor
+            var table = $('#example').DataTable();
+
+            // Get the data for the first row (index 0) - Adjust the index as needed
+            var rowData = table.row(2).data();
+
+            console.log("ROWDATA " + rowData);
+
+            // Alternatively, if you know the column index, you can use the column index
+            var columnIndex = 1; // Adjust the column index as needed
+            var specificValue = rowData[columnIndex];
+
+            console.log("DEBUG ID IS " + specificValue);
+
+            var table = $('#example').DataTable();
+            table.ajax.reload(); // This redraws the table
+        });
+
+        $(document).on("click", "[id*='button_modal']", function () {
+            var controlId = $(this).attr('id');
+            var separator = "_";
+            var controlIdArray = controlId.split(separator);
+            var modalId = "#" + controlIdArray[1];
+            var regulationMapId = controlIdArray[2];
+
+            //DEBUG
+            alert("OPEN MODAL " + modalId + " FOR REG MAP ID " + regulationMapId);
+
+            $("#EventAction").val("RegulationMap");
+            $("#EventValue").val("EditBatch");
+            $("#EventInfo").val(regulationMapId);
+            OpenModal(modalId);
+        });
+    });
+
+    function RefreshTable() {
+        var table = $("#example").DataTable();
+        table.ajax.reload(null, false);
+    }
+
+    function SaveFamilyToBatch(regulationMapId, familyId) {
+        //TODO
+        // Ajax call to save change(s) to selected reg map
+        // Redraw grid
+        var link = '@Url.Action("SaveBatch","RegulationMap")';
+        var formData = new FormData();
+
+        formData.append("regulationMapId", regulationMapId);
+        formData.append("familyId", familyId);
+
+
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                RefreshTable();            },
+            error: function (ex) {
+                alert("Error");
+                $("#search-progress-overlay").hide();
+            }
+        });
+    }
+
+    function SaveGenusToBatch(regulationMapId, genusId) {
+        //TODO
+        // Ajax call to save change(s) to selected reg map
+        // Redraw grid
+        var link = '@Url.Action("SaveBatch","RegulationMap")';
+        var formData = new FormData();
+
+        formData.append("regulationMapId", regulationMapId);
+        formData.append("genusId", genusId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                RefreshTable();            },
+            error: function (ex) {
+                alert("Error");
+                $("#search-progress-overlay").hide();
+            }
+        });
+    }
+
+    function SaveSpeciesToBatch(regulationMapId, speciesId) {
+        //TODO
+        // Ajax call to save change(s) to selected reg map
+        // Redraw grid
+        var link = '@Url.Action("SaveBatch","RegulationMap")';
+        var formData = new FormData();
+
+        formData.append("regulationMapId", regulationMapId);
+        formData.append("speciesId", speciesId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                RefreshTable();            },
+            error: function (ex) {
+                alert("Error");
+                $("#search-progress-overlay").hide();
+            }
+        });
+    }
+
+    function SaveRegulationToBatch(regulationMapId, regulationId) {
+        //TODO
+        // Ajax call to save change(s) to selected reg map
+        // Redraw grid
+        var link = '@Url.Action("SaveBatch","RegulationMap")';
+        var formData = new FormData();
+
+        formData.append("regulationMapId", regulationMapId);
+        formData.append("regulationId", regulationId);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                RefreshTable();            },
+            error: function (ex) {
+                alert("Error");
+                $("#search-progress-overlay-regulation-lookup").hide();
+            }
+        });
+    }
+
+    function OpenModal(modalId) {
+        var overlayId = "#search-progress-overlay-" + modalId.replace("#modal-", "");
+
+        //DEBUG
+        alert("OVERLAY ID " + overlayId);
+
+        $(overlayId).hide();
+        $(modalId).modal("show");
+    }
+</script>

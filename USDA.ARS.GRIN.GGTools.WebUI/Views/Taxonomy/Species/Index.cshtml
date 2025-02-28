@@ -1,0 +1,87 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SpeciesViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    ViewBag.ID = Model.ID;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+<style>
+    .hidden-text {
+        color: #e9ecef;
+    }
+</style>
+
+@Html.Partial("~/Views/Taxonomy/Species/_Detail.cshtml")
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Search Results (@Model.RowsAffected)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div id="section-search-results" class="card-body">
+        @Html.Partial("~/Views/Taxonomy/Species/_List.cshtml")
+    </div>
+</div>
+@{Html.RenderAction("GetDynamicEditModal", "SysFolder", new { @sysTableName = Model.TableName, @typeCode = "DYN" }); }
+@{Html.RenderAction("GetEditModal", "SysFolder", new { @sysTableName = Model.TableName }); }
+
+@using (Html.BeginForm("GetBatchEditor", "Species", FormMethod.Post, new { id = "frmGetBatchEditor" }))
+{
+    @Html.HiddenFor(x => x.ItemIDList)
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+        SetExtendedFields();
+    });
+
+    function Init() {
+        var eventAction = $("#EventAction").val();
+        if (eventAction == "SHOW-SEARCH") {
+            $("#section-search-criteria").show();
+            $("#btnShowAggregateChildData").prop("disabled", false);
+        }
+        else {
+            $("#btnShowAggregateChildData").prop("disabled", true);
+        }
+    }
+
+    $(document).ready(function () {
+        $('#cbxNull_SearchEntity_ProtologueVirt').change(function () {
+            if ($(this).is(':checked')) {
+                $('#SearchEntity_ProtologueVirtualPath').attr('disabled', 'disabled');
+                $('#SearchEntity_ProtologueVirtualPath').addClass('hidden-text');
+                $('#SearchEntity_ProtologueVirtualPath').removeAttr('maxlength');
+            } else {
+                $('#SearchEntity_ProtologueVirtualPath').removeAttr('disabled');
+                $('#SearchEntity_ProtologueVirtualPath').removeClass('hidden-text');
+                $('#SearchEntity_ProtologueVirtualPath').attr('maxlength', '50');
+            }
+        });
+    });
+
+    function GetBatchEditor() {
+        var link = '@Url.Action("GetBatchEditor", "Species")';
+        var formData = new FormData();
+
+        $.ajax({
+        url: link,
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            $("#section-modal-email").html(response);
+            $("#modal-email").modal("show");
+        }
+    });
+}
+
+</script>

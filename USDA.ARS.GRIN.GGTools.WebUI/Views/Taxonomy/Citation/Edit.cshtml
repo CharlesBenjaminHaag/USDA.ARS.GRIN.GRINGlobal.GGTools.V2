@@ -1,0 +1,389 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CitationViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = null;
+}
+
+@{
+    string eventAction = @ViewContext.RouteData.Values["controller"].ToString();
+    string eventValue = @ViewContext.RouteData.Values["action"].ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/GGlogo_BW.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    @{Html.RenderAction("GetMenu", "Menu", new { @eventAction = eventAction, @eventValue = eventValue });}
+                </div>
+                <!-- BEGIN RIGHT-ALIGNED NAV MENU -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    @Html.Partial("~/Views/Shared/_NavbarRight.cshtml")
+                </ul>
+                <!-- END RIGHT-ALIGNED NAV MENU -->
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        @Html.Partial("~/Views/Taxonomy/Shared/_PageTitle.cshtml")
+                        <div class="col-sm-3">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+                    @using (Html.BeginForm("Edit", "Citation", FormMethod.Post, new { id = "frmEdit" }))
+                    {
+                        @Html.HiddenFor(x => x.EventAction)
+                        @Html.HiddenFor(x => x.EventValue)
+                        @Html.HiddenFor(x => x.TableName)
+                        @Html.HiddenFor(x => x.TableCode)
+                        @Html.HiddenFor(x => x.PageTitle)
+                        @Html.HiddenFor(x => x.Entity.ID)
+                        @Html.HiddenFor(x => x.Entity.CategoryCode)
+
+                        <!--
+                        =====================================================
+                        BEGIN REF. FOLDER LOGIC
+                        =====================================================
+                        -->
+                        if (Model.AppUserItemFolderID > 0)
+                        {
+                            Html.RenderAction("RenderRelatedFoldersWidget", "AppUserItemFolder", new { idNumber = Model.Entity.ID });
+                        }
+                        <!--
+                        =====================================================
+                        BEGIN REF. FOLDER LOGIC
+                        =====================================================
+                        -->
+
+                        @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                        @Html.Partial("~/Views/Taxonomy/Shared/_RevisionHistory.cshtml")
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Summary</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div id="section-taxon-select" class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Taxon Type</label>
+                                            <select id="ddlTaxonType" class="form-control">
+                                                <option value="taxonomy-family">Family</option>
+                                                <option value="taxonomy-genus">Genus</option>
+                                                <option value="taxonomy-species">Species</option>
+                                                <option value="accession">Accession</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div id="section-fields-taxonomy-family" class="form-group">
+                                            <label>Family</label>
+                                            <div class="input-group">
+                                                <span id="placeholder-taxomony-family-name" style="background-color: #ecf0f5; border: 1px solid #ced4da; width: 100%; position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; min-width: 0; margin-bottom: 0; padding: 0.375rem 0.75rem; height: calc(2.25rem + 2px);">@Html.Raw(Model.Entity.FamilyName) </span>
+                                                @Html.HiddenFor(x => x.Entity.FamilyID)
+                                                @Html.HiddenFor(x => x.Entity.FamilyName)
+                                                @if (Model.Entity.FamilyID > 0)
+                                                {
+                                                    <span class="input-group-btn">
+                                                        <a href="@Url.Action("Edit", "FamilyMap", new { @entityId = Model.Entity.FamilyID })" class="btn btn-default btn-flat">
+                                                            <i class="fa fa-link"></i>
+                                                        </a>
+                                                    </span>
+                                                }
+                                                <span class="input-group-btn">
+                                                    <button id="btnOpenFamilyLookupModal" type="button" data-ggtools-action="FamilyID" data-ggtools-value="FamilyName" data-toggle="modal" data-target="#modal-family-lookup" class="btn btn-default btn-flat">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div id="section-fields-taxonomy-genus" class="form-group">
+                                            <label>Genus</label>
+                                            <div class="input-group">
+                                                <span id="placeholder-taxomony-genus-name" style="background-color: #ecf0f5; border: 1px solid #ced4da; width: 100%; position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; min-width: 0; margin-bottom: 0; padding: 0.375rem 0.75rem; height: calc(2.25rem + 2px);">@Html.Raw(Model.Entity.GenusName) </span>
+                                                @Html.HiddenFor(x => x.Entity.GenusID)
+                                                @Html.HiddenFor(x => x.Entity.GenusName)
+                                                @if (Model.Entity.GenusID > 0)
+                                                {
+                                                    <span class="input-group-btn">
+                                                        <a href="@Url.Action("Edit", "Genus", new { @entityId = Model.Entity.GenusID })" class="btn btn-default btn-flat">
+                                                            <i class="fa fa-link"></i>
+                                                        </a>
+                                                    </span>
+                                                }
+                                                <span class="input-group-btn">
+                                                    <button id="btnOpenGenusLookupModal" type="button" data-ggtools-action="GenusID" data-ggtools-value="GenusName" data-toggle="modal" data-target="#modal-genus-lookup" class="btn btn-default btn-flat">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div id="section-fields-taxonomy-species" class="form-group">
+                                            <label>Species</label>
+                                            <div class="input-group">
+                                                <span id="placeholder-SpeciesName" style="background-color: #ecf0f5; border: 1px solid #ced4da; width: 100%; position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; min-width: 0; margin-bottom: 0; padding: 0.375rem 0.75rem; height: calc(2.25rem + 2px);">@Html.Raw(Model.Entity.SpeciesName) </span>
+                                                @Html.HiddenFor(x => x.Entity.SpeciesID)
+                                                @Html.HiddenFor(x => x.Entity.SpeciesName)
+                                                @if (Model.Entity.SpeciesID > 0)
+                                                {
+                                                    <span class="input-group-btn">
+                                                        <a href="@Url.Action("Edit", "Species", new { @entityId = Model.Entity.SpeciesID })" class="btn btn-default btn-flat">
+                                                            <i class="fa fa-link"></i>
+                                                        </a>
+                                                    </span>
+                                                }
+                                                <span class="input-group-btn">
+                                                    <button id="btnOpenSpeciesLookupModal" type="button" data-ggtools-action="SpeciesID" data-ggtools-value="SpeciesName" data-toggle="modal" data-target="#modal-species-lookup" class="btn btn-default btn-flat">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+
+
+                                        <div id="section-fields-accession" class="form-group">
+                                            <label>Species</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Entity.AccessionID, new { @class = "form-control", @readonly = "readonly", @style = "background-color:#ecf0f5;" })
+                                                @Html.HiddenFor(x => x.Entity.SpeciesID)
+                                                @if (Model.Entity.SpeciesID > 0)
+                                                {
+                                                    <span class="input-group-btn">
+                                                        <a href="@Url.Action("Edit", "Species", new { @entityId = Model.Entity.SpeciesID })" class="btn btn-default btn-flat">
+                                                            <i class="fa fa-link"></i>
+                                                        </a>
+                                                    </span>
+                                                }
+                                                <span class="input-group-btn">
+                                                    <button id="btnOpenSpeciesLookupModal" type="button" data-ggtools-action="SpeciesID" data-ggtools-value="SpeciesName" data-toggle="modal" data-target="#modal-species-lookup" class="btn btn-default btn-flat">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="margin" style="margin-top:40px;">
+                                            <div class="form-group clearfix">
+                                                <div class="icheck-primary d-inline">
+                                                    @Html.CheckBoxFor(x => x.Entity.IsAcceptedNameOption, new { @id = "cbxLookupIsAcceptedName", @class = "custom-control-input" })
+                                                    <label for="cbxLookupIsAcceptedName">
+                                                        Accepted Name
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Citation Title</label>
+                                            @Html.TextBoxFor(x => x.Entity.CitationTitle, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true", @rows = 1 })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Author Name</label>
+                                            @Html.TextBoxFor(x => x.Entity.AuthorName, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true", @rows = 1 })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label>Year</label>
+                                            @Html.TextBoxFor(x => x.Entity.CitationYear, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Type</label>
+                                            @Html.DropDownListFor(x => x.Entity.TypeCode, Model.CitationTypes, "NULL", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Abbreviated Lit. Source</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Entity.Abbreviation, new { @class = "form-control", @readonly = "readonly", @style = "background-color:#ecf0f5;" })
+                                                @Html.HiddenFor(x => x.Entity.LiteratureID)
+                                                @if (Model.Entity.LiteratureID > 0)
+                                                {
+                                                    <span class="input-group-btn">
+                                                        <a href="@Url.Action("Edit", "Literature", new { @entityId = Model.Entity.LiteratureID })" class="btn btn-default btn-flat">
+                                                            <i class="fa fa-link"></i>
+                                                        </a>
+                                                    </span>
+                                                }
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-flat" data-toggle="modal" data-target="#modal-literature-lookup">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Vol. and Page</label>
+                                            @Html.TextBoxFor(x => x.Entity.Reference, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>URL</label>
+                                            @Html.TextBoxFor(x => x.Entity.URL, new { @class = "form-control", @autocomplete = "off", @data_lpignore = "true" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label>DOI</label>
+                                            @Html.TextBoxFor(x => x.Entity.DOIReference, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <!-- BEGIN NOTE FIELD -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>
+                                                Note
+                                                &nbsp;<a href="" data-toggle="modal" data-target="#modal-note-lookup"><i class="fa fa-search"></i></a>
+                                            </label>
+                                            <div class="input-group">
+                                                @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control", @style = "width:100%;" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @Html.Partial("~/Views/Taxonomy/Citation/_EditExtended.cshtml")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="@Url.Action("Refresh")" class="btn btn-default">Reset</a>
+                                @if (Model.Entity.ID > 0)
+                                {
+                                    <button id="btnDelete" type="button" class="btn btn-danger">
+                                        Delete
+                                    </button>
+                                }
+                                <button type="submit" class="btn btn-default float-right">Save</button>
+                            </div>
+                        </div>
+                    }
+                    @{Html.RenderAction("GetEditModal", "SysFolder", new { sysTableName = Model.TableName }); }
+                    @*@{Html.RenderAction("RenderReferenceCountsWidget", "Citation", new { @citationId = Model.Entity.ID });}*@
+                    @{Html.RenderAction("RenderLookupModal", "Literature"); }
+                    @{Html.RenderAction("RenderLookupModal", "Genus"); }
+                    @{Html.RenderAction("RenderLookupModal", "Species"); }
+                    @Html.Partial("~/Views/Taxonomy/FamilyMap/Modals/_Lookup.cshtml")
+                    @Html.Partial("~/Views/Shared/Modals/_NoteLookup.cshtml")
+                    @Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+                </div>
+            </div>
+
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+    @Html.Partial("~/Views/Shared/_Scripts.cshtml")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Init();
+
+        });
+
+        function Init() {
+            $('[id*="section-fields"]').hide();
+            // If adding a new record, show Family by default; otherwise, show section that corresponds to the
+            // citation taxon.
+            var entityId = $("#Entity_ID").val();
+            var familyId = $("#Entity_FamilyID").val();
+            var genusId = $("#Entity_GenusID").val();
+            var speciesId = $("#Entity_SpeciesID").val();
+
+            //DEBUG
+            /*alert("FAM ID IS " + familyId + " GEN ID IS" + genusId + " SPEC ID IS " + speciesId);*/
+
+            if (genusId > 0) {
+                $("#ddlTaxonType option[value=taxonomy-genus]").attr('selected', 'selected');
+                $("#section-fields-taxonomy-genus").show();
+            }
+            else {
+                if (speciesId > 0) {
+                    $("#ddlTaxonType option[value=taxonomy-species]").attr('selected', 'selected');
+                    $("#section-fields-taxonomy-species").show();
+                }
+                else {
+                    $("#ddlTaxonType option[value=taxonomy-family]").attr('selected', 'selected');
+                    $("#section-fields-taxonomy-family").show();
+                }
+            }
+
+            //if (entityId == 0) {
+            //    $('[id*="section-fields"]').hide();
+            //}
+            //else {
+            //    var categoryTab = $("#Entity_CategoryCode").val() + "-tab";
+            //    var categoryCode = "#section-fields-" + $("#Entity_CategoryCode").val();
+
+            //    //DEBUG
+            //    /*alert("CAT CODE " + categoryCode);*/
+
+            //    $('[id*="section-fields"]').hide();
+            //    $('.nav-link').removeClass("active");
+            //    $(categoryCode).show();
+            //    $("#" + categoryTab).addClass("active");
+            //}
+        }
+
+        $('#ddlTaxonType').on('change', function () {
+            ToggleTaxonFields(this.value);
+        });
+
+        function ToggleTaxonFields(taxonType) {
+            $('[id*="section-fields"]').hide();
+            $("#section-fields-" + taxonType).show();
+        }
+
+        $("#frmEdit").dirty({
+
+            leavingMessage: "There are unsaved changes on this page which will be discarded if you continue."
+
+        });
+
+    </script>
+</body>
+</html>

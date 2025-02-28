@@ -1,0 +1,28 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.CropForCWRViewModel
+<br />
+<table id="data-table-crop-for-cwr-lookup" class="table table-responsive table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollection)
+        {
+            <tr>
+                <td>
+                    @result.ID
+                </td>
+                <td>
+                    @result.ID
+                </td>
+                <td>@Html.Raw(result.CropForCWRName)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+   
+</script>

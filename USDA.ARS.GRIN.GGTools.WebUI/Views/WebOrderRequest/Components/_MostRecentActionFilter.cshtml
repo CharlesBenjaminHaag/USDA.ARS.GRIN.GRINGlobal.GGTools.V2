@@ -1,0 +1,39 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.WebOrderRequestViewModel
+<input type="hidden" id="hf_current_filter_most_recent_action" />
+<div class="card card-default">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-filter"></i>
+            Most Recent Action
+        </h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div id="section-most-recent-action">
+            @foreach (var result in Model.WebOrderRequestActions)
+            {
+                <label class="button-checkbox">
+                    <input id="filter-most-recent-action-@result.Value" type="checkbox" data-ggtools-action="@result.Value" />
+                    <span>@result.Text</span>
+                </label>
+            }
+        </div>
+    </div>
+    <div class="card-footer">
+        <label>
+            <input type="checkbox" id="ckSelectDeselectAllWebOrderRequestMostRecentAction" />
+            <span id="label-current_filter_web_order_request_most-recent-action">Select All</span>
+        </label>
+    </div>
+</div>
+<script type="text/javascript">
+    //function MostRecentActionFilter_GetSelectedValues() {
+    //    var valueArray = [];
+    //    $("#section-most-recent-action input:checked").each(function () {
+    //        var id = $(this).attr("id");
+    //        valueArray.push(id);
+    //        console.log("DEBUG MOST RECENT ACTIONS " + valueArray);
+    //    });
+    //    return valueArray;
+    //}
+</script>

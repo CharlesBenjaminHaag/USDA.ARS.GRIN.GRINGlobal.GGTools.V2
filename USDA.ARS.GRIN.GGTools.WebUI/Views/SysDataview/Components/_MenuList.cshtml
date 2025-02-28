@@ -1,0 +1,9 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysDataViewViewModel
+@foreach (var result in Model.DataCollection)
+{
+    <li id="@result.ID" data-ggtools-dataview-name="@result.DataViewName" class="nav-item">
+        <a href="@Url.Action("Index", result.DataViewName)" class="nav-link">
+            <i class="far fas fa-table nav-icon"></i>
+            <p>@result.Title</p>
+        </a>
+    </li>}

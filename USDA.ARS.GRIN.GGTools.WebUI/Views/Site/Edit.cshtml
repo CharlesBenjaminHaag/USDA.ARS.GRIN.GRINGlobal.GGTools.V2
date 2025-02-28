@@ -1,0 +1,251 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SiteViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@{
+    string publicWebsiteSiteDetailUrl = AppInfo.GetPublicWebsiteURL() + "/site?id=" + Model.Entity.ID;
+}
+
+<div class="card card-primary card-tabs">
+    <div class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#section-input-fields" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Curators</a>
+            </li>
+
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="custom-tabs-one-tabContent">
+            <div class="tab-pane fade show active" id="section-input-fields" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                @using (Html.BeginForm("Edit", "Site", FormMethod.Post, new { id = "frmEdit" }))
+                {
+                    @Html.HiddenFor(x => x.EventAction)
+                    @Html.HiddenFor(x => x.EventValue)
+                    @Html.HiddenFor(x => x.TableName)
+                    @Html.HiddenFor(x => x.Entity.ID)
+                    @Html.HiddenFor(x => x.Entity.CooperatorID)
+                    @Html.HiddenFor(x => x.Entity.ShortName)
+                    @Html.HiddenFor(x => x.IsReadOnly)
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Short Name</label>
+                                @Html.TextBoxFor(x => x.Entity.ShortName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Long Name</label>
+                                @Html.TextBoxFor(x => x.Entity.LongName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Type</label>
+                                @Html.DropDownListFor(x => x.Entity.TypeCode, Model.Types, "Select type", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Provider</label>
+                                @Html.TextBoxFor(x => x.Entity.ProviderIdentifier, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>FAO Institute No.</label>
+                                @Html.TextBoxFor(x => x.Entity.FAOInstituteNumber, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Email</label>
+                                @Html.TextBoxFor(x => x.Entity.EmailAddress, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <div class="col-md-2">
+                                    <div class="form-group clearfix" style="margin-top:40px;">
+                                        <div class="icheck-primary d-inline">
+                                            @Html.CheckBoxFor(x => x.Entity.IsInternalOption, new { id = "cbxIsInternal" })
+                                            <label for="cbxIsInternal">
+                                                Internal
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="form-group clearfix" style="margin-top:40px;">
+                                        <div class="icheck-primary d-inline">
+                                            @Html.CheckBoxFor(x => x.Entity.IsDistributionSiteOption, new { id = "cbxIsDistributionSite" })
+                                            <label for="cbxIsDistributionSite">
+                                                Distribution
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Primary Address</label>
+                                @Html.TextBoxFor(x => x.Entity.PrimaryAddress1, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(x => x.Entity.PrimaryAddress2, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(x => x.Entity.PrimaryAddress3, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Secondary Address</label>
+                                @Html.TextBoxFor(x => x.Entity.SecondaryAddress1, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(x => x.Entity.SecondaryAddress2, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(x => x.Entity.SecondaryAddress3, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>City</label>
+                                @Html.TextBoxFor(x => x.Entity.City, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>State</label>
+                                @Html.DropDownListFor(x => x.Entity.PrimaryAddressGeographyID, Model.States, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>ZIP</label>
+                                @Html.TextBoxFor(x => x.Entity.PostalIndex, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Secondary City</label>
+                                @Html.TextBoxFor(x => x.Entity.SecondaryCity, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Secondary State</label>
+                                @Html.DropDownListFor(x => x.Entity.SecondaryAddressGeographyID, Model.States, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Secondary ZIP</label>
+                                @Html.TextBoxFor(x => x.Entity.SecondaryPostalIndex, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Primary Phone</label>
+                                @Html.TextBoxFor(x => x.Entity.PrimaryPhone, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Secondary Phone</label>
+                                @Html.TextBoxFor(x => x.Entity.SecondaryPhone, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Primary URL</label>
+                            @Html.TextBoxFor(x => x.Entity.PrimaryURL, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Secondary URL</label>
+                            @Html.TextBoxFor(x => x.Entity.SecondaryURL, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Note</label>
+                            @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a href="@publicWebsiteSiteDetailUrl" class="btn btn-default">View Public Website</a>
+                            <button id="btnSave" type="submit" class="btn btn-default float-right">
+                                <i class="fa fa-save"></i> Save Edits
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                @{ Html.RenderAction("Component_SiteCuratorList", "Site", new { @siteId = Model.Entity.ID }); }
+            </div>
+        </div>
+    </div>
+    <div id="section-edit-controls" class="card-footer">
+        <a href="@Url.Action("Refresh")" class="btn btn-default">
+            <i class="fa fa-undo"></i>
+            Reset
+        </a>
+        @*@if (Model.Entity.ID > 0)
+            {
+                <button id="btnDelete" type="button" class="btn btn-danger">
+                    <i class="fa fa-trash"></i> Delete
+                </button>
+            }*@
+
+
+
+
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+    });
+
+    function Init() {
+        var isReadOnly = $("#IsReadOnly").val();
+        if (isReadOnly == "Y") {
+            SetReadOnly();
+        }
+    }
+
+
+
+</script>
+
+
+
+

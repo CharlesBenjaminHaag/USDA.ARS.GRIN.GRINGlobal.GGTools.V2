@@ -1,0 +1,35 @@
+﻿<div class="card card-primary card-tabs">
+    <div class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+            <li class="pt-2 px-3"><h3 class="card-title">Workspaces</h3></li>
+            <li class="nav-item">
+                <a class="nav-link active" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="true">Taxonomy</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false">Access Rights Management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-two-messages-tab" data-toggle="pill" href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages" aria-selected="false">Order Management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-two-settings-tab" data-toggle="pill" href="#custom-tabs-two-settings" role="tab" aria-controls="custom-tabs-two-settings" aria-selected="false">GOBS</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="custom-tabs-two-tabContent">
+            <div class="tab-pane fade show active" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+                @{Html.RenderAction("Component_ListWidget", "SysTable", new { @sysTag = "Taxonomy" });}
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
+                @{Html.RenderAction("Component_ListWidget", "SysTable", new { @sysTag = "Access Rights Management" });}
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
+                @{Html.RenderAction("Component_ListWidget", "SysTable", new { @sysTag = "Order Management" });}
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-two-settings" role="tabpanel" aria-labelledby="custom-tabs-two-settings-tab">
+                <h3>GOBS HERE</h3>
+            </div>
+        </div>
+    </div>
+</div>

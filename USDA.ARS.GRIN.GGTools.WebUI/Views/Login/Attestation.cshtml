@@ -1,0 +1,45 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysUserViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAdminLTE3Login.cshtml";
+}
+<div class="login-box" style="width:600px;">
+    <div class="card card-outline ">
+        <div class="card-header text-center" style="font-size: 2.5rem;">
+            Warning
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { id = "frmLogin" }))
+            {
+                <div class="form-group has-feedback">
+                    <p>
+                        This U.S. Federal Government system is to be used by authorized users only. Information from this system resides on computer systems funded by the government. The data and documents on this system include federal records that may contain sensitive information protected by various federal statutes, including the Privacy Act, 5 U.S.C. § 552a.
+                    </p>
+                    <p>
+                        All access or use of this system constitutes user understanding and acceptance of these terms and constitutes unconditional consent to review, monitoring and action by all authorized government and law enforcement personnel. While using this system your use may be monitored, recorded and subject to audit.
+                    </p>
+                    <p>
+                        Unauthorized user attempts or acts to (1) access, upload, change, or delete or deface information on this system, (2) modify this system, (3) deny access to this system, (4) accrue resources for unauthorized use or (5) otherwise misuse this system are strictly prohibited. Such attempts or acts are subject to action that may result in criminal, civil, or administrative penalties.
+                    </p>
+                </div>
+                <div class="row">
+                    <!-- /.col -->
+                    <div class="col-md-6">
+                        <a href="@Url.Action("Logout", "Login")" id="btCancelLogin" class="btn btn-default btn-block btn-flat">
+                            Cancel
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="btnLogin" type="submit" class="btn btn-default btn-block btn-flat" data-pdsa-action="submit">Continue</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            }
+        </div>
+        <div class="card-footer">Version @AppInfo.GetVersion()</div>
+    </div>
+</div>
+
+
+
+
+

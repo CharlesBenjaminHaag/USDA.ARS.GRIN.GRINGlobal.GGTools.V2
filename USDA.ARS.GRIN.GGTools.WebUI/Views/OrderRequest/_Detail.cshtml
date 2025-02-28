@@ -1,0 +1,99 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.OrderRequestViewModel
+
+<div class="card">
+    <div class="card-header p-2">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Search Criteria</a></li>
+            <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Saved Searches</a></li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="activity">
+                <div id="section-search-criteria" class="row">
+                    <div class="col-md-1">
+                        <div class="form-group form-horizontal">
+                            <label>ID</label>
+                            @Html.TextBoxFor(x => x.SearchEntity.ID, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group form-horizontal">
+                            <label>Local No.</label>
+                            @Html.TextBoxFor(x => x.SearchEntity.LocalNumber, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div id="section-alternate-name" class="form-group form-horizontal">
+                            <label>Requestor Name</label>
+                            @Html.TextBoxFor(x => x.SearchEntity.RequestorCooperatorName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div id="section-alternate-name" class="form-group form-horizontal">
+                            <label>Ship-To Cooperator Name</label>
+                            @Html.TextBoxFor(x => x.SearchEntity.ShipToCooperatorName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div id="section-alternate-name" class="form-group form-horizontal">
+                            <label>Final Recipient</label>
+                            @Html.TextBoxFor(x => x.SearchEntity.FinalRecipientCooperatorName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div id="section-alternate-name" class="form-group form-horizontal">
+                            <label>Requestor Organization</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group form-horizontal">
+                            <label>Time Frame</label>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div id="section-family-name" class="form-group form-horizontal">
+                            <label>Year</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Intended Use</label>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Status</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group form-horizontal">
+                            <label>Owned By</label>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <label>Locked</label>
+                    </div>
+                </div>
+                <div>
+                    <button id="btnReset" type="button" class="btn btn-default">Reset</button>
+                    <div class="btn-group float-right">
+                        <button type="submit" class="btn btn-default">Search</button>
+                        <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu" role="menu" style="">
+                            <a id="btnOpenSaveSearchModalh" class="dropdown-item" href="#">Save Search</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="timeline">
+                <div class="row">
+                    <div class="col-md-12">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

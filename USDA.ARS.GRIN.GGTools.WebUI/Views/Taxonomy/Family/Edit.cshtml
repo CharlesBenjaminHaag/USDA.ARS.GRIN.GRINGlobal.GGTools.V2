@@ -1,0 +1,341 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.FamilyViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = null;
+}
+
+@{
+    string eventAction = @ViewContext.RouteData.Values["controller"].ToString();
+    string eventValue = @ViewContext.RouteData.Values["action"].ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("~/Views/Shared/_Head.cshtml")
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand-md navbar-light text-sm">
+            <div class="container" style="max-width:1500px;">
+                <a href="@Url.Action("Index","Home")" class="navbar-brand">
+                    <img src="~/dist/img/gringlobal-logo.jfif" alt="GRIN-Global Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">GGTools</span>
+                </a>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    @{Html.RenderAction("GetMenu", "Menu", new { @eventAction = eventAction, @eventValue = eventValue });}
+                </div>
+
+                <!-- BEGIN RIGHT-ALIGNED NAV MENU -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    @Html.Partial("~/Views/Shared/_NavbarRight.cshtml")
+                </ul>
+                <!-- END RIGHT-ALIGNED NAV MENU -->
+            </div>
+        </nav>
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container" style="max-width:1500px;">
+                    <div class="row mb-2">
+                        @Html.Partial("~/Views/Taxonomy/Shared/_PageTitle.cshtml")
+                        <div class="col-sm-3">
+                            @Html.Partial("~/Views/Taxonomy/Shared/_Breadcrumbs.cshtml")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container" style="max-width:1500px;">
+                    <div id="section-folder-confirmation"></div>
+                    @Html.Partial("~/Views/Taxonomy/Shared/_RevisionHistory.cshtml")
+
+                    @using (Html.BeginForm("Edit", "Family", FormMethod.Post, new { id = "frmEdit" }))
+                    {
+                        @Html.HiddenFor(x => x.PageTitle)
+                        @Html.HiddenFor(x => x.EventAction)
+                        @Html.HiddenFor(x => x.EventValue)
+                        @Html.HiddenFor(x => x.TableName)
+                        @Html.HiddenFor(x => x.TableCode)
+                        @Html.HiddenFor(x => x.Entity.ID)
+                        @Html.HiddenFor(x => x.Entity.IsAcceptedName)
+
+                        <!--
+                        =====================================================
+                        BEGIN REF. FOLDER LOGIC
+                        =====================================================
+                        -->
+                        //if (Model.AppUserItemFolderID > 0)
+                        //{
+                        //    Html.RenderAction("RenderRelatedFoldersWidget", "AppUserItemFolder", new { idNumber = Model.Entity.ID });
+                        //}
+                        <!--
+                        =====================================================
+                        BEGIN REF. FOLDER LOGIC
+                        =====================================================
+                        -->
+
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Summary</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @Html.Partial("~/Views/Shared/_ValidationMessages.cshtml")
+                                <div class="row accepted">
+                                    <div id="section-accepted-name" class="col-md-6 accepted">
+                                        <div class="form-group">
+                                            <label>Accepted Name</label>
+                                            <div class="input-group">
+                                                <span id="placeholder-accepted-name" style="background-color: #ecf0f5; border: 1px solid #ced4da; width: 100%; position: relative; -ms-flex: 1 1 auto; flex: 1 1 auto; width: 1%; min-width: 0; margin-bottom: 0; padding: 0.375rem 0.75rem; height: calc(2.25rem + 2px);">@Html.Raw(Model.Entity.AcceptedName) </span>
+                                                @Html.HiddenFor(x => x.Entity.AcceptedID)
+                                                @if (Model.Entity.AcceptedID > 0)
+                                                {
+                                                    <span class="input-group-btn">
+                                                        <a href="@Url.Action("Edit", "FamilyMap", new { @entityId = Model.Entity.AcceptedID })" class="btn btn-default btn-flat">
+                                                            <i class="fa fa-link"></i>
+                                                        </a>
+                                                    </span>
+                                                }
+                                                <span class="input-group-btn">
+                                                    <button id="btnOpenFamilyLookupModal" type="button" class="btn btn-default btn-flat" data-ggtools-action="AcceptedID" data-ggtools-value="AcceptedName" data-toggle="modal" data-target="#modal-family-lookup">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Family Name</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Entity.FamilyName, new { @class = "form-control" })
+                                                <span class="input-group-btn">
+                                                    <a id="btnSetAcceptedOn" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-down"></i> Not Accepted</a>
+                                                    <a id="btnSetAcceptedOff" class="btn btn-default" href="#" role="button"><i class="fas fa-thumbs-up"></i> Accepted</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Order</label>
+                                            @Html.DropDownListFor(x => x.Entity.ClassificationID, Model.Orders, "Select order", new { id = "ddlSelectOrder", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Type</label>
+                                            @Html.DropDownListFor(x => x.Entity.FamilyTypeCode, Model.FamilyTypes, "NULL", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Suprafamily Rank Name</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Entity.SuprafamilyRankName, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Suprafamily Rank Code</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Entity.SuprafamilyRankCode, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Subfamily Name</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Entity.SubfamilyName, new { @class = "form-control" })
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Tribe Name</label>
+                                            @Html.TextBoxFor(x => x.Entity.TribeName, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Subtribe Name</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Entity.SubtribeName, new { @class = "form-control" })
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.Partial("~/Views/Taxonomy/Family/Components/_GenusEditor.cshtml")
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Alternate Name</label>
+                                            @Html.TextBoxFor(x => x.Entity.AlternateName, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Authority</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Entity.FamilyAuthority, new { @class = "form-control" })
+                                                <span class="input-group-btn">
+                                                    <button id="btnOpenAuthorityLookupModal"
+                                                            type="button"
+                                                            data-ggtools-display-field="Entity_FamilyAuthority"
+                                                            data-ggtools-value-field="Entity_FamilyAuthority"
+                                                            data-toggle="modal"
+                                                            data-target="#modal-author-lookup"
+                                                            class="btn btn-default btn-flat">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <!-- BEGIN NOTE FIELD -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>
+                                                Note
+                                                &nbsp;<a href="" data-toggle="modal" data-target="#modal-note-lookup"><i class="fa fa-search"></i></a>
+                                            </label>
+                                            <div class="input-group">
+                                                @Html.TextAreaFor(x => x.Entity.Note, new { @id = "txtNote", @class = "form-control", @style = "width:100%;" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <!-- WEB VISIBLE -->
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <br />
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" value="Web Visible" readonly="readonly" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" style="background-color:white;">
+                                                        @Html.CheckBoxFor(x => x.IsWebVisibleSelector)
+                                                        &nbsp;
+                                                    </span>
+                                                </div>
+                                                @if ((Model.Entity.ID > 0) && (Model.Entity.IsWebVisible == "Y"))
+                                                {
+                                                    <div class="input-group-append">
+                                                        <a href="https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomyfamily?id=@Model.Entity.ID" class="btn btn-default float-right" target="_blank">
+                                                            <i class="fas fa-globe"></i>
+                                                            View on Public Website
+                                                        </a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="@Url.Action("Refresh")" class="btn btn-default">Reset</a>
+                                @if (Model.Entity.ID > 0)
+                                {
+                                    <button id="btnDelete" type="button" class="btn btn-danger">
+                                        Delete
+                                    </button>
+                                }
+
+                                <div class="btn-group float-right">
+                                    <button type="submit" class="btn btn-default float-right margin-05">
+                                        <i class="fas fa-save"></i>
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.Entity.ID > 0)
+                    {
+                        @Html.Partial("~/Views/Taxonomy/Family/Components/_RelatedDataViewer.cshtml")
+                    }
+                    @{Html.RenderAction("RenderLookupModal", "FamilyMap"); }
+                    @{Html.RenderAction("RenderLookupModal", "Genus"); }
+                    @{Html.RenderAction("RenderLookupModal", "Author"); }
+                    @Html.Partial("~/Views/Shared/Modals/_NoteLookup.cshtml")
+                    @Html.Partial("~/Views/Taxonomy/Shared/Modals/_Delete.cshtml")
+                    @{Html.RenderAction("GetEditModal", "SysFolder", new { sysTableName = Model.TableName }); }
+                </div>
+            </div>
+
+        </div>
+        <aside class="control-sidebar control-sidebar-dark">
+        </aside>
+        <!-- Main Footer -->
+        @Html.Partial("~/Views/Shared/_Footer.cshtml")
+    </div>
+</body>
+</html>
+@Html.Partial("~/Views/Shared/_Scripts.cshtml")
+<script type="text/javascript">
+        $(document).ready(function () {
+            Init();
+        });
+
+        function Init() {
+            SetControlVisibility();
+            var defaultId = $('ul#list-dependent-data li:first').attr("id");
+            var action = $('ul#list-dependent-data li:first').data("ggtools-action");
+            var value = $('ul#list-dependent-data li:first').data("ggtools-value");
+            LoadDependentData(defaultId, action, value);
+        }
+
+        $('#section-dependent-data ul.nav li').on('click', function () {
+            var selectedId = $(this).attr('id');
+            var action = $(this).data("ggtools-action");
+            var value = $(this).data("ggtools-value");
+            LoadDependentData(selectedId, action, value);
+        });
+
+        function LoadDependentData(controlId, eventAction, eventValue) {
+        var link = '@Url.Action("EVENT_VALUE","EVENT_ACTION", new { familyId = "FAMILY_ID" })';
+        var entityId = $("#Entity_ID").val();
+        var genusId = $("#Entity_GenusID").val();
+        var genusName = $("#Entity_Name").val();
+        var formData = new FormData();
+        var sectionData = controlId.replace("tab_selector", "tab_content");
+
+        link = link.replace("EVENT_ACTION", eventAction);
+        link = link.replace("EVENT_VALUE", eventValue);
+        link = link.replace("FAMILY_ID", entityId);
+
+        formData.append("FamilyID", entityId);
+
+        $("#progress_overlay").show();
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#" + sectionData).html(response);
+                $("#progress_overlay").hide();
+            }
+        });
+    }
+</script>

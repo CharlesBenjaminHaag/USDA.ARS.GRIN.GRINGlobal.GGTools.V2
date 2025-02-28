@@ -1,0 +1,65 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.GeographyViewModel
+
+<table id="data-table-geography-countries" class="table table-hover" style="width:100%;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Countries</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var result in Model.DataCollectionCountries)
+        {
+            <tr>
+                <td></td>
+                <td>
+                    <div class="icheck-primary">
+                        <input type="checkbox" value="" id="check_@result.CountryCode" class="ggtools-check-country">
+                        <label for="check_@result.CountryCode">@result.CountryDescription</label>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@*<div style="padding: 10px;">
+    <div class="icheck-primary">
+        <input type="checkbox" value="" id="check-all-country" class="form-check-input-countries">
+        <label for="check-all-country">Select All</label>
+    </div>
+</div>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableGeo("data-table-geography-countries");
+
+        $(".ggtools-check-country").on('change', function () {
+            var selectedCountries = GetSelectedCountries();
+            //DEBUG
+            /*$("#txtDEBUGCountries").val(selectedCountries);*/
+
+            if (selectedCountries.length == 0) {
+                var table = $('#data-table-geography-administrative-unit').DataTable();
+
+                table
+                    .clear()
+                    .draw();
+            }
+            else {
+                LoadAdministrativeUnits("", selectedCountries);
+            }
+        });
+    });
+
+    // *******************************************************************
+    // Checkbox functions
+    // *******************************************************************
+    //$(".form-check-input-countries").click(function () {
+    //    var checkAll = $(".form-check-input-countries").prop('checked');
+    //    if (checkAll) {
+    //        $(".ggtools-check-country").prop("checked", true);
+    //    } else {
+    //        $(".ggtools-check-country").prop("checked", false);
+    //    }
+    //});
+</script>

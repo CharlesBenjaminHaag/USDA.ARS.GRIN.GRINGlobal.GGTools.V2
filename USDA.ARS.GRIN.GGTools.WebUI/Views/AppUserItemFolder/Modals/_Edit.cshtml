@@ -1,0 +1,362 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.AppUserItemFolderViewModel
+<div class="modal fade text-sm" id="modal-folder-edit" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Folder
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header p-2">
+                        <ul class="nav nav-pills">
+                            <li id="btnSelectCreateFolder" class="nav-item"><a class="nav-link active" href="#folder-create" data-toggle="tab">Create A New Folder</a></li>
+                            <li id="btnSelectUpdateFolder" class="nav-item"><a class="nav-link" href="#folder-select" data-toggle="tab">Update An Existing Folder</a></li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="folder-create">
+                                @using (Html.BeginForm("Edit", "AppUserItemFolder", FormMethod.Post, new { id = "frmAppUserItemFolder" }))
+                                {
+                                    @Html.HiddenFor(x => x.Entity.ParentID)
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Name</label>
+                                                @Html.TextBoxFor(x => x.Entity.FolderName, new { @class = "form-control" })
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Category</label>
+                                                            @Html.DropDownListFor(x => x.Entity.Category, Model.Categories, "Select value", new { @class = "form-control" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label>Add Category</label>
+                                                        @Html.TextBoxFor(x => x.Entity.NewCategory, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                @Html.TextBoxFor(x => x.Entity.Description, new { @class = "form-control" })
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="margin">
+                                                    <div class="form-group clearfix">
+                                                        <div class="icheck-primary d-inline">
+                                                            @Html.CheckBoxFor(x => x.Entity.IsFavoriteOption, new { id = "cbxIsFavorite", @type = "checkbox", @class = "custom-control-input" })
+                                                            <label for="cbxIsFavorite">
+                                                                Add this folder to my Favorites list.
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button id="btnSaveNewFolder" type="button" class="btn btn-default float-right" data-dismiss="modal">Save</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="tab-pane" id="folder-select">
+                                <div class="row">
+                                    <div id="section-folder-list" class="col-md-12">
+                                        <table id="data_table_app_user_item_folder_list" class="table table-striped ggtools" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>ID</th>
+                                                    <th>Title</th>
+                                                    <th>Category</th>
+                                                    <th>Items</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var folder in Model.DataCollectionUserFolders)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @folder.ID
+                                                        </td>
+                                                        <td>
+                                                            @folder.ID
+                                                        </td>
+                                                        <td>
+                                                            <b>@folder.FolderName</b> - @folder.Description
+                                                        </td>
+                                                        <td>@folder.Category</td>
+                                                        <td>
+                                                            <span class='badge badge-info'>
+                                                                @folder.TotalItems
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button id="btnUpdateSelectedFolder" class="btn btn-default float-right">Update Selected Folder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+*************************************************************************************************
+TEMP FOLDER-DISABLED WARNING
+*************************************************************************************************
+-->
+<div class="modal fade" id="modal-folder-disabled-warning">
+    <div class="modal-dialog">
+        <div class="modal-content bg-warning">
+            <div class="modal-header">
+                <h4 class="modal-title">Please Note</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Folder logic has been temporarily disabled.</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+*************************************************************************************************
+Modal that appears if no record is selected for folder addition.
+*************************************************************************************************
+-->
+<div class="modal fade" id="modal-validation-warning" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">No Record(s) Selected</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please first select at least one record to add to the folder.</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light float-right" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        InitDataTableLookupFormat("data_table_app_user_item_folder_list");
+    });
+
+    $("#btnOpenFolderModalInSingleMode").click(function () {
+
+        event.preventDefault();
+        $("#EventAction").val("FOLDER");
+        $("#EventValue").val("SINGLE");
+
+        $("#modal-folder-edit").modal("show");
+    });
+
+    $("#btnSaveNewFolder").click(function () {
+        SaveNewFolder();
+    });
+
+    $("#btnUpdateSelectedFolder").click(function () {
+        UpdateFolder();
+    });
+
+    function OpenAppUserItemFolderModal() {
+        var tableName = $("#TableName").val();
+        var dataTableName = "data_table_" + tableName;
+        var selectedItemIdList = GetSelectedEntityIDs(dataTableName);
+
+        $("#modal-folder-disabled-warning").modal("show");
+
+        //if (selectedItemIdList.length < 1) {
+        //    $("#modal-validation-warning").modal("show");
+        //}
+        //else {
+        //    $("#modal-folder-edit").modal("show");
+        //}
+    }
+
+    /*
+     * Adds a batch of selected items to an existing folder
+     */
+    function UpdateFolder() {
+        var link = '@Url.Action("AddItems", "AppUserItemFolder")';
+        var eventValue = $("#EventValue").val();
+        var entityId = $("#frmAppUserItemFolder #Entity_ParentID").val();
+        var appUserItemFolderId = GetSelectedEntityIDs("data_table_app_user_item_folder_list");
+        var tableName = $("#TableName").val();
+        var dataTableName = "data_table_" + tableName;
+        var formData = new FormData();
+        var selectedItemIdList = "";
+
+        //DEBUG
+        /*alert("EVENT VAL " + eventValue + " PARENT ENTITY " + entityId);*/
+
+        if (eventValue == "SINGLE") {
+            selectedItemIdList = entityId;
+            //DEBUG
+            alert("ID LIST IS " + selectedItemIdList);
+        }
+        else {
+            selectedItemIdList = GetSelectedEntityIDs("data_table_" + $("#TableName").val());
+        }
+
+        if (selectedItemIdList.length < 1) {
+            alert("ERROR: No items selected");
+        }
+
+        if (typeof selectedItemIdList == 'undefined') {
+            alert("ERROR: Item ID list undefined");
+        }
+
+        formData.append("Entity.ID", appUserItemFolderId);
+        formData.append("EntityIDList", selectedItemIdList);
+        formData.append("Entity.TableName", tableName);
+
+        // TEST Show confirmation alert once folder done.
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-folder-confirmation").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    /*
+     * Adds a batch of items to a newly-created folder
+    */
+    function SaveNewFolder() {
+        var link = '@Url.Action("Add", "AppUserItemFolder")';
+        var eventValue = $("#EventValue").val();
+        var entityId = $("#frmAppUserItemFolder #Entity_ParentID").val();
+        var formData = new FormData();
+
+        if ($('#cbxIsFavorite').prop('checked') == true) {
+            formData.append("Entity.IsFavorite", "Y");
+        }
+
+        formData.append("Entity.TableName", $("#TableName").val());
+        formData.append("Entity.FolderName", $("#Entity_FolderName").val());
+        formData.append("Entity.FolderType", "STATIC");
+        formData.append("Entity.Category", $("#Entity_Category").val());
+        formData.append("Entity.NewCategory", $("#Entity_NewCategory").val());
+        formData.append("Entity.Description", $("#Entity_Description").val());
+
+        //DEBUG
+        /*alert("EVENT VAL " + eventValue + " PARENT ENTITY " + entityId);*/
+
+        if (eventValue == "SINGLE") {
+            var selectedItemIdList = entityId;
+        }
+        else {
+            var selectedItemIdList = GetSelectedEntityIDs("data_table_" + $("#TableName").val());
+        }
+
+        if (selectedItemIdList.length < 1) {
+            alert("ERROR: No items selected");
+        }
+
+        if (typeof selectedItemIdList == 'undefined') {
+            alert("ERROR: Item ID list undefined");
+        }
+        formData.append("EntityIDList", selectedItemIdList);
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (response) {
+                $("#section-folder-confirmation").html(response);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+
+    function ConfirmFolderSave(folderTitle) {
+        $("#new-folder-name").html(folderTitle);
+        $("#alert-folder-confirmation").show();
+    }
+
+    function SaveFolderItems(folderId) {
+        var link = '@Url.Action("AddItems", "Folder")';
+        var tableName = $("#TableName").val();
+        var selectedItemIdList = GetSelectedEntityIDs("data-table-order");
+        var formData = new FormData();
+
+        formData.append("FolderID", folderId);
+        formData.append("TableName", tableName);
+
+        if (typeof selectedItemIdList != 'undefined') {
+            formData.append("IDList", selectedItemIdList);
+        }
+
+        $.ajax({
+            url: link,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+        $("#modal-folder-edit").modal("hide");
+    }
+</script>
+

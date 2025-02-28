@@ -1,0 +1,221 @@
+﻿@using System.Data;
+@using USDA.ARS.GRIN.GGTools.DataLayer;
+@model USDA.ARS.GRIN.GGTools.ViewModelLayer.ImportViewModel
+
+@Html.HiddenFor(x => x.RowsAffected)
+
+@{
+    string sectionId = String.Empty;
+    string hfGenusId = String.Empty;
+    string txtSpeciesID = String.Empty;
+    string txtGenusName = String.Empty;
+    string hfGenusName = String.Empty;
+    string txtSpeciesName = String.Empty;
+    string hfSpeciesName = String.Empty;
+    string txtProtologue = String.Empty;
+    string txtAuthority = String.Empty;
+    string btnOpenLookupModalGenus = String.Empty;
+    string btnOpenLookupModalProtologue = String.Empty;
+    string btnOpenLookupModalAuthority = String.Empty;
+    string btnSave = String.Empty;
+    string btnUndo = String.Empty;
+    string cssStyleSyntax = String.Empty;
+    string cssStyleSyntax2 = String.Empty;
+    string cssStyleSyntax3 = String.Empty;
+    string cssStyleSyntax4 = String.Empty;
+}
+
+
+@{ // REFACTOR: Set id of DataTable based on DB table extracted from query.
+    SysTableField sysTableFieldHeading = new SysTableField();
+    SysTableField sysTableField = new SysTableField();
+    var tableId = "data_table_" + Model.TableName;
+    int keyColumnCount = 0;
+}
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="far fas fa-table nav-icon"></i>
+
+        </h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row" style="background-color:#EBEBEB;">
+            <div class="col-md-1">
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="customCheckbox1" value="option1">
+                        <label for="customCheckbox1" class="custom-control-label">ID</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"><label>Name</label></div>
+            <div class="col-md-1"><label>Original Name</label></div>
+            <div class="col-md-2"><label>Authority</label></div>
+            <div class="col-md-2"><label>Original Authority</label></div>
+            <div class="col-md-2"><label>Protologue</label></div>
+            <div class="col-md-2"><label>Original Protologue</label></div>
+            <div class="col-md-1">
+
+            </div>
+        </div>
+        @foreach (var result in Model.DataCollectionSpeciesImport)
+        {
+            {
+                sectionId = result.ID.ToString();
+                hfGenusId = "hfGenusID" + result.ID.ToString();
+                txtSpeciesID = "txtSpeciesID" + result.ID.ToString();
+                txtGenusName = "txtGenusName" + result.ID.ToString();
+                hfGenusName = "hfGenusName" + result.ID.ToString();
+                txtSpeciesName = "txtSpeciesName" + result.ID.ToString();
+                hfSpeciesName = "hfSpeciesName" + result.ID.ToString();
+                txtProtologue = "txtProtologue" + result.ID.ToString();
+                txtAuthority = "txtAuthority" + result.ID.ToString();
+
+                btnOpenLookupModalGenus = "btnOpenLookupModalGenus" + result.ID.ToString();
+                btnOpenLookupModalProtologue = "btnOpenLookupModalProtologue" + result.ID.ToString();
+                btnOpenLookupModalAuthority = "btnOpenLookupModalAuthority" + result.ID.ToString();
+                btnSave = "btnSave" + result.ID.ToString();
+                btnUndo = "btnUndo" + result.ID.ToString();
+
+                cssStyleSyntax = string.Empty;
+                cssStyleSyntax2 = string.Empty;
+                cssStyleSyntax3 = string.Empty;
+                cssStyleSyntax4 = string.Empty;
+
+                if (result.SpeciesName != result.OriginalSpeciesName)
+                {
+                    cssStyleSyntax = "background-color:yellow;";
+                }
+
+                if (result.SpeciesAuthority != result.OriginalSpeciesAuthority)
+                {
+                    cssStyleSyntax2 = "background-color:yellow;";
+                }
+
+                if (result.Protologue != result.OriginalProtologue)
+                {
+                    cssStyleSyntax3 = "background-color:yellow;";
+                }
+
+            }
+
+            <div class="row">
+                <div class="col-md-1">
+                    <div class="form-group">
+                        @*@Html.TextBox("txtSpeciesID", result.ID, new { @class = "form-control", @readonly="readonly" })*@
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="customCheckbox1" value="option1">
+                            <label for="customCheckbox1" class="custom-control-label">@result.ID</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        @Html.TextBox("txtSpeciesName", result.SpeciesName, new { @class = "form-control", @style = cssStyleSyntax })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        @Html.TextBox("txtOriginalSpeciesName", result.OriginalSpeciesName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        @Html.TextBox("txtAuthority", result.SpeciesAuthority, new { @class = "form-control", @style = cssStyleSyntax2 })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        @Html.TextBox("txtOriginalSpeciesAuthority", result.OriginalSpeciesAuthority, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        @Html.TextBox("txtProtologue", result.Protologue, new { @class = "form-control", @style = cssStyleSyntax3 })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        @Html.TextBox("txtOriginalProtologue", result.OriginalProtologue, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default"><i class="fa fa-undo"></i></button>
+                        <button type="button" class="btn btn-default"><i class="fa fa-save"></i></button>
+                        <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    </div>
+                    @*<button id=@btnUndo type="button" class="btn btn-default btn-undo" data-ggtools-id="@result.ID"><i class="fa fa-undo"></i></button>
+                    <button id="@btnSave" type="button" class="btn btn-default btn-save" data-ggtools-id="@result.ID"><i class="fa fa-save"></i></button>*@
+                </div>
+            </div>
+        }
+
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var searchResultsVisible = 0;
+        searchResultsVisible = $("#RowsAffected").val();
+
+        if (searchResultsVisible > 0) {
+            var tableName = "data_table_" + $("#TableName").val();
+            InitDataTableDynamicQuery(tableName);
+        }
+    });
+
+
+
+
+
+    function InitDataTableDynamicQuery(tableName) {
+        tableName = "#" + tableName;
+        $(document).ready(function () {
+            table = $(tableName).DataTable({
+                dom: 'Blfrtip',
+                paging: true,
+                "pageLength": 10,
+                scrollX: true,
+                responsive: true,
+
+                buttons: [
+
+                    'selectAll',
+                    'selectNone',
+                    'csv',
+                    'excel',
+                    'pdf',
+                    {
+                        text: 'Add to Folder',
+                        action: function (e, dt, node, config) {
+                            OpenFolderModal();
+                        }
+                    }
+                ],
+                select: true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                //columnDefs: [
+                //    { targets: [0], visible: false }
+                //]
+            });
+
+            $('table.ggtools').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                /*alert('You clicked on ' + data[0] + "'s row");*/
+            });
+        });
+    }
+
+</script>

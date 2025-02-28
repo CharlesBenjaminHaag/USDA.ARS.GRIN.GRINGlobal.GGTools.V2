@@ -1,0 +1,31 @@
+﻿@model USDA.ARS.GRIN.GGTools.ViewModelLayer.SysTagViewModel
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Filter by Tag</h4>
+    </div>
+    <div class="card-body">
+        <div id="external-events">
+            @foreach (var sysTag in Model.DataCollection)
+            {
+                string cssStyleText = "position: relative; color:white; background-color:" + sysTag.TagFormatString + ";";
+                <div id="@sysTag.ID" class="external-event" style="@cssStyleText">@sysTag.TagText</div>
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(".external-event").on('click', function (event) {
+        var ID = $(this).attr('id');
+
+        var DEBUG = GetSelectedTab();
+        
+        
+    });
+
+    function GetSelectedTab() {
+        var specifiedDiv = $("#tab-content-container"); // Replace with your specified div's ID or selector
+        var firstVisibleDiv = specifiedDiv.find("div:visible").first();
+        var firstVisibleDivId = firstVisibleDiv.attr("id");
+        return firstVisibleDivId;
+    }
+</script>

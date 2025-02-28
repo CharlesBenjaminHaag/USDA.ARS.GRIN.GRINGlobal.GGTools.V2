@@ -1,0 +1,151 @@
+﻿@using System.Data;
+@model USDA.ARS.GRIN.GGTools.ViewModelLayer.CodeValueViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/_LayoutAdminLTE3.cshtml";
+}
+
+@Html.Partial("~/Views/Shared/_RevisionHistory.cshtml")
+@using (Html.BeginForm("Edit", "CodeValue", FormMethod.Post, new { id = "frmEdit" }))
+{
+    @Html.HiddenFor(x => x.EventAction)
+    @Html.HiddenFor(x => x.EventValue)
+    @Html.HiddenFor(x => x.TableName)
+    @Html.HiddenFor(x => x.TableCode)
+    @Html.HiddenFor(x => x.PageTitle)
+    @Html.HiddenFor(x => x.Entity.ID)
+
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Summary</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group form-horizontal">
+                        <label>Select Group</label>
+                        @Html.DropDownListFor(x => x.Entity.GroupName, Model.Groups, "Select value", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group form-horizontal">
+                        <label>New Group</label>
+                        @Html.TextBoxFor(x => x.NewGroup, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1">
+                    <div class="form-group form-horizontal">
+                        <label>Language</label>
+                        @Html.DropDownListFor(x => x.Entity.SysLangID, Model.SysLangs, "Select value", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Code</label>
+                        @Html.TextBoxFor(x => x.Entity.Code, new { @class = "form-control", maxlength = "20" })
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label>Title</label>
+                        @Html.TextBoxFor(x => x.Entity.CodeTitle, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Description</label>
+                        @Html.TextBoxFor(x => x.Entity.CodeDescription, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="@Url.Action("Refresh")" class="btn btn-danger">Cancel</a>
+            <button type="submit" class="btn btn-default float-right">Save</button>
+        </div>
+    </div>
+}
+
+@*<div class="card card-primary card-tabs">
+    <div class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+            <li class="pt-2 px-3"><h3 class="card-title">Related Tables</h3></li>
+
+            @{
+                int i = 0;
+                int j = 0;
+                string tabSelectorId = "";
+                string tabContentId = "";
+                string tabSelectorCssClass = "nav-link";
+                string tabContentCssClass = "tab-pane fade";
+            }
+
+            @foreach (var sysTableField1 in Model.DataCollectionSysTableFields)
+            {
+                tabSelectorId = "tab-selector-" + sysTableField1.SysTableName;
+                tabSelectorCssClass = "nav-link";
+                tabContentCssClass = "tab-pane fade";
+
+                if (i == 0)
+                {
+                    tabSelectorCssClass += " active";
+                    tabContentCssClass += " show active";
+                }
+
+                tabContentId = "tab-content-" + sysTableField1.SysTableName;
+
+                <li class="nav-item">
+                    <a class="@tabSelectorCssClass" id="@tabSelectorId" data-toggle="pill" href="#@tabContentId" role="tab" aria-controls="custom-tabs-two-home" aria-selected="true">@sysTableField1.SysTableName</a>
+                </li>
+                i++;
+            }
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="custom-tabs-two-tabContent">
+            @foreach (var sysTableField2 in Model.DataCollectionSysTableFields)
+            {
+                tabContentId = "tab-content-" + sysTableField2.SysTableName;
+
+                tabContentCssClass = "tab-pane fade";
+
+                if (j == 0)
+                {
+                    tabContentCssClass += " show active";
+                }
+
+                <div class="@tabContentCssClass" id="@tabContentId" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+                    @{ Html.RenderAction("Component_ReferencedTableList", "CodeValue", new { tableName = sysTableField2.SysTableName, fieldName = sysTableField2.FieldName, codeValue = Model.Entity.Code }); }
+                </div>
+                j++;
+            }
+        </div>
+    </div>
+
+</div>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Init();
+
+        
+        // Select all tables on the page and initialize each as a DataTable
+        $('table').each(function () {
+            $(this).DataTable();  // Initialize DataTables on each table
+        });
+    });
+
+    function Init() {
+        var isReadOnly = $("#IsReadOnly").val();
+        if (isReadOnly == "Y") {
+            SetReadOnly();
+        }
+    }
+</script>

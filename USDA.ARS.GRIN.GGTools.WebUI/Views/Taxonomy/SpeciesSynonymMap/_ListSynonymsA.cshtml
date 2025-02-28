@@ -1,0 +1,73 @@
+﻿@model USDA.ARS.GRIN.GGTools.Taxonomy.ViewModelLayer.SynonymMapViewModel
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Synonyms (@Model.DataCollection.Count)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="section-search-results" class="data-list">
+            <table id="data_table_taxonomy_species_synonym_map_a" class="table table-striped ggtools" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Accepted</th>
+                        <th>Synonym</th>
+                        <th>Protologue</th>
+                        <th>Verified</th>
+                        <th>By</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.DataCollection)
+                    {
+                    <tr>
+                        <td>
+                            @result.ID
+                        </td>
+                        <td>
+                            @result.SpeciesAID
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Species", new { entityId = result.SpeciesAID })">
+                                @Html.Raw(result.SpeciesAAssembledName)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.Raw(Model.FormatBoolean(result.SpeciesAIsAcceptedName))
+                        </td>
+                        <td>
+                            @result.SynonymDescription.Replace("Synonym","")
+                        </td>
+                        <td>@result.SpeciesAProtologue</td>
+                        <td>
+                            @if (result.SpeciesANameVerifiedDate > DateTime.MinValue)
+                            {
+                                @result.SpeciesANameVerifiedDate.ToShortDateString()
+                            }
+                        </td>
+                        <td>@result.SpeciesAVerifiedByCooperatorName</td>
+                        <td class="table-col-align-right">
+                            <a href="@Url.Action("Edit", "Species", new { entityId = result.SpeciesAID })" class="btn btn-default btn-sm pull-right row-edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    InitDataTable("data_table_taxonomy_species_synonym_map_a");
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
